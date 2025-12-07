@@ -11,7 +11,7 @@
  */
 
 import { z } from 'zod';
-import { USER_METRICS_CONSTANTS, VALIDATION_CONSTANTS } from '@onecoach/lib-ai-agents';
+import { USER_METRICS_CONSTANTS, VALIDATION_CONSTANTS } from '@OneCoach/constants/analytics-constants';
 import { MacrosSchema } from './nutrition/base.schemas';
 import { cuid2Schema } from './core/common.schemas';
 

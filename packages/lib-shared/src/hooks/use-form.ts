@@ -71,28 +71,7 @@ export function useForm<T extends object>(options: UseFormOptions<T>): UseFormRe
   const [touched, setTouched] = useState<Partial<Record<keyof T, boolean>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Helper to update values (handles both modes)
-  const updateValues = useCallback(
-    (newValuesOrFn: T | ((prev: T) => T)) => {
-      if (isControlled) {
-        // We need the current values to apply function updates
-        // Since we can't access the 'latest' controlledValues inside this callback without deps,
-        // we assume the caller handles referential integrity or we use the dependency.
-        // Simpler: just call the setter.
-        // Note: functional updates might be tricky in controlled mode if the parent doesn't support them.
-        // We'll resolve the function here if possible, but we need 'prev'.
-        // For now, strict usage:
-        setControlledValues(
-          typeof newValuesOrFn === 'function'
-            ? (newValuesOrFn as (prev: T) => T)(controlledValues)
-            : newValuesOrFn
-        );
-      } else {
-        setInternalValues(newValuesOrFn);
-      }
-    },
-    [isControlled, setControlledValues, controlledValues]
-  );
+
 
   // Helper for partial updates
   const updateValuesPartial = useCallback(

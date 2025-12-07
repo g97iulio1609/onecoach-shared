@@ -15,10 +15,11 @@
     "./config": "./src/config/index.ts",
     "./config/*": "./src/config/*.ts",
     "./prompts": "./src/prompts.ts",
-    "./colors": "./src/colors.ts"
+    "./colors": "./src/colors.ts",
+    "./analytics-constants": "./src/analytics-constants.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc -b"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

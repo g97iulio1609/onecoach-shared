@@ -60,7 +60,7 @@ export * from './batch-processing';
 export * from './url-normalizer';
 
 // Dialog Global
-export * from './dialog-global';
+// export * from './dialog-global'; // Moved to lib-stores
 
 // Simple Cache
 export * from './simple-cache';

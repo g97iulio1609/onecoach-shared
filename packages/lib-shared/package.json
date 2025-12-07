@@ -147,11 +147,12 @@
     }
   },
   "scripts": {
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc -b"
   },
   "dependencies": {
     "@OneCoach/types": "workspace:*",
     "@OneCoach/schemas": "workspace:*",
+    "@OneCoach/lib-api": "workspace:*",
     "@prisma/client": "7.0.0"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@
  */
 
 import { z } from 'zod';
-import { AI_REASONING_CONFIG } from '@OneCoach/constants/models';
+import { AI_REASONING_CONFIG } from '@OneCoach/constants/analytics-constants';
 
 /**
  * Schema for base chat message (without UI-specific fields like id, timestamp, metadata)

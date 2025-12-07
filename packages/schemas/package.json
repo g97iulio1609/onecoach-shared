@@ -23,7 +23,7 @@
     }
   },
   "scripts": {
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc -b"
   },
   "dependencies": {
     "@OneCoach/constants": "workspace:*",
