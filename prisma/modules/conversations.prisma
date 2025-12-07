@@ -1,0 +1,77 @@
+// ============================================================================
+// CONVERSATIONS MODULE - Conversations, Messages, Chat Usage Logs
+// ============================================================================
+
+model conversations {
+  id               String                  @id @default(cuid())
+  title            String?
+  metadata         Json?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  lastMessageAt    DateTime?               @default(now())
+  modelOverride    String?
+  providerOverride AIProvider?
+  userId           String?                 @db.Uuid
+  messages         conversation_messages[]
+  users            users?                  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "conversations_userid_fkey")
+
+  @@index([createdAt])
+  @@index([lastMessageAt])
+  @@index([userId])
+  @@index([userId, lastMessageAt(sort: Desc)], map: "idx_conversations_user_lastmsg")
+}
+
+model conversation_messages {
+  id             String           @id @default(cuid())
+  conversationId String
+  role           ConversationRole
+  content        String
+  metadata       Json?
+  sequence       Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  conversations  conversations    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([createdAt])
+  @@index([sequence])
+  @@index([conversationId, sequence], map: "idx_conversation_messages_conv_seq")
+  @@index([conversationId, createdAt], map: "idx_conversation_messages_conv_created")
+}
+
+// ============================================================================
+// CHAT USAGE TRACKING - Tracciamento utilizzo chat per analytics admin
+// ============================================================================
+
+model chat_usage_logs {
+  id             String     @id @default(cuid())
+  userId         String?    @db.Uuid
+  conversationId String?
+  provider       AIProvider
+  modelId        String
+  inputTokens    Int        @default(0)
+  outputTokens   Int        @default(0)
+  totalTokens    Int        @default(0)
+  inputCost      Decimal?   @db.Decimal(10, 6)
+  outputCost     Decimal?   @db.Decimal(10, 6)
+  totalCost      Decimal?   @db.Decimal(10, 6)
+  latencyMs      Int?
+  isStreaming    Boolean    @default(false)
+  hasVision      Boolean    @default(false)
+  hasTools       Boolean    @default(false)
+  toolsUsed      String[]   @default([])
+  errorCode      String?
+  errorMessage   String?
+  metadata       Json?
+  createdAt      DateTime   @default(now())
+  users          users?     @relation("ChatUsageLogs", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([provider])
+  @@index([modelId])
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([provider, createdAt])
+  @@index([modelId, createdAt])
+}
+

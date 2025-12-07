@@ -1,0 +1,35 @@
+// ============================================================================
+// COPILOT MODULE - Copilot Settings and Admin Config
+// ============================================================================
+
+// Copilot settings per utente/coach
+model copilot_settings {
+  id               String   @id @default(cuid())
+  userId           String   @unique @db.Uuid
+  isEnabled        Boolean  @default(true)
+  contextBuilders  String[] @default([])
+  disabledScreens  String[] @default([])
+  maxContextTokens Int      @default(4000)
+  suggestionMode   String   @default("auto") // auto, manual, disabled
+  autoTriggerDelay Int      @default(2000) // ms
+  metadata         Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  users            users    @relation("CopilotSettings", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([isEnabled])
+}
+
+// Copilot global admin settings
+model copilot_admin_config {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       Json
+  description String?
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+}
+

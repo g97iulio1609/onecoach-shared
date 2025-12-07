@@ -1,0 +1,19 @@
+// ============================================================================
+// DAILY METRICS MODULE - Daily Analytics Metrics
+// ============================================================================
+
+model daily_metrics {
+  id                 String   @id
+  date               DateTime @unique @db.Date
+  newUsers           Int      @default(0)
+  activeUsers        Int      @default(0)
+  creditsConsumed    Int      @default(0)
+  revenue            Int      @default(0)
+  workoutsGenerated  Int      @default(0)
+  nutritionGenerated Int      @default(0)
+  metadata           Json?
+  createdAt          DateTime @default(now())
+
+  @@index([date])
+}
+

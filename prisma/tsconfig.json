@@ -1,0 +1,29 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["../apps/next/*"],
+      "@/types": ["../packages/types/src/index.ts"],
+      "@/types/*": ["../packages/types/src/*"],
+      "@components/*": ["../apps/next/components/*"],
+      "@hooks/*": ["../apps/next/hooks/*"],
+      "@features/*": ["../apps/next/features/*"],
+      "app/*": ["../packages/app/src/*"],
+      "ui/*": ["../packages/ui/src/*"],
+      "lib/*": ["../packages/lib/src/*", "../apps/next/lib/*"],
+      "hooks": ["../packages/hooks/src/index.ts"],
+      "hooks/*": ["../packages/hooks/src/*"],
+      "types/*": ["../packages/types/src/*"],
+      "design-system/*": ["../packages/design-system/src/*"],
+      "@OneCoach/constants": ["../packages/constants/src/index.ts"],
+      "@OneCoach/constants/*": ["../packages/constants/src/*"],
+      "@OneCoach/types": ["../packages/types/src/index.ts"]
+    },
+    "strict": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}

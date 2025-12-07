@@ -1,0 +1,86 @@
+// ============================================================================
+// MARKETPLACE MODULE - Marketplace Plans, Purchases, Ratings
+// ============================================================================
+
+enum MarketplacePlanType {
+  WORKOUT
+  NUTRITION
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
+}
+
+model marketplace_plans {
+  id               String              @id @default(cuid())
+  planType         MarketplacePlanType
+  workoutProgramId String?             @unique
+  nutritionPlanId  String?             @unique
+  title            String              @db.VarChar(255)
+  description      String
+  coverImage       String?
+  price            Decimal             @db.Decimal(10, 2)
+  currency         String              @default("EUR") @db.VarChar(3)
+  isPublished      Boolean             @default(false)
+  totalPurchases   Int                 @default(0)
+  averageRating    Decimal?            @db.Decimal(3, 2)
+  totalReviews     Int                 @default(0)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  publishedAt      DateTime?
+  coachId          String?             @db.Uuid
+  coach            users?              @relation("CoachMarketplacePlans", fields: [coachId], references: [id], onDelete: Cascade, map: "marketplace_plans_coachid_fkey")
+  nutrition_plan   nutrition_plans?    @relation(fields: [nutritionPlanId], references: [id], onDelete: Cascade)
+  workout_program  workout_programs?   @relation(fields: [workoutProgramId], references: [id], onDelete: Cascade)
+  plan_purchases   plan_purchases[]
+  plan_ratings     plan_ratings[]
+
+  @@index([planType])
+  @@index([isPublished])
+  @@index([averageRating])
+  @@index([isPublished, planType], map: "idx_marketplace_plans_pub_type")
+  @@index([isPublished, averageRating(sort: Desc)], map: "idx_marketplace_plans_pub_rating")
+  @@index([coachId, isPublished], map: "idx_marketplace_coach_published")
+  @@index([coachId])
+}
+
+model plan_purchases {
+  id                 String            @id @default(cuid())
+  marketplacePlanId  String
+  price              Decimal           @db.Decimal(10, 2)
+  currency           String            @db.VarChar(3)
+  coachCommission    Decimal           @db.Decimal(10, 2)
+  platformCommission Decimal           @db.Decimal(10, 2)
+  stripePaymentId    String?           @unique
+  status             PurchaseStatus    @default(PENDING)
+  purchasedAt        DateTime          @default(now())
+  refundedAt         DateTime?
+  userId             String?           @db.Uuid
+  marketplace_plan   marketplace_plans @relation(fields: [marketplacePlanId], references: [id], onDelete: Cascade)
+  users              users?            @relation(fields: [userId], references: [id], onDelete: Cascade, map: "plan_purchases_userid_fkey")
+
+  @@index([marketplacePlanId])
+  @@index([status])
+  @@index([purchasedAt])
+  @@index([userId])
+}
+
+model plan_ratings {
+  id                String            @id @default(cuid())
+  marketplacePlanId String
+  rating            Int
+  review            String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  userId            String?           @db.Uuid
+  marketplace_plan  marketplace_plans @relation(fields: [marketplacePlanId], references: [id], onDelete: Cascade)
+  users             users?            @relation(fields: [userId], references: [id], onDelete: Cascade, map: "plan_ratings_userid_fkey")
+
+  @@index([marketplacePlanId])
+  @@index([rating])
+  @@index([userId])
+}
+

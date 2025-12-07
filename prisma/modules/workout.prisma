@@ -1,0 +1,186 @@
+// ============================================================================
+// WORKOUT MODULE - Workout Programs, Sessions, Goals, Performance Records
+// ============================================================================
+
+enum WorkoutGoal {
+  STRENGTH
+  HYPERTROPHY
+  ENDURANCE
+  MOBILITY
+  GENERAL_FITNESS
+}
+
+enum WorkoutStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+model workout_goal_translations {
+  id            String        @id
+  workoutGoalId String
+  locale        String        @db.VarChar(8)
+  name          String        @db.VarChar(255)
+  description   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now())
+  workout_goals workout_goals @relation(fields: [workoutGoalId], references: [id], onDelete: Cascade)
+
+  @@unique([workoutGoalId, locale])
+  @@index([locale])
+  @@index([workoutGoalId])
+}
+
+model workout_goals {
+  id                        String                      @id
+  name                      String                      @unique @db.VarChar(64)
+  slug                      String                      @unique
+  workout_goal_translations workout_goal_translations[]
+
+  @@index([name])
+}
+
+model workout_program_versions {
+  id               String           @id
+  programId        String
+  version          Int
+  name             String
+  description      String
+  difficulty       DifficultyLevel
+  durationWeeks    Int
+  goals            String[]
+  status           WorkoutStatus
+  weeks            Json
+  metadata         Json?
+  createdBy        String
+  createdAt        DateTime         @default(now())
+  workout_programs workout_programs @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, version])
+  @@index([createdAt])
+  @@index([programId])
+}
+
+model workout_programs {
+  id                       String                     @id
+  name                     String
+  description              String
+  difficulty               DifficultyLevel
+  durationWeeks            Int
+  goals                    String[]
+  status                   WorkoutStatus              @default(ACTIVE)
+  weeks                    Json
+  metadata                 Json?
+  version                  Int                        @default(1)
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime
+  userId                   String?                    @db.Uuid
+  marketplace_plan         marketplace_plans?
+  workout_program_versions workout_program_versions[]
+  users                    users?                     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "workout_programs_userid_fkey")
+  workout_sessions         workout_sessions[]
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([userId, createdAt(sort: Desc)], map: "idx_workout_programs_user_created")
+  @@index([userId, status], map: "idx_workout_programs_user_status")
+  @@index([userId])
+  @@index([metadata], map: "idx_workout_programs_metadata_gin", type: Gin)
+  @@index([weeks], map: "idx_workout_programs_weeks_gin", type: Gin)
+}
+
+model workout_sessions {
+  id                           String                         @id @default(cuid())
+  programId                    String
+  weekNumber                   Int
+  dayNumber                    Int
+  startedAt                    DateTime                       @default(now())
+  completedAt                  DateTime?
+  exercises                    Json
+  notes                        String?
+  createdAt                    DateTime                       @default(now())
+  updatedAt                    DateTime                       @default(now())
+  userId                       String?                        @db.Uuid
+  exercise_performance_records exercise_performance_records[]
+  workout_programs             workout_programs               @relation(fields: [programId], references: [id], onDelete: Cascade)
+  users                        users?                         @relation(fields: [userId], references: [id], onDelete: Cascade, map: "workout_sessions_userid_fkey")
+
+  @@index([programId])
+  @@index([startedAt])
+  @@index([completedAt])
+  @@index([programId, weekNumber, dayNumber], map: "idx_workout_sessions_prog_week_day")
+  @@index([userId, startedAt(sort: Desc)], map: "idx_workout_sessions_user_started")
+  @@index([userId])
+  @@index([programId, weekNumber, dayNumber, startedAt, completedAt], map: "idx_workout_sessions_covering")
+  @@index([exercises], map: "idx_workout_sessions_exercises_gin", type: Gin)
+}
+
+model exercise_performance_records {
+  id                  String            @id @default(cuid())
+  exerciseId          String
+  sessionId           String?
+  date                DateTime          @db.Date
+  sets                Int
+  reps                Int
+  weight              Decimal           @db.Decimal(6, 2)
+  volume              Decimal           @db.Decimal(8, 2)
+  rpe                 Int?
+  notes               String?
+  createdAt           DateTime          @default(now())
+  repsMax             Int?
+  rpeMax              Int?
+  weightMax           Decimal?          @db.Decimal(6, 2)
+  intensityPercent    Int?
+  intensityPercentMax Int?
+  userId              String?           @db.Uuid
+  exercises           exercises         @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  workout_sessions    workout_sessions? @relation(fields: [sessionId], references: [id])
+  users               users?            @relation(fields: [userId], references: [id], onDelete: Cascade, map: "exercise_performance_records_userid_fkey")
+
+  @@index([exerciseId])
+  @@index([date])
+  @@index([userId])
+  @@index([userId, date(sort: Desc)], map: "idx_exercise_perf_user_date")
+  @@index([userId, exerciseId], map: "idx_exercise_perf_user_exercise")
+}
+
+model user_one_rep_max {
+  id                        String                      @id
+  exerciseId                String
+  oneRepMax                 Decimal                     @db.Decimal(5, 2)
+  notes                     String?
+  lastUpdated               DateTime                    @default(now())
+  createdAt                 DateTime                    @default(now())
+  version                   Int                         @default(1)
+  userId                    String?                     @db.Uuid
+  exercises                 exercises                   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  users                     users?                      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_one_rep_max_userid_fkey")
+  user_one_rep_max_versions user_one_rep_max_versions[]
+
+  @@index([exerciseId])
+  @@index([userId, exerciseId], map: "idx_user_one_rep_max_user_exercise")
+  @@index([userId])
+}
+
+model user_one_rep_max_versions {
+  id               String            @id
+  maxId            String
+  userId           String
+  exerciseId       String
+  oneRepMax        Decimal           @db.Decimal(5, 2)
+  notes            String?
+  version          Int
+  createdBy        String
+  createdAt        DateTime          @default(now())
+  userOneRepMaxId  String?
+  user_one_rep_max user_one_rep_max? @relation(fields: [userOneRepMaxId], references: [id])
+
+  @@unique([maxId, version])
+  @@index([createdAt])
+  @@index([exerciseId])
+  @@index([maxId])
+  @@index([userId])
+  @@index([userOneRepMaxId])
+}
+

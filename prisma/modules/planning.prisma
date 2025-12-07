@@ -1,0 +1,152 @@
+// ============================================================================
+// PLANNING MODULE - Planning Plans, Tasks, Execution Metrics, Calendar
+// ============================================================================
+
+enum PlanningStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+  PAUSED
+}
+
+enum PlanningAgentType {
+  WORKOUT
+  NUTRITION
+}
+
+enum CalendarPlanType {
+  NUTRITION
+  WORKOUT
+}
+
+model planning_plans {
+  id               String             @id @default(cuid())
+  agentType        PlanningAgentType
+  durationWeeks    Int
+  daysPerWeek      Int
+  status           PlanningStatus     @default(PENDING)
+  metadata         Json?
+  errorMessage     String?
+  startedAt        DateTime?
+  completedAt      DateTime?
+  pausedAt         DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  progress         Int                @default(0)
+  result           Json?
+  userId           String?            @db.Uuid
+  user             users?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks            planning_tasks[]
+  executionMetrics execution_metrics[]
+
+  @@index([status])
+  @@index([agentType])
+  @@index([createdAt])
+  @@index([agentType, status], map: "idx_planning_plan_agent_status")
+  @@index([userId])
+  @@index([userId, agentType, status], map: "idx_planningplan_user_agent_status")
+  @@index([userId, status], map: "idx_planningplan_user_status")
+}
+
+model planning_tasks {
+  id           String            @id @default(cuid())
+  planId       String
+  weekNumber   Int
+  status       PlanningStatus    @default(PENDING)
+  result       Json?
+  errorMessage String?
+  retryCount   Int               @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  subTasks     planning_sub_tasks[]
+  plan         planning_plans      @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, weekNumber])
+  @@index([planId])
+  @@index([status])
+  @@index([weekNumber])
+}
+
+model planning_sub_tasks {
+  id           String               @id @default(cuid())
+  taskId       String
+  dayNumber    Int
+  dayName      String
+  status       PlanningStatus       @default(PENDING)
+  result       Json?
+  errorMessage String?
+  retryCount   Int                  @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  subSubTasks  planning_sub_sub_tasks[] @relation("SubTaskToSubSubTask")
+  task         planning_tasks         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, dayNumber])
+  @@index([taskId])
+  @@index([status])
+  @@index([dayNumber])
+}
+
+model planning_sub_sub_tasks {
+  id           String          @id @default(cuid())
+  subTaskId    String
+  mealNumber   Int
+  mealName     String?
+  mealType     String?
+  status       PlanningStatus  @default(PENDING)
+  result       Json?
+  errorMessage String?
+  retryCount   Int             @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  subTask      planning_sub_tasks @relation("SubTaskToSubSubTask", fields: [subTaskId], references: [id], onDelete: Cascade)
+
+  @@unique([subTaskId, mealNumber])
+  @@index([subTaskId])
+  @@index([status])
+  @@index([mealNumber])
+}
+
+model calendar_assignments {
+  id             String           @id @default(cuid())
+  date           DateTime         @db.Date
+  planType       CalendarPlanType
+  planId         String
+  isRecurring    Boolean          @default(false)
+  recurrenceRule Json?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  userId         String?          @db.Uuid
+  user           users?           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "calendar_assignments_userid_fkey")
+
+  @@index([date])
+  @@index([planType])
+  @@index([userId])
+  @@index([userId, date], map: "idx_calendar_assignments_user_date")
+  @@index([userId, planType, date], map: "idx_calendar_assignments_user_plantype_date")
+}
+
+model execution_metrics {
+  id        String       @id @default(cuid())
+  domain    String
+  timestamp BigInt
+  decisions Json
+  outcome   Json
+  createdAt DateTime     @default(now())
+  planId    String
+  plan      planning_plans @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([domain])
+  @@index([timestamp])
+  @@index([createdAt])
+}
+

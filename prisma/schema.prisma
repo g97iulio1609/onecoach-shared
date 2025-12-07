@@ -1,0 +1,2874 @@
+// ============================================================================
+// MODULE: _base
+// ============================================================================
+// ============================================================================
+// BASE MODULE - Generator, Datasource, and Common Enums
+// ============================================================================
+// This module contains the Prisma configuration and shared enums used across
+// multiple domains. DO NOT add domain-specific models here.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
+  engineType    = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// COMMON ENUMS - Used across multiple domains
+// ============================================================================
+
+enum AIProvider {
+  GOOGLE
+  ANTHROPIC
+  OPENAI
+  XAI
+  OPENROUTER
+  MINIMAX
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  COACH
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+enum ConversationRole {
+  USER
+  ASSISTANT
+  SYSTEM
+  TOOL
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHT
+  MODERATE
+  ACTIVE
+  VERY_ACTIVE
+}
+
+enum DifficultyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum WeightUnit {
+  KG
+  LBS
+}
+
+enum TransactionType {
+  PURCHASE
+  CONSUMPTION
+  REFUND
+  ADMIN_ADJUSTMENT
+  SUBSCRIPTION_RENEWAL
+  PROMOTION
+}
+
+// ============================================================================
+// MODULE: auth
+// ============================================================================
+// ============================================================================
+// AUTH MODULE - Authentication and User Management
+// ============================================================================
+
+model accounts {
+  id                String  @id
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  userId            String? @db.Uuid
+  users             users?  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "accounts_userid_fkey")
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model sessions {
+  id           String   @id
+  sessionToken String   @unique
+  expires      DateTime
+  userId       String?  @db.Uuid
+  users        users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "sessions_userid_fkey")
+
+  @@index([userId])
+}
+
+model users {
+  email                                   String                         @unique @db.Citext
+  name                                    String?
+  password                                String
+  role                                    UserRole                       @default(USER)
+  status                                  UserStatus                     @default(ACTIVE)
+  credits                                 Int                            @default(0)
+  stripeCustomerId                        String?                        @unique
+  emailVerified                           DateTime?
+  image                                   String?
+  createdAt                               DateTime                       @default(now())
+  updatedAt                               DateTime
+  autoRecalculateMacros                   Boolean                        @default(false)
+  healthLastSync                          DateTime?
+  healthPlatform                          String?
+  betaEnabled                             Boolean                        @default(false)
+  invitationId                            String?
+  copilotEnabled                          Boolean                        @default(true)
+  id                                      String                         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planning_plans                          planning_plans[]
+  accounts                                accounts[]
+  affiliate_rewards                       affiliate_rewards[]
+  body_measurements                       body_measurements[]
+  calendar_assignments                    calendar_assignments[]
+  carts                                   carts[]
+  coach_profile                           coach_profiles?
+  coach_vetting_requests                  coach_vetting_requests[]
+  conversations                           conversations[]
+  credit_transactions                     credit_transactions[]
+  exercise_performance_records            exercise_performance_records[]
+  exercise_versions                       exercise_versions[]
+  exercises_exercises_approvedByIdTousers exercises[]                    @relation("exercises_approvedByIdTousers")
+  exercises_exercises_createdByIdTousers  exercises[]                    @relation("exercises_createdByIdTousers")
+  health_active_calories                  health_active_calories[]
+  health_heart_rate                       health_heart_rate[]
+  health_steps                            health_steps[]
+  health_weight                           health_weight[]
+  health_workout                          health_workout[]
+  invitation_uses                         invitation_uses[]
+  created_invitations                     invitations[]                  @relation("CreatedInvitations")
+  marketplace_plans_as_coach              marketplace_plans[]            @relation("CoachMarketplacePlans")
+  meal_templates                          meal_templates[]
+  nutrition_adherence_metrics             nutrition_adherence_metrics[]
+  nutrition_day_logs                      nutrition_day_logs[]
+  nutrition_plans                         nutrition_plans[]
+  nutrition_templates                     nutrition_templates[]
+  password_reset_tokens                   password_reset_tokens[]
+  payments                                payments[]
+  payout_audit_logs                       payout_audit_log[]             @relation("payout_audit_log_user")
+  plan_purchases                          plan_purchases[]
+  plan_ratings                            plan_ratings[]
+  policies_createdByIdTousers             policies[]                     @relation("policies_createdByIdTousers")
+  policies_updatedByIdTousers             policies[]                     @relation("policies_updatedByIdTousers")
+  promotion_uses                          promotion_uses[]
+  referral_attributions_as_referred       referral_attributions[]        @relation("ReferralReferred")
+  referral_attributions_as_referrer       referral_attributions[]        @relation("ReferralReferrer")
+  referral_code                           referral_codes?
+  sessions                                sessions[]
+  subscriptions                           subscriptions[]
+  user_api_keys                           user_api_keys[]
+  user_consents                           user_consents[]
+  user_goals                              user_goals[]
+  user_onboarding_progress                user_onboarding_progress?
+  user_one_rep_max                        user_one_rep_max[]
+  user_payout_profile                     user_payout_profiles?
+  user_profiles                           user_profiles?
+  user_progress_snapshots                 user_progress_snapshots[]
+  user_skills                             user_skills[]
+  user_workflows                          user_workflows[]
+  direct_conversations_as_coach           direct_conversations[]            @relation("CoachDirectConversations")
+  direct_conversations_as_athlete         direct_conversations[]            @relation("AthleteDirectConversations")
+  direct_messages_sent                    direct_messages[]                 @relation("DirectMessageSender")
+  message_reads                           message_reads[]                   @relation("MessageReads")
+  user_memory                             user_memories?                    @relation("UserMemory")
+  user_memory_versions                    user_memory_versions[]            @relation("UserMemoryVersions")
+  user_memory_timeline                    user_memory_timeline[]            @relation("UserMemoryTimeline")
+  invitation                              invitations?                   @relation("UserInvitation", fields: [invitationId], references: [id])
+  workout_programs                        workout_programs[]
+  workout_sessions                        workout_sessions[]
+  workout_templates                       workout_templates[]
+  chat_usage_logs                         chat_usage_logs[]              @relation("ChatUsageLogs")
+  copilot_settings                        copilot_settings?              @relation("CopilotSettings")
+
+  @@index([role])
+  @@index([status])
+  @@index([stripeCustomerId])
+  @@index([email])
+  @@index([betaEnabled])
+  @@index([createdAt], map: "idx_users_created")
+  @@index([role, status], map: "idx_users_role_status")
+  @@index([invitationId])
+}
+
+model verification_tokens {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model password_reset_tokens {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  userId    String?   @db.Uuid
+  user      users?    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "password_reset_tokens_userid_fkey")
+
+  @@index([token])
+  @@index([expiresAt])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: ai
+// ============================================================================
+// ============================================================================
+// AI MODULE - AI Configuration, Prompts, Models, and Chat
+// ============================================================================
+
+enum OperationType {
+  GENERAL_CHAT
+  VISION_ANALYSIS
+  FOOD_LABEL_ANALYSIS
+  MEAL_SEGMENTATION
+  PLAN_GENERATION
+  PLAN_MODIFICATION
+  PLAN_RECALCULATION
+  EXERCISE_GENERATION
+  EXERCISE_AUTOCOMPLETE
+  ANALYTICS_INSIGHTS
+  PROGRESS_ANALYSIS
+  WORKOUT_IMPORT
+}
+
+enum AIChatFeature {
+  MODEL_SELECTOR
+  SPEECH_RECOGNITION
+  CHECKPOINT
+  CONTEXT
+  CONVERSATION
+  SOURCES
+  SUGGESTION
+  TASK
+  ARTIFACT
+  WEB_PREVIEW
+  REASONING
+  QUEUE
+}
+
+model ai_config_history {
+  id             String        @id @default(cuid())
+  operationType  OperationType
+  model          String
+  creditCost     Int
+  maxTokens      Int
+  thinkingBudget Int
+  changedBy      String
+  changeReason   String?
+  createdAt      DateTime      @default(now())
+
+  @@index([createdAt])
+  @@index([operationType])
+}
+
+model ai_operation_configs {
+  id                     String        @id @default(cuid())
+  operationType          OperationType
+  model                  String
+  creditCost             Int
+  maxTokens              Int           @default(65000)
+  thinkingBudget         Int           @default(32000)
+  isActive               Boolean       @default(true)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime
+  recalculateCreditsCost Int?          @default(1)
+
+  @@unique([operationType, model])
+  @@unique([operationType, model], map: "ai_operation_configs_operationtype_model_key")
+  @@index([isActive])
+  @@index([operationType])
+}
+
+model ai_provider_configs {
+  id             String     @id @default(cuid())
+  provider       AIProvider @unique
+  isEnabled      Boolean    @default(true)
+  defaultModel   String?
+  metadata       Json?
+  updatedBy      String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime
+  vercelEnvVarId String?
+}
+
+model ai_framework_configs {
+  id          String   @id @default(cuid())
+  feature     String   @unique
+  isEnabled   Boolean  @default(false)
+  config      Json?
+  description String?
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([feature])
+  @@index([isEnabled])
+}
+
+model ai_framework_config_history {
+  id           String   @id @default(cuid())
+  feature      String
+  isEnabled    Boolean
+  config       Json?
+  changedBy    String
+  changeReason String?
+  createdAt    DateTime @default(now())
+
+  @@index([feature])
+  @@index([createdAt])
+}
+
+model ai_system_prompts {
+  id             String                     @id @default(cuid())
+  agentId        String                     @unique
+  agentCategory  String
+  agentName      String
+  isActive       Boolean                    @default(false)
+  promptTemplate String
+  variables      Json?
+  description    String?
+  defaultPrompt  String
+  updatedBy      String?
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+  history        ai_system_prompt_history[]
+
+  @@index([agentCategory])
+  @@index([isActive])
+  @@index([agentId])
+}
+
+model ai_system_prompt_history {
+  id             String            @id @default(cuid())
+  promptId       String
+  promptTemplate String
+  isActive       Boolean
+  changedBy      String
+  changeReason   String?
+  createdAt      DateTime          @default(now())
+  prompt         ai_system_prompts @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@index([promptId])
+  @@index([createdAt])
+}
+
+model ai_external_models {
+  id                       String   @id @default(cuid())
+  provider                 String   @default("openrouter")
+  modelId                  String   @unique
+  name                     String
+  description              String?
+  contextLength            Int?
+  maxOutputTokens          Int?
+  promptPrice              Decimal  @db.Decimal(10, 6)
+  completionPrice          Decimal  @db.Decimal(10, 6)
+  supportsImages           Boolean  @default(false)
+  supportsReasoning        Boolean  @default(false)
+  reasoningEffort          String?
+  supportsStructuredOutput Boolean  @default(false)
+  isActive                 Boolean  @default(true)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  @@index([provider])
+  @@index([isActive])
+}
+
+model ai_chat_models {
+  id                    String                 @id @default(cuid())
+  provider              AIProvider
+  modelId               String
+  displayName           String
+  description           String?
+  isActive              Boolean                @default(true)
+  isDefault             Boolean                @default(false)
+  maxTokens             Int                    @default(8192)
+  contextWindow         Int                    @default(128000)
+  inputPricePerMillion  Decimal?               @db.Decimal(10, 4)
+  outputPricePerMillion Decimal?               @db.Decimal(10, 4)
+  supportsVision        Boolean                @default(false)
+  supportsTools         Boolean                @default(true)
+  supportsStreaming     Boolean                @default(true)
+  metadata              Json?
+  sortOrder             Int                    @default(0)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @default(now()) @updatedAt
+  modelAccess           ai_chat_model_access[]
+
+  @@unique([provider, modelId])
+  @@index([isActive])
+  @@index([isDefault])
+  @@index([provider])
+  @@index([sortOrder])
+}
+
+model ai_chat_feature_configs {
+  id              String        @id @default(cuid())
+  feature         AIChatFeature @unique
+  isEnabled       Boolean       @default(false)
+  enabledForRoles UserRole[]    @default([])
+  config          Json?
+  description     String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
+
+  @@index([isEnabled])
+}
+
+model ai_chat_model_access {
+  id        String         @id @default(cuid())
+  modelId   String
+  role      UserRole
+  canSelect Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now()) @updatedAt
+  model     ai_chat_models @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  @@unique([modelId, role])
+  @@index([role])
+}
+
+// ============================================================================
+// MODULE: exercise
+// ============================================================================
+// ============================================================================
+// EXERCISE MODULE - Exercise Catalog, Body Parts, Muscles, Equipment
+// ============================================================================
+
+enum ExerciseApprovalStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ExerciseRelationType {
+  ALTERNATIVE
+  COMPLEMENTARY
+  PROGRESSION
+}
+
+enum MuscleRole {
+  PRIMARY
+  SECONDARY
+}
+
+model body_part_translations {
+  id          String     @id
+  locale      String     @db.VarChar(8)
+  name        String     @db.VarChar(255)
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  bodyPartId  String
+  body_parts  body_parts @relation(fields: [bodyPartId], references: [id], onDelete: Cascade)
+
+  @@unique([bodyPartId, locale])
+  @@index([bodyPartId])
+  @@index([locale])
+}
+
+model body_parts {
+  name                   String                   @unique @db.VarChar(64)
+  slug                   String                   @unique
+  imageUrl               String?
+  id                     String                   @id
+  body_part_translations body_part_translations[]
+  exercise_body_parts    exercise_body_parts[]
+
+  @@index([name])
+}
+
+model equipment_translations {
+  id          String     @id
+  locale      String     @db.VarChar(8)
+  name        String     @db.VarChar(255)
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  equipmentId String
+  equipments  equipments @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+
+  @@unique([equipmentId, locale])
+  @@index([equipmentId])
+  @@index([locale])
+}
+
+model equipments {
+  name                   String                   @unique @db.VarChar(64)
+  slug                   String                   @unique
+  imageUrl               String?
+  id                     String                   @id
+  equipment_translations equipment_translations[]
+  exercise_equipments    exercise_equipments[]
+
+  @@index([name])
+}
+
+model exercise_body_parts {
+  exerciseId String
+  bodyPartId String
+  body_parts body_parts @relation(fields: [bodyPartId], references: [id], onDelete: Cascade)
+  exercises  exercises  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, bodyPartId])
+  @@index([bodyPartId])
+}
+
+model exercise_equipments {
+  exerciseId  String
+  equipmentId String
+  equipments  equipments @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  exercises   exercises  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, equipmentId])
+  @@index([equipmentId])
+}
+
+model exercise_muscles {
+  exerciseId String
+  role       MuscleRole
+  muscleId   String
+  exercises  exercises  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  muscles    muscles    @relation(fields: [muscleId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, muscleId, role])
+  @@index([muscleId])
+  @@index([role])
+}
+
+model exercise_relations {
+  id                                             String               @id
+  fromId                                         String
+  toId                                           String
+  relation                                       ExerciseRelationType @default(ALTERNATIVE)
+  createdAt                                      DateTime             @default(now())
+  exercises_exercise_relations_fromIdToexercises exercises            @relation("exercise_relations_fromIdToexercises", fields: [fromId], references: [id], onDelete: Cascade)
+  exercises_exercise_relations_toIdToexercises   exercises            @relation("exercise_relations_toIdToexercises", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@unique([fromId, toId, relation])
+  @@index([toId])
+}
+
+model exercise_translations {
+  id          String    @id
+  exerciseId  String
+  locale      String    @db.VarChar(8)
+  name        String    @db.VarChar(255)
+  shortName   String?   @db.VarChar(128)
+  description String?
+  searchTerms String[]  @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  exercises   exercises @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, locale])
+  @@index([exerciseId])
+  @@index([locale])
+  @@index([name])
+  @@index([exerciseId, locale, name], map: "idx_exercise_translations_covering")
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_exercise_translations_name_trgm", type: Gin)
+}
+
+model exercise_type_translations {
+  id             String         @id
+  locale         String         @db.VarChar(8)
+  name           String         @db.VarChar(255)
+  description    String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime
+  exerciseTypeId String
+  exercise_types exercise_types @relation(fields: [exerciseTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseTypeId, locale])
+  @@index([exerciseTypeId])
+  @@index([locale])
+}
+
+model exercise_types {
+  name                       String                       @unique @db.VarChar(64)
+  imageUrl                   String?
+  id                         String                       @id
+  exercise_type_translations exercise_type_translations[]
+  exercises                  exercises[]
+
+  @@index([name])
+}
+
+model exercise_versions {
+  id          String    @id @default(cuid())
+  exerciseId  String
+  version     Int
+  diff        Json
+  baseVersion Int?
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+  createdById String?   @db.Uuid
+  users       users?    @relation(fields: [createdById], references: [id], onDelete: NoAction, map: "exercise_versions_createdbyid_fkey")
+  exercises   exercises @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, version])
+  @@index([createdAt])
+  @@index([exerciseId])
+  @@index([createdById])
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model exercises {
+  id                                  String                         @id @db.VarChar(40)
+  slug                                String                         @unique @db.VarChar(128)
+  overview                            String?
+  imageUrl                            String?
+  videoUrl                            String?
+  keywords                            String[]                       @default([])
+  instructions                        String[]                       @default([])
+  exerciseTips                        String[]                       @default([])
+  variations                          String[]                       @default([])
+  approvalStatus                      ExerciseApprovalStatus         @default(PENDING)
+  approvedAt                          DateTime?
+  isUserGenerated                     Boolean                        @default(false)
+  version                             Int                            @default(1)
+  createdAt                           DateTime                       @default(now())
+  updatedAt                           DateTime
+  exerciseTypeId                      String?
+  createdById                         String?                        @db.Uuid
+  approvedById                        String?                        @db.Uuid
+  exercise_body_parts                 exercise_body_parts[]
+  exercise_equipments                 exercise_equipments[]
+  exercise_muscles                    exercise_muscles[]
+  exercise_performance_records        exercise_performance_records[]
+  relatedFrom                         exercise_relations[]           @relation("exercise_relations_fromIdToexercises")
+  relatedTo                           exercise_relations[]           @relation("exercise_relations_toIdToexercises")
+  exercise_translations               exercise_translations[]
+  exercise_versions                   exercise_versions[]
+  users_exercises_approvedByIdTousers users?                         @relation("exercises_approvedByIdTousers", fields: [approvedById], references: [id], onDelete: NoAction, map: "exercises_approvedbyid_fkey")
+  users_exercises_createdByIdTousers  users?                         @relation("exercises_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, map: "exercises_createdbyid_fkey")
+  exercise_types                      exercise_types?                @relation(fields: [exerciseTypeId], references: [id])
+  user_one_rep_max                    user_one_rep_max[]
+
+  @@index([approvalStatus])
+  @@index([createdAt])
+  @@index([exerciseTypeId])
+  @@index([approvalStatus, createdAt(sort: Desc)], map: "idx_exercises_approval_created")
+  @@index([approvedById])
+  @@index([createdById])
+}
+
+model muscle_translations {
+  id          String   @id
+  locale      String   @db.VarChar(8)
+  name        String   @db.VarChar(255)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  muscleId    String
+  muscles     muscles  @relation(fields: [muscleId], references: [id], onDelete: Cascade)
+
+  @@unique([muscleId, locale])
+  @@index([locale])
+  @@index([muscleId])
+}
+
+model muscles {
+  name                String                @unique @db.VarChar(64)
+  slug                String                @unique
+  imageUrl            String?
+  id                  String                @id
+  exercise_muscles    exercise_muscles[]
+  muscle_translations muscle_translations[]
+
+  @@index([name])
+}
+
+// ============================================================================
+// MODULE: workout
+// ============================================================================
+// ============================================================================
+// WORKOUT MODULE - Workout Programs, Sessions, Goals, Performance Records
+// ============================================================================
+
+enum WorkoutGoal {
+  STRENGTH
+  HYPERTROPHY
+  ENDURANCE
+  MOBILITY
+  GENERAL_FITNESS
+}
+
+enum WorkoutStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+model workout_goal_translations {
+  id            String        @id
+  workoutGoalId String
+  locale        String        @db.VarChar(8)
+  name          String        @db.VarChar(255)
+  description   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now())
+  workout_goals workout_goals @relation(fields: [workoutGoalId], references: [id], onDelete: Cascade)
+
+  @@unique([workoutGoalId, locale])
+  @@index([locale])
+  @@index([workoutGoalId])
+}
+
+model workout_goals {
+  id                        String                      @id
+  name                      String                      @unique @db.VarChar(64)
+  slug                      String                      @unique
+  workout_goal_translations workout_goal_translations[]
+
+  @@index([name])
+}
+
+model workout_program_versions {
+  id               String           @id
+  programId        String
+  version          Int
+  name             String
+  description      String
+  difficulty       DifficultyLevel
+  durationWeeks    Int
+  goals            String[]
+  status           WorkoutStatus
+  weeks            Json
+  metadata         Json?
+  createdBy        String
+  createdAt        DateTime         @default(now())
+  workout_programs workout_programs @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, version])
+  @@index([createdAt])
+  @@index([programId])
+}
+
+model workout_programs {
+  id                       String                     @id
+  name                     String
+  description              String
+  difficulty               DifficultyLevel
+  durationWeeks            Int
+  goals                    String[]
+  status                   WorkoutStatus              @default(ACTIVE)
+  weeks                    Json
+  metadata                 Json?
+  version                  Int                        @default(1)
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime
+  userId                   String?                    @db.Uuid
+  marketplace_plan         marketplace_plans?
+  workout_program_versions workout_program_versions[]
+  users                    users?                     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "workout_programs_userid_fkey")
+  workout_sessions         workout_sessions[]
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([userId, createdAt(sort: Desc)], map: "idx_workout_programs_user_created")
+  @@index([userId, status], map: "idx_workout_programs_user_status")
+  @@index([userId])
+  @@index([metadata], map: "idx_workout_programs_metadata_gin", type: Gin)
+  @@index([weeks], map: "idx_workout_programs_weeks_gin", type: Gin)
+}
+
+model workout_sessions {
+  id                           String                         @id @default(cuid())
+  programId                    String
+  weekNumber                   Int
+  dayNumber                    Int
+  startedAt                    DateTime                       @default(now())
+  completedAt                  DateTime?
+  exercises                    Json
+  notes                        String?
+  createdAt                    DateTime                       @default(now())
+  updatedAt                    DateTime                       @default(now())
+  userId                       String?                        @db.Uuid
+  exercise_performance_records exercise_performance_records[]
+  workout_programs             workout_programs               @relation(fields: [programId], references: [id], onDelete: Cascade)
+  users                        users?                         @relation(fields: [userId], references: [id], onDelete: Cascade, map: "workout_sessions_userid_fkey")
+
+  @@index([programId])
+  @@index([startedAt])
+  @@index([completedAt])
+  @@index([programId, weekNumber, dayNumber], map: "idx_workout_sessions_prog_week_day")
+  @@index([userId, startedAt(sort: Desc)], map: "idx_workout_sessions_user_started")
+  @@index([userId])
+  @@index([programId, weekNumber, dayNumber, startedAt, completedAt], map: "idx_workout_sessions_covering")
+  @@index([exercises], map: "idx_workout_sessions_exercises_gin", type: Gin)
+}
+
+model exercise_performance_records {
+  id                  String            @id @default(cuid())
+  exerciseId          String
+  sessionId           String?
+  date                DateTime          @db.Date
+  sets                Int
+  reps                Int
+  weight              Decimal           @db.Decimal(6, 2)
+  volume              Decimal           @db.Decimal(8, 2)
+  rpe                 Int?
+  notes               String?
+  createdAt           DateTime          @default(now())
+  repsMax             Int?
+  rpeMax              Int?
+  weightMax           Decimal?          @db.Decimal(6, 2)
+  intensityPercent    Int?
+  intensityPercentMax Int?
+  userId              String?           @db.Uuid
+  exercises           exercises         @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  workout_sessions    workout_sessions? @relation(fields: [sessionId], references: [id])
+  users               users?            @relation(fields: [userId], references: [id], onDelete: Cascade, map: "exercise_performance_records_userid_fkey")
+
+  @@index([exerciseId])
+  @@index([date])
+  @@index([userId])
+  @@index([userId, date(sort: Desc)], map: "idx_exercise_perf_user_date")
+  @@index([userId, exerciseId], map: "idx_exercise_perf_user_exercise")
+}
+
+model user_one_rep_max {
+  id                        String                      @id
+  exerciseId                String
+  oneRepMax                 Decimal                     @db.Decimal(5, 2)
+  notes                     String?
+  lastUpdated               DateTime                    @default(now())
+  createdAt                 DateTime                    @default(now())
+  version                   Int                         @default(1)
+  userId                    String?                     @db.Uuid
+  exercises                 exercises                   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  users                     users?                      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_one_rep_max_userid_fkey")
+  user_one_rep_max_versions user_one_rep_max_versions[]
+
+  @@index([exerciseId])
+  @@index([userId, exerciseId], map: "idx_user_one_rep_max_user_exercise")
+  @@index([userId])
+}
+
+model user_one_rep_max_versions {
+  id               String            @id
+  maxId            String
+  userId           String
+  exerciseId       String
+  oneRepMax        Decimal           @db.Decimal(5, 2)
+  notes            String?
+  version          Int
+  createdBy        String
+  createdAt        DateTime          @default(now())
+  userOneRepMaxId  String?
+  user_one_rep_max user_one_rep_max? @relation(fields: [userOneRepMaxId], references: [id])
+
+  @@unique([maxId, version])
+  @@index([createdAt])
+  @@index([exerciseId])
+  @@index([maxId])
+  @@index([userId])
+  @@index([userOneRepMaxId])
+}
+
+// ============================================================================
+// MODULE: nutrition
+// ============================================================================
+// ============================================================================
+// NUTRITION MODULE - Nutrition Plans, Day Logs, Adherence Metrics, Goals
+// ============================================================================
+
+enum NutritionStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+model nutrition_plan_versions {
+  id               String          @id
+  planId           String
+  version          Int
+  name             String
+  description      String
+  durationWeeks    Int
+  targetMacros     Json
+  restrictions     String[]
+  preferences      String[]
+  status           NutritionStatus
+  metadata         Json?
+  createdBy        String
+  createdAt        DateTime        @default(now())
+  goals            String[]
+  weeks            Json
+  adaptations      Json?
+  personalizedPlan Json?
+  userProfile      Json?
+  nutrition_plans  nutrition_plans @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, version])
+  @@index([createdAt])
+  @@index([planId])
+}
+
+model nutrition_plans {
+  id                          String                        @id
+  name                        String
+  description                 String
+  durationWeeks               Int
+  targetMacros                Json
+  restrictions                String[]
+  preferences                 String[]
+  status                      NutritionStatus               @default(ACTIVE)
+  metadata                    Json?
+  version                     Int                           @default(1)
+  createdAt                   DateTime                      @default(now())
+  updatedAt                   DateTime
+  goals                       String[]
+  weeks                       Json
+  adaptations                 Json?
+  personalizedPlan            Json?
+  userProfile                 Json?
+  userId                      String?                       @db.Uuid
+  marketplace_plan            marketplace_plans?
+  nutrition_adherence_metrics nutrition_adherence_metrics[]
+  nutrition_day_logs          nutrition_day_logs[]
+  nutrition_plan_versions     nutrition_plan_versions[]
+  users                       users?                        @relation(fields: [userId], references: [id], onDelete: Cascade, map: "nutrition_plans_userid_fkey")
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([userId, createdAt(sort: Desc)], map: "idx_nutrition_plans_user_created")
+  @@index([userId, status], map: "idx_nutrition_plans_user_status")
+  @@index([userId])
+  @@index([targetMacros], map: "idx_nutrition_plans_targetmacros_gin", type: Gin)
+  @@index([userProfile], map: "idx_nutrition_plans_userprofile_gin", type: Gin)
+  @@index([weeks], map: "idx_nutrition_plans_weeks_gin", type: Gin)
+}
+
+model nutrition_day_logs {
+  id                String          @id @default(cuid())
+  planId            String
+  weekNumber        Int
+  dayNumber         Int
+  date              DateTime        @db.Date
+  meals             Json
+  actualDailyMacros Json?
+  waterIntake       Decimal?        @db.Decimal(4, 2)
+  notes             String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @default(now())
+  userId            String?         @db.Uuid
+  nutrition_plans   nutrition_plans @relation(fields: [planId], references: [id], onDelete: Cascade)
+  users             users?          @relation(fields: [userId], references: [id], onDelete: Cascade, map: "nutrition_day_logs_userid_fkey")
+
+  @@index([planId])
+  @@index([date])
+  @@index([planId, weekNumber], map: "idx_nutrition_day_logs_plan_week")
+  @@index([userId, date(sort: Desc)], map: "idx_nutrition_day_logs_user_date")
+  @@index([userId])
+}
+
+model nutrition_adherence_metrics {
+  id               String          @id @default(cuid())
+  planId           String
+  weekNumber       Int
+  startDate        DateTime        @db.Date
+  endDate          DateTime        @db.Date
+  daysLogged       Int
+  totalDays        Int
+  adherenceRate    Decimal         @db.Decimal(5, 2)
+  avgCalories      Decimal         @db.Decimal(6, 2)
+  avgProtein       Decimal         @db.Decimal(6, 2)
+  avgCarbs         Decimal         @db.Decimal(6, 2)
+  avgFats          Decimal         @db.Decimal(6, 2)
+  avgWaterIntake   Decimal?        @db.Decimal(4, 2)
+  caloriesVariance Decimal         @db.Decimal(6, 2)
+  proteinVariance  Decimal         @db.Decimal(6, 2)
+  carbsVariance    Decimal         @db.Decimal(6, 2)
+  fatsVariance     Decimal         @db.Decimal(6, 2)
+  createdAt        DateTime        @default(now())
+  userId           String?         @db.Uuid
+  nutrition_plans  nutrition_plans @relation(fields: [planId], references: [id], onDelete: Cascade)
+  users            users?          @relation(fields: [userId], references: [id], onDelete: Cascade, map: "nutrition_adherence_metrics_userid_fkey")
+
+  @@index([planId])
+  @@index([startDate])
+  @@index([planId, weekNumber], map: "idx_nutrition_adherence_plan_week")
+  @@index([userId])
+}
+
+model nutrition_goals {
+  id                          String                        @id @default(cuid())
+  name                        String                        @unique @db.VarChar(64)
+  slug                        String                        @unique
+  nutrition_goal_translations nutrition_goal_translations[]
+}
+
+model nutrition_goal_translations {
+  id              String          @id @default(cuid())
+  nutritionGoalId String
+  locale          String          @db.VarChar(8)
+  name            String          @db.VarChar(255)
+  description     String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @default(now())
+  nutrition_goals nutrition_goals @relation(fields: [nutritionGoalId], references: [id], onDelete: Cascade)
+
+  @@unique([nutritionGoalId, locale])
+  @@index([nutritionGoalId])
+  @@index([locale])
+}
+
+// ============================================================================
+// MODULE: food
+// ============================================================================
+// ============================================================================
+// FOOD MODULE - Food Items, Brands, Categories, Translations
+// ============================================================================
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model food_items {
+  id                     String                   @id @default(cuid())
+  name                   String                   @db.VarChar(255)
+  nameNormalized         String                   @db.VarChar(255)
+  barcode                String?                  @unique @db.VarChar(128)
+  macrosPer100g          Json
+  servingSize            Decimal                  @db.Decimal(6, 2)
+  unit                   String                   @default("g")
+  metadata               Json?
+  imageUrl               String?                  @db.VarChar(512)
+  brandId                String?
+  proteinPct             Decimal                  @db.Decimal(5, 2)
+  carbPct                Decimal                  @db.Decimal(5, 2)
+  fatPct                 Decimal                  @db.Decimal(5, 2)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  mainMacro              Json
+  categories             food_item_categories[]
+  food_item_translations food_item_translations[]
+  brand                  food_brands?             @relation(fields: [brandId], references: [id])
+
+  @@index([name])
+  @@index([nameNormalized])
+  @@index([barcode])
+  @@index([brandId])
+  @@index([proteinPct])
+  @@index([carbPct])
+  @@index([fatPct])
+  @@index([createdAt])
+  @@index([createdAt, name])
+  @@index([id, name, nameNormalized, proteinPct, carbPct, fatPct], map: "idx_food_items_covering")
+  @@index([macrosPer100g], map: "idx_food_items_macros_gin", type: Gin)
+  @@index([metadata], map: "idx_food_items_metadata_gin", type: Gin)
+  @@index([nameNormalized(ops: raw("gin_trgm_ops"))], map: "idx_food_items_name_normalized_trgm", type: Gin)
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_food_items_name_trgm", type: Gin)
+}
+
+model food_item_translations {
+  id          String     @id @default(cuid())
+  foodItemId  String
+  locale      String     @db.VarChar(8)
+  name        String     @db.VarChar(255)
+  description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  food_items  food_items @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+
+  @@unique([foodItemId, locale])
+  @@index([foodItemId])
+  @@index([locale])
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_food_item_translations_name_trgm", type: Gin)
+}
+
+model food_brands {
+  id             String       @id @default(cuid())
+  name           String       @unique @db.VarChar(128)
+  nameNormalized String       @db.VarChar(128)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  items          food_items[]
+
+  @@index([nameNormalized])
+}
+
+model food_categories {
+  id        String                 @id @default(cuid())
+  name      String                 @unique @db.VarChar(128)
+  slug      String                 @unique @db.VarChar(128)
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  items     food_item_categories[]
+
+  @@index([slug])
+}
+
+model food_item_categories {
+  foodItemId      String
+  categoryId      String
+  createdAt       DateTime        @default(now())
+  food_categories food_categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  food_items      food_items      @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+
+  @@id([foodItemId, categoryId])
+  @@index([categoryId])
+}
+
+// ============================================================================
+// MODULE: user_profile
+// ============================================================================
+// ============================================================================
+// USER PROFILE MODULE - User Profiles, Body Measurements, Progress Snapshots, Goals
+// ============================================================================
+
+enum DietType {
+  OMNIVORE
+  VEGETARIAN
+  VEGAN
+  PESCATARIAN
+  KETO
+  PALEO
+  MEDITERRANEAN
+}
+
+model user_profiles {
+  id                  String         @id
+  age                 Int?
+  sex                 Sex?
+  heightCm            Int?
+  weightKg            Decimal?       @db.Decimal(5, 2)
+  activityLevel       ActivityLevel? @default(MODERATE)
+  trainingFrequency   Int?           @default(3)
+  dailyCalories       Int?
+  workoutGoal         WorkoutGoal?   @default(GENERAL_FITNESS)
+  equipment           String[]       @default([])
+  dietaryRestrictions String[]       @default([])
+  dietaryPreferences  String[]       @default([])
+  healthNotes         String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @default(now())
+  weightUnit          WeightUnit     @default(KG)
+  workoutGoals        String[]       @default([])
+  nutritionGoals      String[]       @default([])
+  dietType            DietType?      @default(OMNIVORE)
+  userId              String?        @unique(map: "user_profiles_userid_key") @db.Uuid
+  users               users?         @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_profiles_userid_fkey")
+
+  @@index([dietaryRestrictions], map: "idx_user_profiles_dietary_restrictions_gin", type: Gin)
+  @@index([equipment], map: "idx_user_profiles_equipment_gin", type: Gin)
+  @@index([nutritionGoals], map: "idx_user_profiles_nutrition_goals_gin", type: Gin)
+  @@index([workoutGoals], map: "idx_user_profiles_workout_goals_gin", type: Gin)
+}
+
+model body_measurements {
+  id         String   @id @default(cuid())
+  date       DateTime @db.Date
+  weight     Decimal? @db.Decimal(5, 2)
+  bodyFat    Decimal? @db.Decimal(4, 2)
+  muscleMass Decimal? @db.Decimal(5, 2)
+  chest      Decimal? @db.Decimal(5, 2)
+  waist      Decimal? @db.Decimal(5, 2)
+  hips       Decimal? @db.Decimal(5, 2)
+  thigh      Decimal? @db.Decimal(5, 2)
+  arm        Decimal? @db.Decimal(5, 2)
+  calf       Decimal? @db.Decimal(5, 2)
+  neck       Decimal? @db.Decimal(5, 2)
+  shoulders  Decimal? @db.Decimal(5, 2)
+  notes      String?
+  photos     String[] @default([])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  userId     String?  @db.Uuid
+  users      users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "body_measurements_userid_fkey")
+
+  @@index([date])
+  @@index([userId])
+  @@index([userId, date(sort: Desc)], map: "idx_body_measurements_user_date")
+}
+
+model user_progress_snapshots {
+  id                  String   @id @default(cuid())
+  date                DateTime @db.Date
+  weight              Decimal? @db.Decimal(5, 2)
+  bodyFat             Decimal? @db.Decimal(4, 2)
+  muscleMass          Decimal? @db.Decimal(5, 2)
+  workoutSessions7d   Int      @default(0)
+  workoutSessions30d  Int      @default(0)
+  avgVolumePerSession Decimal? @db.Decimal(8, 2)
+  strengthProgress    Json?
+  nutritionLogs7d     Int      @default(0)
+  nutritionLogs30d    Int      @default(0)
+  avgCalories         Decimal? @db.Decimal(6, 2)
+  avgProtein          Decimal? @db.Decimal(6, 2)
+  avgCarbs            Decimal? @db.Decimal(6, 2)
+  avgFats             Decimal? @db.Decimal(6, 2)
+  adherenceRate       Decimal? @db.Decimal(5, 2)
+  activeGoals         String[] @default([])
+  completedGoals      String[] @default([])
+  createdAt           DateTime @default(now())
+  userId              String?  @db.Uuid
+  users               users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_progress_snapshots_userid_fkey")
+
+  @@index([date])
+  @@index([userId])
+}
+
+model user_goals {
+  id            String    @id @default(cuid())
+  type          String
+  target        Json
+  deadline      DateTime? @db.Date
+  status        String    @default("ACTIVE")
+  startDate     DateTime  @db.Date
+  completedDate DateTime? @db.Date
+  progressLogs  Json[]
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
+  userId        String?   @db.Uuid
+  users         users?    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_goals_userid_fkey")
+
+  @@index([status])
+  @@index([deadline])
+  @@index([userId, status], map: "idx_user_goals_user_status")
+  @@index([userId])
+}
+
+model user_onboarding_progress {
+  id              String    @id @default(cuid())
+  isCompleted     Boolean   @default(false)
+  currentStep     Int       @default(1)
+  completedSteps  Json      @default("{}")
+  skippedSteps    Json      @default("{}")
+  metadata        Json?
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  lastInteraction DateTime  @updatedAt
+  userId          String?   @unique(map: "user_onboarding_progress_userid_key") @db.Uuid
+  user            users?    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_onboarding_progress_userid_fkey")
+
+  @@index([isCompleted])
+  @@index([lastInteraction])
+}
+
+/// User-created custom skills
+model user_skills {
+  id             String    @id @default(cuid())
+  name           String
+  description    String?
+  version        String    @default("1.0.0")
+  category       String?
+  tags           Json?     @default("[]")
+  inputSchema    Json
+  outputSchema   Json?
+  implementation Json
+  generatedCode  String?
+  codeHash       String?
+  isPublic       Boolean   @default(false)
+  isActive       Boolean   @default(true)
+  deployedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  userId         String?   @db.Uuid
+  user           users?    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_skills_userid_fkey")
+
+  @@index([category])
+  @@index([isActive])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+/// User-created agent workflows  
+model user_workflows {
+  id          String           @id @default(cuid())
+  name        String
+  description String?
+  version     String           @default("1.0.0")
+  domain      String?
+  entryNodeId String?
+  isPublic    Boolean          @default(false)
+  isActive    Boolean          @default(true)
+  deployedAt  DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  userId      String?          @db.Uuid
+  user        users?           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_workflows_userid_fkey")
+  edges       workflow_edges[]
+  nodes       workflow_nodes[]
+
+  @@index([domain])
+  @@index([isActive])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+/// Workflow graph nodes
+model workflow_nodes {
+  id            String           @id @default(cuid())
+  workflowId    String
+  type          String
+  label         String
+  position      Json
+  config        Json
+  order         Int?             @default(0)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  outgoingEdges workflow_edges[] @relation("SourceNode")
+  incomingEdges workflow_edges[] @relation("TargetNode")
+  workflow      user_workflows   @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId])
+  @@index([type])
+}
+
+/// Workflow graph edges (connections)
+model workflow_edges {
+  id         String         @id @default(cuid())
+  workflowId String
+  sourceId   String
+  targetId   String
+  label      String?
+  condition  Json?
+  order      Int?           @default(0)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  source     workflow_nodes @relation("SourceNode", fields: [sourceId], references: [id], onDelete: Cascade)
+  target     workflow_nodes @relation("TargetNode", fields: [targetId], references: [id], onDelete: Cascade)
+  workflow   user_workflows @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId])
+  @@index([sourceId])
+  @@index([targetId])
+}
+
+// ============================================================================
+// MODULE: payments
+// ============================================================================
+// ============================================================================
+// PAYMENTS MODULE - Payments, Subscriptions, Credit Transactions, Promotions
+// ============================================================================
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentType {
+  SUBSCRIPTION
+  CREDITS
+  MARKETPLACE
+}
+
+enum SubscriptionPlan {
+  PLUS
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PAST_DUE
+}
+
+enum PromotionType {
+  STRIPE_COUPON
+  BONUS_CREDITS
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+model payments {
+  id                    String           @id
+  subscriptionId        String?
+  stripePaymentId       String           @unique
+  amount                Int
+  currency              String           @default("eur")
+  status                PaymentStatus    @default(PENDING)
+  type                  PaymentType
+  creditsAdded          Int?
+  metadata              Json?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime
+  stripePaymentIntentId String?          @unique
+  userId                String?          @db.Uuid
+  subscriptions         subscriptions?   @relation(fields: [subscriptionId], references: [id])
+  users                 users?           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "payments_userid_fkey")
+  promotion_uses        promotion_uses[]
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([stripePaymentIntentId])
+  @@index([metadata], map: "idx_payments_metadata_gin", type: Gin)
+  @@index([userId, createdAt(sort: Desc)], map: "idx_payments_user_created")
+  @@index([userId, status], map: "idx_payments_user_status")
+  @@index([userId])
+  @@index([subscriptionId])
+}
+
+model subscriptions {
+  id                   String             @id
+  plan                 SubscriptionPlan
+  status               SubscriptionStatus @default(ACTIVE)
+  stripeSubscriptionId String?            @unique
+  stripeCustomerId     String?
+  stripePriceId        String?
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime
+  userId               String?            @db.Uuid
+  payments             payments[]
+  users                users?             @relation(fields: [userId], references: [id], onDelete: Cascade, map: "subscriptions_userid_fkey")
+
+  @@index([status])
+  @@index([stripeSubscriptionId])
+  @@index([userId, status], map: "idx_subscriptions_user_status")
+  @@index([userId])
+}
+
+model credit_transactions {
+  id           String          @id @default(cuid())
+  amount       Int
+  type         TransactionType
+  description  String
+  metadata     Json?
+  balanceAfter Int
+  createdAt    DateTime        @default(now())
+  userId       String?         @db.Uuid
+  users        users?          @relation(fields: [userId], references: [id], onDelete: Cascade, map: "credit_transactions_userid_fkey")
+
+  @@index([createdAt])
+  @@index([type])
+  @@index([userId])
+}
+
+model promotions {
+  id             String           @id @default(cuid())
+  code           String           @unique
+  type           PromotionType
+  stripeCouponId String?
+  discountType   DiscountType?
+  discountValue  Decimal?
+  bonusCredits   Int?
+  maxUses        Int?
+  maxUsesPerUser Int              @default(1)
+  validFrom      DateTime
+  validUntil     DateTime?
+  isActive       Boolean          @default(true)
+  description    String?
+  createdBy      String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  promotion_uses promotion_uses[]
+
+  @@index([code])
+  @@index([isActive])
+  @@index([validFrom])
+  @@index([validUntil])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model promotion_uses {
+  id                      String     @id @default(cuid())
+  promotionId             String
+  paymentId               String?
+  stripeCheckoutSessionId String?
+  appliedAt               DateTime   @default(now())
+  metadata                Json?
+  userId                  String?    @db.Uuid
+  payments                payments?  @relation(fields: [paymentId], references: [id])
+  promotions              promotions @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  users                   users?     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "promotion_uses_userid_fkey")
+
+  @@index([promotionId])
+  @@index([paymentId])
+  @@index([appliedAt])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: checkout
+// ============================================================================
+// ============================================================================
+// CHECKOUT MODULE - Carts, Cart Items, Checkout Settings, Offer Rules, Events
+// ============================================================================
+
+enum CartStatus {
+  ACTIVE
+  CHECKOUT_IN_PROGRESS
+  COMPLETED
+  ABANDONED
+  EXPIRED
+}
+
+enum CartItemType {
+  CREDIT_PACK
+  MARKETPLACE_PLAN
+  SUBSCRIPTION
+}
+
+enum CheckoutOfferType {
+  CROSS_SELL
+  UPSELL
+}
+
+enum CheckoutOfferPlacement {
+  CART
+  CHECKOUT
+  POST_PURCHASE
+}
+
+model carts {
+  id            String      @id @default(cuid())
+  userId        String      @db.Uuid
+  status        CartStatus  @default(ACTIVE)
+  currency      String      @default("EUR") @db.VarChar(3)
+  subtotal      Decimal     @default(0) @db.Decimal(10, 2)
+  discountTotal Decimal     @default(0) @db.Decimal(10, 2)
+  total         Decimal     @default(0) @db.Decimal(10, 2)
+  promoCode     String?
+  referralCode  String?
+  metadata      Json?
+  lastSeenAt    DateTime    @default(now())
+  expiresAt     DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  completedAt   DateTime?
+  cart_items    cart_items[]
+  user          users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([lastSeenAt])
+  @@index([userId, status])
+}
+
+model cart_items {
+  id          String       @id @default(cuid())
+  cartId      String
+  itemType    CartItemType
+  itemId      String
+  quantity    Int          @default(1)
+  unitPrice   Decimal      @db.Decimal(10, 2)
+  currency    String       @default("EUR") @db.VarChar(3)
+  title       String
+  description String?
+  image       String?
+  metadata    Json?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  cart        carts        @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, itemType, itemId])
+  @@index([cartId])
+  @@index([itemType])
+}
+
+model checkout_settings {
+  id                       String   @id @default("default")
+  oneClickEnabled          Boolean  @default(true)
+  linkEnabled              Boolean  @default(true)
+  applePayEnabled          Boolean  @default(true)
+  googlePayEnabled         Boolean  @default(true)
+  savePaymentMethodDefault Boolean  @default(true)
+  autofillEnabled          Boolean  @default(true)
+  currency                 String   @default("EUR") @db.VarChar(3)
+  cartExpirationHours      Int      @default(72)
+  abandonedCartReminder    Boolean  @default(true)
+  reminderDelayHours       Int      @default(24)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+}
+
+model checkout_offer_rules {
+  id           String                  @id @default(cuid())
+  name         String
+  type         CheckoutOfferType
+  placement    CheckoutOfferPlacement  @default(CHECKOUT)
+  priority     Int                     @default(100)
+  isActive     Boolean                 @default(true)
+  audience     Json?
+  conditions   Json?
+  offerPayload Json?
+  layout       Json?
+  ctaLabel     String?
+  startsAt     DateTime?
+  endsAt       DateTime?
+  createdBy    String
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  @@index([isActive])
+  @@index([placement])
+  @@index([priority])
+  @@index([startsAt])
+  @@index([endsAt])
+}
+
+model checkout_events {
+  id        String   @id @default(cuid())
+  type      String
+  cartId    String?
+  userId    String?  @db.Uuid
+  offerId   String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([cartId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// MODULE: affiliate
+// ============================================================================
+// ============================================================================
+// AFFILIATE MODULE - Affiliate Programs, Referral Codes, Rewards, Payouts
+// ============================================================================
+
+enum AffiliateRewardType {
+  REGISTRATION_CREDIT
+  SUBSCRIPTION_COMMISSION
+  BONUS
+}
+
+enum AffiliateRewardStatus {
+  PENDING
+  CLEARED
+  CANCELLED
+}
+
+enum ReferralAttributionStatus {
+  PENDING
+  ACTIVE
+  CANCELLED
+}
+
+model affiliate_programs {
+  id                       String                     @id @default(cuid())
+  name                     String
+  isActive                 Boolean                    @default(false)
+  registrationCredit       Int                        @default(0)
+  baseCommissionRate       Decimal                    @default(0) @db.Decimal(10, 4)
+  maxLevels                Int                        @default(1)
+  subscriptionGraceDays    Int                        @default(3)
+  rewardPendingDays        Int                        @default(14)
+  lifetimeCommissions      Boolean                    @default(true)
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+  affiliate_program_levels affiliate_program_levels[]
+  affiliate_rewards        affiliate_rewards[]
+  referral_attributions    referral_attributions[]
+  referral_codes           referral_codes[]
+}
+
+model affiliate_program_levels {
+  id                 String             @id @default(cuid())
+  programId          String
+  level              Int
+  commissionRate     Decimal            @default(0) @db.Decimal(10, 4)
+  creditReward       Int                @default(0)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  affiliate_programs affiliate_programs @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, level])
+  @@index([programId])
+}
+
+model referral_codes {
+  id                    String                  @id @default(cuid())
+  programId             String
+  code                  String                  @unique @db.Citext
+  isActive              Boolean                 @default(true)
+  metadata              Json?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  userId                String?                 @unique(map: "referral_codes_userid_key") @db.Uuid
+  referral_attributions referral_attributions[]
+  affiliate_programs    affiliate_programs      @relation(fields: [programId], references: [id], onDelete: Cascade)
+  users                 users?                  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "referral_codes_userid_fkey")
+
+  @@index([programId])
+}
+
+model referral_attributions {
+  id                  String                    @id @default(cuid())
+  programId           String
+  referralCodeId      String
+  level               Int                       @default(1)
+  status              ReferralAttributionStatus @default(PENDING)
+  attributedAt        DateTime                  @default(now())
+  activatedAt         DateTime?
+  cancelledAt         DateTime?
+  graceEndAt          DateTime?
+  parentAttributionId String?
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @updatedAt
+  referrerUserId      String?                   @db.Uuid
+  referredUserId      String?                   @db.Uuid
+  affiliate_rewards   affiliate_rewards[]
+  parentAttribution   referral_attributions?    @relation("ReferralParent", fields: [parentAttributionId], references: [id], onDelete: Cascade)
+  childAttributions   referral_attributions[]   @relation("ReferralParent")
+  affiliate_programs  affiliate_programs        @relation(fields: [programId], references: [id], onDelete: Cascade)
+  referral_codes      referral_codes            @relation(fields: [referralCodeId], references: [id], onDelete: Cascade)
+  users_referred      users?                    @relation("ReferralReferred", fields: [referredUserId], references: [id], onDelete: Cascade, map: "referral_attributions_referreduserid_fkey")
+  users_referrer      users?                    @relation("ReferralReferrer", fields: [referrerUserId], references: [id], onDelete: Cascade, map: "referral_attributions_referreruserid_fkey")
+
+  @@index([programId])
+  @@index([referralCodeId])
+  @@index([referredUserId])
+  @@index([referrerUserId])
+  @@index([parentAttributionId])
+}
+
+model affiliate_rewards {
+  id                    String                @id @default(cuid())
+  programId             String
+  attributionId         String
+  type                  AffiliateRewardType
+  level                 Int                   @default(1)
+  currencyAmount        Decimal?              @db.Decimal(10, 2)
+  currencyCode          String?               @db.VarChar(8)
+  creditAmount          Int?                  @default(0)
+  status                AffiliateRewardStatus @default(PENDING)
+  pendingUntil          DateTime
+  readyAt               DateTime?
+  settledAt             DateTime?
+  metadata              Json?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  userId                String?               @db.Uuid
+  referral_attributions referral_attributions @relation(fields: [attributionId], references: [id], onDelete: Cascade)
+  affiliate_programs    affiliate_programs    @relation(fields: [programId], references: [id], onDelete: Cascade)
+  users                 users?                @relation(fields: [userId], references: [id], onDelete: Cascade, map: "affiliate_rewards_userid_fkey")
+
+  @@index([programId])
+  @@index([attributionId])
+  @@index([status])
+  @@index([metadata], map: "idx_affiliate_rewards_metadata_gin", type: Gin)
+  @@index([userId])
+}
+
+model payout_audit_log {
+  id           String   @id @default(cuid())
+  rewardIds    Json
+  action       String
+  amount       Decimal? @db.Decimal(10, 2)
+  currencyCode String?  @db.VarChar(8)
+  performedBy  String
+  notes        String?
+  metadata     Json?
+  createdAt    DateTime @default(now())
+  userId       String?  @db.Uuid
+  users        users?   @relation("payout_audit_log_user", fields: [userId], references: [id], onDelete: NoAction, map: "payout_audit_log_userid_fkey")
+
+  @@index([performedBy])
+  @@index([action])
+  @@index([createdAt])
+  @@index([rewardIds], map: "idx_payout_audit_log_rewardids_gin", type: Gin)
+  @@index([userId])
+}
+
+model user_payout_profiles {
+  id              String   @id @default(cuid())
+  beneficiaryName String   @db.VarChar(255)
+  taxCode         String?  @db.VarChar(32)
+  vatNumber       String?  @db.VarChar(32)
+  iban            String?  @db.VarChar(34)
+  bicSwift        String?  @db.VarChar(11)
+  addressLine1    String?  @db.VarChar(255)
+  addressLine2    String?  @db.VarChar(255)
+  city            String?  @db.VarChar(128)
+  postalCode      String?  @db.VarChar(24)
+  country         String?  @db.VarChar(2)
+  taxResidence    String?  @db.VarChar(2)
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  userId          String?  @unique(map: "user_payout_profiles_userid_key") @db.Uuid
+  users           users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_payout_profiles_userid_fkey")
+}
+
+// ============================================================================
+// MODULE: marketplace
+// ============================================================================
+// ============================================================================
+// MARKETPLACE MODULE - Marketplace Plans, Purchases, Ratings
+// ============================================================================
+
+enum MarketplacePlanType {
+  WORKOUT
+  NUTRITION
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
+}
+
+model marketplace_plans {
+  id               String              @id @default(cuid())
+  planType         MarketplacePlanType
+  workoutProgramId String?             @unique
+  nutritionPlanId  String?             @unique
+  title            String              @db.VarChar(255)
+  description      String
+  coverImage       String?
+  price            Decimal             @db.Decimal(10, 2)
+  currency         String              @default("EUR") @db.VarChar(3)
+  isPublished      Boolean             @default(false)
+  totalPurchases   Int                 @default(0)
+  averageRating    Decimal?            @db.Decimal(3, 2)
+  totalReviews     Int                 @default(0)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  publishedAt      DateTime?
+  coachId          String?             @db.Uuid
+  coach            users?              @relation("CoachMarketplacePlans", fields: [coachId], references: [id], onDelete: Cascade, map: "marketplace_plans_coachid_fkey")
+  nutrition_plan   nutrition_plans?    @relation(fields: [nutritionPlanId], references: [id], onDelete: Cascade)
+  workout_program  workout_programs?   @relation(fields: [workoutProgramId], references: [id], onDelete: Cascade)
+  plan_purchases   plan_purchases[]
+  plan_ratings     plan_ratings[]
+
+  @@index([planType])
+  @@index([isPublished])
+  @@index([averageRating])
+  @@index([isPublished, planType], map: "idx_marketplace_plans_pub_type")
+  @@index([isPublished, averageRating(sort: Desc)], map: "idx_marketplace_plans_pub_rating")
+  @@index([coachId, isPublished], map: "idx_marketplace_coach_published")
+  @@index([coachId])
+}
+
+model plan_purchases {
+  id                 String            @id @default(cuid())
+  marketplacePlanId  String
+  price              Decimal           @db.Decimal(10, 2)
+  currency           String            @db.VarChar(3)
+  coachCommission    Decimal           @db.Decimal(10, 2)
+  platformCommission Decimal           @db.Decimal(10, 2)
+  stripePaymentId    String?           @unique
+  status             PurchaseStatus    @default(PENDING)
+  purchasedAt        DateTime          @default(now())
+  refundedAt         DateTime?
+  userId             String?           @db.Uuid
+  marketplace_plan   marketplace_plans @relation(fields: [marketplacePlanId], references: [id], onDelete: Cascade)
+  users              users?            @relation(fields: [userId], references: [id], onDelete: Cascade, map: "plan_purchases_userid_fkey")
+
+  @@index([marketplacePlanId])
+  @@index([status])
+  @@index([purchasedAt])
+  @@index([userId])
+}
+
+model plan_ratings {
+  id                String            @id @default(cuid())
+  marketplacePlanId String
+  rating            Int
+  review            String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  userId            String?           @db.Uuid
+  marketplace_plan  marketplace_plans @relation(fields: [marketplacePlanId], references: [id], onDelete: Cascade)
+  users             users?            @relation(fields: [userId], references: [id], onDelete: Cascade, map: "plan_ratings_userid_fkey")
+
+  @@index([marketplacePlanId])
+  @@index([rating])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: coach
+// ============================================================================
+// ============================================================================
+// COACH MODULE - Coach Profiles and Vetting Requests
+// ============================================================================
+
+enum CoachVerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum VettingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model coach_profiles {
+  id                 String                  @id @default(cuid())
+  bio                String?
+  credentials        String?
+  coachingStyle      String?
+  linkedinUrl        String?
+  instagramUrl       String?
+  websiteUrl         String?
+  verificationStatus CoachVerificationStatus @default(PENDING)
+  isPubliclyVisible  Boolean                 @default(false)
+  totalSales         Int                     @default(0)
+  averageRating      Decimal?                @db.Decimal(3, 2)
+  totalReviews       Int                     @default(0)
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  userId             String?                 @unique(map: "coach_profiles_userid_key") @db.Uuid
+  users              users?                  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "coach_profiles_userid_fkey")
+
+  @@index([verificationStatus])
+  @@index([isPubliclyVisible])
+}
+
+model coach_vetting_requests {
+  id                  String        @id @default(cuid())
+  credentialDocuments Json?
+  status              VettingStatus @default(PENDING)
+  submittedAt         DateTime      @default(now())
+  reviewedAt          DateTime?
+  reviewedBy          String?
+  reviewNotes         String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  userId              String?       @db.Uuid
+  users               users?        @relation(fields: [userId], references: [id], onDelete: Cascade, map: "coach_vetting_requests_userid_fkey")
+
+  @@index([status])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: conversations
+// ============================================================================
+// ============================================================================
+// CONVERSATIONS MODULE - Conversations, Messages, Chat Usage Logs
+// ============================================================================
+
+model conversations {
+  id               String                  @id @default(cuid())
+  title            String?
+  metadata         Json?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  lastMessageAt    DateTime?               @default(now())
+  modelOverride    String?
+  providerOverride AIProvider?
+  userId           String?                 @db.Uuid
+  messages         conversation_messages[]
+  users            users?                  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "conversations_userid_fkey")
+
+  @@index([createdAt])
+  @@index([lastMessageAt])
+  @@index([userId])
+  @@index([userId, lastMessageAt(sort: Desc)], map: "idx_conversations_user_lastmsg")
+}
+
+model conversation_messages {
+  id             String           @id @default(cuid())
+  conversationId String
+  role           ConversationRole
+  content        String
+  metadata       Json?
+  sequence       Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  conversations  conversations    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([createdAt])
+  @@index([sequence])
+  @@index([conversationId, sequence], map: "idx_conversation_messages_conv_seq")
+  @@index([conversationId, createdAt], map: "idx_conversation_messages_conv_created")
+}
+
+// ============================================================================
+// CHAT USAGE TRACKING - Tracciamento utilizzo chat per analytics admin
+// ============================================================================
+
+model chat_usage_logs {
+  id             String     @id @default(cuid())
+  userId         String?    @db.Uuid
+  conversationId String?
+  provider       AIProvider
+  modelId        String
+  inputTokens    Int        @default(0)
+  outputTokens   Int        @default(0)
+  totalTokens    Int        @default(0)
+  inputCost      Decimal?   @db.Decimal(10, 6)
+  outputCost     Decimal?   @db.Decimal(10, 6)
+  totalCost      Decimal?   @db.Decimal(10, 6)
+  latencyMs      Int?
+  isStreaming    Boolean    @default(false)
+  hasVision      Boolean    @default(false)
+  hasTools       Boolean    @default(false)
+  toolsUsed      String[]   @default([])
+  errorCode      String?
+  errorMessage   String?
+  metadata       Json?
+  createdAt      DateTime   @default(now())
+  users          users?     @relation("ChatUsageLogs", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([provider])
+  @@index([modelId])
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([provider, createdAt])
+  @@index([modelId, createdAt])
+}
+
+// ============================================================================
+// MODULE: direct-messaging
+// ============================================================================
+// ============================================================================
+// DIRECT MESSAGING MODULE - Direct Conversations, Messages, Message Reads
+// ============================================================================
+
+enum ConversationPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model direct_conversations {
+  id            String                @id @default(cuid())
+  coachId       String                @db.Uuid
+  athleteId     String                @db.Uuid
+  title         String?
+  isMuted       Boolean               @default(false)
+  priority      ConversationPriority  @default(MEDIUM)
+  lastMessageAt DateTime?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  coach         users                 @relation("CoachDirectConversations", fields: [coachId], references: [id], onDelete: Cascade, map: "direct_conversations_coachid_fkey")
+  athlete       users                 @relation("AthleteDirectConversations", fields: [athleteId], references: [id], onDelete: Cascade, map: "direct_conversations_athleteid_fkey")
+  messages      direct_messages[]
+
+  @@unique([coachId, athleteId], map: "direct_conversations_coach_athlete_unique")
+  @@index([coachId, lastMessageAt(sort: Desc)], map: "idx_direct_conv_coach_lastmsg")
+  @@index([athleteId, lastMessageAt(sort: Desc)], map: "idx_direct_conv_athlete_lastmsg")
+  @@index([coachId])
+  @@index([athleteId])
+  @@index([priority])
+  @@index([isMuted])
+}
+
+model direct_messages {
+  id             String                @id @default(cuid())
+  conversationId String
+  senderId       String                @db.Uuid
+  content        String
+  isImportant    Boolean               @default(false)
+  isReported     Boolean               @default(false)
+  reportedReason String?
+  reportedAt     DateTime?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  conversation   direct_conversations  @relation(fields: [conversationId], references: [id], onDelete: Cascade, map: "direct_messages_conversationid_fkey")
+  sender         users                 @relation("DirectMessageSender", fields: [senderId], references: [id], onDelete: Cascade, map: "direct_messages_senderid_fkey")
+  reads          message_reads[]
+
+  @@index([conversationId, createdAt(sort: Desc)], map: "idx_direct_msg_conv_created")
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([isImportant])
+  @@index([isReported])
+  @@index([createdAt])
+}
+
+model message_reads {
+  id        String           @id @default(cuid())
+  messageId String
+  userId    String           @db.Uuid
+  readAt    DateTime         @default(now())
+  message   direct_messages  @relation(fields: [messageId], references: [id], onDelete: Cascade, map: "message_reads_messageid_fkey")
+  user      users            @relation("MessageReads", fields: [userId], references: [id], onDelete: Cascade, map: "message_reads_userid_fkey")
+
+  @@unique([messageId, userId], map: "message_reads_message_user_unique")
+  @@index([messageId])
+  @@index([userId])
+  @@index([readAt])
+}
+
+// ============================================================================
+// MODULE: planning
+// ============================================================================
+// ============================================================================
+// PLANNING MODULE - Planning Plans, Tasks, Execution Metrics, Calendar
+// ============================================================================
+
+enum PlanningStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+  PAUSED
+}
+
+enum PlanningAgentType {
+  WORKOUT
+  NUTRITION
+}
+
+enum CalendarPlanType {
+  NUTRITION
+  WORKOUT
+}
+
+model planning_plans {
+  id               String             @id @default(cuid())
+  agentType        PlanningAgentType
+  durationWeeks    Int
+  daysPerWeek      Int
+  status           PlanningStatus     @default(PENDING)
+  metadata         Json?
+  errorMessage     String?
+  startedAt        DateTime?
+  completedAt      DateTime?
+  pausedAt         DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  progress         Int                @default(0)
+  result           Json?
+  userId           String?            @db.Uuid
+  user             users?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks            planning_tasks[]
+  executionMetrics execution_metrics[]
+
+  @@index([status])
+  @@index([agentType])
+  @@index([createdAt])
+  @@index([agentType, status], map: "idx_planning_plan_agent_status")
+  @@index([userId])
+  @@index([userId, agentType, status], map: "idx_planningplan_user_agent_status")
+  @@index([userId, status], map: "idx_planningplan_user_status")
+}
+
+model planning_tasks {
+  id           String            @id @default(cuid())
+  planId       String
+  weekNumber   Int
+  status       PlanningStatus    @default(PENDING)
+  result       Json?
+  errorMessage String?
+  retryCount   Int               @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  subTasks     planning_sub_tasks[]
+  plan         planning_plans      @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, weekNumber])
+  @@index([planId])
+  @@index([status])
+  @@index([weekNumber])
+}
+
+model planning_sub_tasks {
+  id           String               @id @default(cuid())
+  taskId       String
+  dayNumber    Int
+  dayName      String
+  status       PlanningStatus       @default(PENDING)
+  result       Json?
+  errorMessage String?
+  retryCount   Int                  @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  subSubTasks  planning_sub_sub_tasks[] @relation("SubTaskToSubSubTask")
+  task         planning_tasks         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, dayNumber])
+  @@index([taskId])
+  @@index([status])
+  @@index([dayNumber])
+}
+
+model planning_sub_sub_tasks {
+  id           String          @id @default(cuid())
+  subTaskId    String
+  mealNumber   Int
+  mealName     String?
+  mealType     String?
+  status       PlanningStatus  @default(PENDING)
+  result       Json?
+  errorMessage String?
+  retryCount   Int             @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  subTask      planning_sub_tasks @relation("SubTaskToSubSubTask", fields: [subTaskId], references: [id], onDelete: Cascade)
+
+  @@unique([subTaskId, mealNumber])
+  @@index([subTaskId])
+  @@index([status])
+  @@index([mealNumber])
+}
+
+model calendar_assignments {
+  id             String           @id @default(cuid())
+  date           DateTime         @db.Date
+  planType       CalendarPlanType
+  planId         String
+  isRecurring    Boolean          @default(false)
+  recurrenceRule Json?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  userId         String?          @db.Uuid
+  user           users?           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "calendar_assignments_userid_fkey")
+
+  @@index([date])
+  @@index([planType])
+  @@index([userId])
+  @@index([userId, date], map: "idx_calendar_assignments_user_date")
+  @@index([userId, planType, date], map: "idx_calendar_assignments_user_plantype_date")
+}
+
+model execution_metrics {
+  id        String       @id @default(cuid())
+  domain    String
+  timestamp BigInt
+  decisions Json
+  outcome   Json
+  createdAt DateTime     @default(now())
+  planId    String
+  plan      planning_plans @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([domain])
+  @@index([timestamp])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// MODULE: oneagenda
+// ============================================================================
+// ============================================================================
+// ONEAGENDA MODULE - Projects, Milestones, Tasks, Habits
+// ============================================================================
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+  ON_HOLD
+}
+
+enum MilestoneStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+  CANCELLED
+}
+
+enum TaskPriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum HabitFrequency {
+  DAILY
+  WEEKLY
+  CUSTOM
+}
+
+// Models are defined in schema.prisma with @@map directives
+// This file only contains enums used by the oneagenda module
+
+// ============================================================================
+// MODULE: health
+// ============================================================================
+// ============================================================================
+// HEALTH MODULE - Health Data Integration (Steps, Heart Rate, Weight, Workouts)
+// ============================================================================
+
+model health_steps {
+  id        String   @id @default(cuid())
+  steps     Int
+  date      DateTime @db.Date
+  endDate   DateTime @db.Date
+  source    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String?  @db.Uuid
+  user      users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_steps_userid_fkey")
+
+  @@index([date])
+  @@index([userId])
+  @@index([userId, date(sort: Desc)], map: "idx_health_steps_user_date")
+}
+
+model health_heart_rate {
+  id         String   @id @default(cuid())
+  bpm        Int
+  recordedAt DateTime
+  source     String
+  createdAt  DateTime @default(now())
+  userId     String?  @db.Uuid
+  user       users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_heart_rate_userid_fkey")
+
+  @@index([recordedAt])
+  @@index([userId])
+  @@index([userId, recordedAt(sort: Desc)], map: "idx_health_heart_rate_user_recorded")
+}
+
+model health_active_calories {
+  id        String   @id @default(cuid())
+  calories  Int
+  date      DateTime @db.Date
+  endDate   DateTime @db.Date
+  source    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String?  @db.Uuid
+  user      users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_active_calories_userid_fkey")
+
+  @@index([date])
+  @@index([userId])
+  @@index([userId, date(sort: Desc)], map: "idx_health_active_calories_user_date")
+}
+
+model health_weight {
+  id         String   @id @default(cuid())
+  weight     Decimal  @db.Decimal(5, 2)
+  recordedAt DateTime
+  source     String
+  createdAt  DateTime @default(now())
+  userId     String?  @db.Uuid
+  user       users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_weight_userid_fkey")
+
+  @@index([recordedAt])
+  @@index([userId])
+  @@index([userId, recordedAt(sort: Desc)], map: "idx_health_weight_user_recorded")
+}
+
+model health_workout {
+  id           String   @id @default(cuid())
+  activityType String
+  duration     Int
+  distance     Decimal? @db.Decimal(8, 2)
+  calories     Int?
+  startDate    DateTime
+  endDate      DateTime
+  source       String
+  createdAt    DateTime @default(now())
+  userId       String?  @db.Uuid
+  user         users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_workout_userid_fkey")
+
+  @@index([startDate])
+  @@index([activityType])
+  @@index([userId])
+  @@index([userId, startDate(sort: Desc)], map: "idx_health_workout_user_start")
+}
+
+// ============================================================================
+// MODULE: policies
+// ============================================================================
+// ============================================================================
+// POLICIES MODULE - Policies, Policy History, User Consents
+// ============================================================================
+
+enum PolicyType {
+  PRIVACY
+  TERMS
+  GDPR
+  CONTENT
+}
+
+enum PolicyStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model policies {
+  id              String           @id @default(cuid())
+  slug            String           @unique @db.VarChar(64)
+  type            PolicyType       @unique
+  title           String           @db.VarChar(255)
+  content         String
+  metaDescription String?          @db.VarChar(500)
+  status          PolicyStatus     @default(DRAFT)
+  version         Int              @default(1)
+  publishedAt     DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime
+  createdById     String?          @db.Uuid
+  updatedById     String?          @db.Uuid
+  createdBy       users?          @relation("policies_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, map: "policies_createdbyid_fkey")
+  updatedBy       users?          @relation("policies_updatedByIdTousers", fields: [updatedById], references: [id], onDelete: NoAction, map: "policies_updatedbyid_fkey")
+  policy_history  policy_history[]
+  user_consents   user_consents[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([type])
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model policy_history {
+  id              String       @id @default(cuid())
+  policyId        String
+  version         Int
+  slug            String       @db.VarChar(64)
+  type            PolicyType
+  title           String       @db.VarChar(255)
+  content         String
+  metaDescription String?      @db.VarChar(500)
+  status          PolicyStatus
+  changedBy       String
+  changeReason    String?
+  createdAt       DateTime     @default(now())
+  policies        policies     @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  @@unique([policyId, version])
+  @@index([policyId])
+  @@index([createdAt])
+}
+
+model user_consents {
+  id            String     @id @default(cuid())
+  policyId      String
+  policyType    PolicyType
+  policyVersion Int
+  consented     Boolean    @default(true)
+  consentedAt   DateTime   @default(now())
+  withdrawnAt   DateTime?
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  userId        String?    @db.Uuid
+  policies      policies   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  users         users?     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_consents_userid_fkey")
+
+  @@index([policyId])
+  @@index([policyType])
+  @@index([consentedAt])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: invitations
+// ============================================================================
+// ============================================================================
+// INVITATIONS MODULE - Invitations and Invitation Uses
+// ============================================================================
+
+enum InvitationType {
+  ONE_TIME
+  MULTI_USE
+}
+
+enum InvitationStatus {
+  ACTIVE
+  USED
+  REVOKED
+  EXPIRED
+}
+
+model invitations {
+  id          String            @id @default(cuid())
+  code        String            @unique
+  type        InvitationType    @default(ONE_TIME)
+  status      InvitationStatus  @default(ACTIVE)
+  maxUses     Int               @default(1)
+  usedCount   Int               @default(0)
+  expiresAt   DateTime?
+  metadata    Json?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  createdById String?           @db.Uuid
+  uses        invitation_uses[]
+  createdBy   users?            @relation("CreatedInvitations", fields: [createdById], references: [id], onDelete: NoAction, map: "invitations_createdbyid_fkey")
+  users       users[]           @relation("UserInvitation")
+
+  @@index([code])
+  @@index([status])
+  @@index([createdById])
+}
+
+model invitation_uses {
+  id           String      @id @default(cuid())
+  invitationId String
+  usedAt       DateTime    @default(now())
+  userId       String?     @db.Uuid
+  invitation   invitations @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  user         users?      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "invitation_uses_userid_fkey")
+
+  @@index([invitationId])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: templates
+// ============================================================================
+// ============================================================================
+// TEMPLATES MODULE - Workout, Nutrition, and Meal Templates
+// ============================================================================
+
+enum TemplateType {
+  meal
+  day
+  week
+}
+
+enum WorkoutTemplateType {
+  exercise
+  day
+  week
+  progression
+}
+
+model workout_templates {
+  id          String              @id @default(cuid())
+  type        WorkoutTemplateType
+  name        String
+  description String?
+  category    String?
+  tags        String[]            @default([])
+  data        Json
+  isPublic    Boolean             @default(false)
+  usageCount  Int                 @default(0)
+  lastUsedAt  DateTime?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  userId      String?             @db.Uuid
+  users       users?              @relation(fields: [userId], references: [id], onDelete: Cascade, map: "workout_templates_userid_fkey")
+
+  @@index([type])
+  @@index([category])
+  @@index([createdAt])
+  @@index([lastUsedAt])
+  @@index([usageCount])
+  @@index([tags], type: Gin)
+  @@index([userId, category], map: "idx_workout_templates_user_category")
+  @@index([userId, type], map: "idx_workout_templates_user_type")
+  @@index([userId])
+}
+
+model nutrition_templates {
+  id          String       @id @default(cuid())
+  type        TemplateType
+  name        String
+  description String?
+  category    String?
+  tags        String[]     @default([])
+  data        Json
+  isPublic    Boolean      @default(false)
+  usageCount  Int          @default(0)
+  lastUsedAt  DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  userId      String?      @db.Uuid
+  users       users?       @relation(fields: [userId], references: [id], onDelete: Cascade, map: "nutrition_templates_userid_fkey")
+
+  @@index([type])
+  @@index([category])
+  @@index([createdAt])
+  @@index([lastUsedAt])
+  @@index([usageCount])
+  @@index([tags], type: Gin)
+  @@index([userId, category], map: "idx_nutrition_templates_user_category")
+  @@index([userId, type], map: "idx_nutrition_templates_user_type")
+  @@index([userId])
+}
+
+model meal_templates {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  meal        Json
+  tags        String[] @default([])
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String?  @db.Uuid
+  users       users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "meal_templates_userid_fkey")
+
+  @@index([createdAt])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: feature_flags
+// ============================================================================
+// ============================================================================
+// FEATURE FLAGS MODULE - Feature Flags, Metrics, Feedback
+// ============================================================================
+
+enum RolloutStrategy {
+  ALL
+  ROLE_BASED
+  PERCENTAGE
+  RANDOM
+  BETA_USERS
+  COMBINED
+}
+
+enum FlagEventType {
+  ENABLED
+  DISABLED
+  EVALUATED
+  ERROR
+}
+
+model feature_flags {
+  id          String                  @id @default(cuid())
+  key         String                  @unique @db.VarChar(128)
+  name        String                  @db.VarChar(255)
+  description String?
+  enabled     Boolean                 @default(false)
+  strategy    RolloutStrategy         @default(ALL)
+  config      Json?
+  metadata    Json?
+  createdBy   String
+  updatedBy   String?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  feedback    feature_flag_feedback[]
+  metrics     feature_flag_metrics[]
+
+  @@index([key])
+  @@index([enabled])
+  @@index([strategy])
+  @@index([createdAt])
+}
+
+model feature_flag_metrics {
+  id        String        @id @default(cuid())
+  flagKey   String
+  userId    String?
+  event     FlagEventType
+  value     Boolean?
+  metadata  Json?
+  timestamp DateTime      @default(now())
+  flag      feature_flags @relation(fields: [flagKey], references: [key], onDelete: Cascade)
+
+  @@index([flagKey])
+  @@index([userId])
+  @@index([event])
+  @@index([timestamp])
+}
+
+model feature_flag_feedback {
+  id        String        @id @default(cuid())
+  flagKey   String
+  rating    Int
+  comment   String?
+  metadata  Json?
+  createdAt DateTime      @default(now())
+  userId    String?       @db.Uuid
+  flag      feature_flags @relation(fields: [flagKey], references: [key], onDelete: Cascade)
+
+  @@index([flagKey])
+  @@index([rating])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: copilot
+// ============================================================================
+// ============================================================================
+// COPILOT MODULE - Copilot Settings and Admin Config
+// ============================================================================
+
+// Copilot settings per utente/coach
+model copilot_settings {
+  id               String   @id @default(cuid())
+  userId           String   @unique @db.Uuid
+  isEnabled        Boolean  @default(true)
+  contextBuilders  String[] @default([])
+  disabledScreens  String[] @default([])
+  maxContextTokens Int      @default(4000)
+  suggestionMode   String   @default("auto") // auto, manual, disabled
+  autoTriggerDelay Int      @default(2000) // ms
+  metadata         Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  users            users    @relation("CopilotSettings", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([isEnabled])
+}
+
+// Copilot global admin settings
+model copilot_admin_config {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       Json
+  description String?
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+}
+
+// ============================================================================
+// MODULE: user_api_keys
+// ============================================================================
+// ============================================================================
+// USER API KEYS MODULE - User API Keys Management
+// ============================================================================
+
+enum ApiKeyStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+model user_api_keys {
+  id                    String       @id @default(cuid())
+  provider              String       @default("openrouter")
+  keyLabel              String
+  keyHash               String
+  limit                 Int
+  status                ApiKeyStatus @default(ACTIVE)
+  stripePaymentIntentId String?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  userId                String?      @db.Uuid
+  users                 users?       @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_api_keys_userid_fkey")
+
+  @@index([stripePaymentIntentId])
+  @@index([status])
+  @@index([provider])
+  @@index([userId])
+}
+
+// ============================================================================
+// MODULE: user_memory
+// ============================================================================
+// ============================================================================
+// USER MEMORY MODULE - Dynamic User Memory for AI Personalization
+// ============================================================================
+
+model user_memories {
+  id             String                 @id @default(cuid())
+  userId         String                 @unique @db.Uuid
+  memory         Json                   @default("{}") // Structured memory with domain sections
+  version        Int                    @default(1) // Memory structure version for migrations
+  lastAnalyzedAt DateTime? // Last time periodic analysis ran
+  updatedAt      DateTime               @updatedAt
+  createdAt      DateTime               @default(now())
+  users          users                  @relation("UserMemory", fields: [userId], references: [id], onDelete: Cascade, map: "user_memories_userid_fkey")
+  versions       user_memory_versions[] @relation("UserMemoryVersions")
+  timeline       user_memory_timeline[] @relation("UserMemoryTimeline")
+
+  @@index([userId])
+  @@index([lastAnalyzedAt])
+  @@index([updatedAt])
+  // GIN index on JSONB for efficient queries
+  @@index([memory(ops: JsonbPathOps)], type: Gin, map: "idx_user_memories_memory_gin")
+}
+
+// Version history for memory (KISS: simple versioning with snapshot)
+model user_memory_versions {
+  id            String   @id @default(cuid())
+  userId        String   @db.Uuid
+  versionNumber Int      // Sequential version number
+  memory        Json     // Snapshot of memory at this version
+  changeType    String   // 'manual' | 'auto' | 'enhanced'
+  changeNote    String?  // Optional note about what changed
+  changedBy     String?  // 'user' | 'ai' | 'system'
+  createdAt     DateTime @default(now())
+  users         users    @relation("UserMemoryVersions", fields: [userId], references: [id], onDelete: Cascade, map: "user_memory_versions_userid_fkey")
+  user_memory   user_memories? @relation("UserMemoryVersions", fields: [userId], references: [userId], onDelete: Cascade, map: "user_memory_versions_userid_fkey2")
+
+  @@index([userId])
+  @@index([userId, versionNumber])
+  @@index([createdAt])
+}
+
+// Timeline of significant events (KISS: simple event log)
+model user_memory_timeline {
+  id          String   @id @default(cuid())
+  userId      String   @db.Uuid
+  eventType   String   // 'progress' | 'injury' | 'goal' | 'milestone' | 'note'
+  domain      String?  // 'workout' | 'nutrition' | 'oneagenda' | 'general'
+  title       String
+  description String?
+  data        Json?    // Additional event data
+  date        DateTime @db.Date
+  createdAt   DateTime @default(now())
+  users       users    @relation("UserMemoryTimeline", fields: [userId], references: [id], onDelete: Cascade, map: "user_memory_timeline_userid_fkey")
+  user_memory user_memories? @relation("UserMemoryTimeline", fields: [userId], references: [userId], onDelete: Cascade, map: "user_memory_timeline_userid_fkey2")
+
+  @@index([userId])
+  @@index([userId, date])
+  @@index([eventType])
+  @@index([domain])
+}
+
+// ============================================================================
+// MODULE: daily_metrics
+// ============================================================================
+// ============================================================================
+// DAILY METRICS MODULE - Daily Analytics Metrics
+// ============================================================================
+
+model daily_metrics {
+  id                 String   @id
+  date               DateTime @unique @db.Date
+  newUsers           Int      @default(0)
+  activeUsers        Int      @default(0)
+  creditsConsumed    Int      @default(0)
+  revenue            Int      @default(0)
+  workoutsGenerated  Int      @default(0)
+  nutritionGenerated Int      @default(0)
+  metadata           Json?
+  createdAt          DateTime @default(now())
+
+  @@index([date])
+}
+

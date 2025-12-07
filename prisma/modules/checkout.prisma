@@ -1,0 +1,132 @@
+// ============================================================================
+// CHECKOUT MODULE - Carts, Cart Items, Checkout Settings, Offer Rules, Events
+// ============================================================================
+
+enum CartStatus {
+  ACTIVE
+  CHECKOUT_IN_PROGRESS
+  COMPLETED
+  ABANDONED
+  EXPIRED
+}
+
+enum CartItemType {
+  CREDIT_PACK
+  MARKETPLACE_PLAN
+  SUBSCRIPTION
+}
+
+enum CheckoutOfferType {
+  CROSS_SELL
+  UPSELL
+}
+
+enum CheckoutOfferPlacement {
+  CART
+  CHECKOUT
+  POST_PURCHASE
+}
+
+model carts {
+  id            String      @id @default(cuid())
+  userId        String      @db.Uuid
+  status        CartStatus  @default(ACTIVE)
+  currency      String      @default("EUR") @db.VarChar(3)
+  subtotal      Decimal     @default(0) @db.Decimal(10, 2)
+  discountTotal Decimal     @default(0) @db.Decimal(10, 2)
+  total         Decimal     @default(0) @db.Decimal(10, 2)
+  promoCode     String?
+  referralCode  String?
+  metadata      Json?
+  lastSeenAt    DateTime    @default(now())
+  expiresAt     DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  completedAt   DateTime?
+  cart_items    cart_items[]
+  user          users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([lastSeenAt])
+  @@index([userId, status])
+}
+
+model cart_items {
+  id          String       @id @default(cuid())
+  cartId      String
+  itemType    CartItemType
+  itemId      String
+  quantity    Int          @default(1)
+  unitPrice   Decimal      @db.Decimal(10, 2)
+  currency    String       @default("EUR") @db.VarChar(3)
+  title       String
+  description String?
+  image       String?
+  metadata    Json?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  cart        carts        @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, itemType, itemId])
+  @@index([cartId])
+  @@index([itemType])
+}
+
+model checkout_settings {
+  id                       String   @id @default("default")
+  oneClickEnabled          Boolean  @default(true)
+  linkEnabled              Boolean  @default(true)
+  applePayEnabled          Boolean  @default(true)
+  googlePayEnabled         Boolean  @default(true)
+  savePaymentMethodDefault Boolean  @default(true)
+  autofillEnabled          Boolean  @default(true)
+  currency                 String   @default("EUR") @db.VarChar(3)
+  cartExpirationHours      Int      @default(72)
+  abandonedCartReminder    Boolean  @default(true)
+  reminderDelayHours       Int      @default(24)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+}
+
+model checkout_offer_rules {
+  id           String                  @id @default(cuid())
+  name         String
+  type         CheckoutOfferType
+  placement    CheckoutOfferPlacement  @default(CHECKOUT)
+  priority     Int                     @default(100)
+  isActive     Boolean                 @default(true)
+  audience     Json?
+  conditions   Json?
+  offerPayload Json?
+  layout       Json?
+  ctaLabel     String?
+  startsAt     DateTime?
+  endsAt       DateTime?
+  createdBy    String
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  @@index([isActive])
+  @@index([placement])
+  @@index([priority])
+  @@index([startsAt])
+  @@index([endsAt])
+}
+
+model checkout_events {
+  id        String   @id @default(cuid())
+  type      String
+  cartId    String?
+  userId    String?  @db.Uuid
+  offerId   String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([cartId])
+  @@index([userId])
+  @@index([createdAt])
+}
+

@@ -1,0 +1,83 @@
+// ============================================================================
+// HEALTH MODULE - Health Data Integration (Steps, Heart Rate, Weight, Workouts)
+// ============================================================================
+
+model health_steps {
+  id        String   @id @default(cuid())
+  steps     Int
+  date      DateTime @db.Date
+  endDate   DateTime @db.Date
+  source    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String?  @db.Uuid
+  user      users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_steps_userid_fkey")
+
+  @@index([date])
+  @@index([userId])
+  @@index([userId, date(sort: Desc)], map: "idx_health_steps_user_date")
+}
+
+model health_heart_rate {
+  id         String   @id @default(cuid())
+  bpm        Int
+  recordedAt DateTime
+  source     String
+  createdAt  DateTime @default(now())
+  userId     String?  @db.Uuid
+  user       users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_heart_rate_userid_fkey")
+
+  @@index([recordedAt])
+  @@index([userId])
+  @@index([userId, recordedAt(sort: Desc)], map: "idx_health_heart_rate_user_recorded")
+}
+
+model health_active_calories {
+  id        String   @id @default(cuid())
+  calories  Int
+  date      DateTime @db.Date
+  endDate   DateTime @db.Date
+  source    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String?  @db.Uuid
+  user      users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_active_calories_userid_fkey")
+
+  @@index([date])
+  @@index([userId])
+  @@index([userId, date(sort: Desc)], map: "idx_health_active_calories_user_date")
+}
+
+model health_weight {
+  id         String   @id @default(cuid())
+  weight     Decimal  @db.Decimal(5, 2)
+  recordedAt DateTime
+  source     String
+  createdAt  DateTime @default(now())
+  userId     String?  @db.Uuid
+  user       users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_weight_userid_fkey")
+
+  @@index([recordedAt])
+  @@index([userId])
+  @@index([userId, recordedAt(sort: Desc)], map: "idx_health_weight_user_recorded")
+}
+
+model health_workout {
+  id           String   @id @default(cuid())
+  activityType String
+  duration     Int
+  distance     Decimal? @db.Decimal(8, 2)
+  calories     Int?
+  startDate    DateTime
+  endDate      DateTime
+  source       String
+  createdAt    DateTime @default(now())
+  userId       String?  @db.Uuid
+  user         users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "health_workout_userid_fkey")
+
+  @@index([startDate])
+  @@index([activityType])
+  @@index([userId])
+  @@index([userId, startDate(sort: Desc)], map: "idx_health_workout_user_start")
+}
+

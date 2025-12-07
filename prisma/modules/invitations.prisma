@@ -1,0 +1,49 @@
+// ============================================================================
+// INVITATIONS MODULE - Invitations and Invitation Uses
+// ============================================================================
+
+enum InvitationType {
+  ONE_TIME
+  MULTI_USE
+}
+
+enum InvitationStatus {
+  ACTIVE
+  USED
+  REVOKED
+  EXPIRED
+}
+
+model invitations {
+  id          String            @id @default(cuid())
+  code        String            @unique
+  type        InvitationType    @default(ONE_TIME)
+  status      InvitationStatus  @default(ACTIVE)
+  maxUses     Int               @default(1)
+  usedCount   Int               @default(0)
+  expiresAt   DateTime?
+  metadata    Json?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  createdById String?           @db.Uuid
+  uses        invitation_uses[]
+  createdBy   users?            @relation("CreatedInvitations", fields: [createdById], references: [id], onDelete: NoAction, map: "invitations_createdbyid_fkey")
+  users       users[]           @relation("UserInvitation")
+
+  @@index([code])
+  @@index([status])
+  @@index([createdById])
+}
+
+model invitation_uses {
+  id           String      @id @default(cuid())
+  invitationId String
+  usedAt       DateTime    @default(now())
+  userId       String?     @db.Uuid
+  invitation   invitations @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  user         users?      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "invitation_uses_userid_fkey")
+
+  @@index([invitationId])
+  @@index([userId])
+}
+

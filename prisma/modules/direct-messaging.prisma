@@ -1,0 +1,70 @@
+// ============================================================================
+// DIRECT MESSAGING MODULE - Direct Conversations, Messages, Message Reads
+// ============================================================================
+
+enum ConversationPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model direct_conversations {
+  id            String                @id @default(cuid())
+  coachId       String                @db.Uuid
+  athleteId     String                @db.Uuid
+  title         String?
+  isMuted       Boolean               @default(false)
+  priority      ConversationPriority  @default(MEDIUM)
+  lastMessageAt DateTime?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  coach         users                 @relation("CoachDirectConversations", fields: [coachId], references: [id], onDelete: Cascade, map: "direct_conversations_coachid_fkey")
+  athlete       users                 @relation("AthleteDirectConversations", fields: [athleteId], references: [id], onDelete: Cascade, map: "direct_conversations_athleteid_fkey")
+  messages      direct_messages[]
+
+  @@unique([coachId, athleteId], map: "direct_conversations_coach_athlete_unique")
+  @@index([coachId, lastMessageAt(sort: Desc)], map: "idx_direct_conv_coach_lastmsg")
+  @@index([athleteId, lastMessageAt(sort: Desc)], map: "idx_direct_conv_athlete_lastmsg")
+  @@index([coachId])
+  @@index([athleteId])
+  @@index([priority])
+  @@index([isMuted])
+}
+
+model direct_messages {
+  id             String                @id @default(cuid())
+  conversationId String
+  senderId       String                @db.Uuid
+  content        String
+  isImportant    Boolean               @default(false)
+  isReported     Boolean               @default(false)
+  reportedReason String?
+  reportedAt     DateTime?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  conversation   direct_conversations  @relation(fields: [conversationId], references: [id], onDelete: Cascade, map: "direct_messages_conversationid_fkey")
+  sender         users                 @relation("DirectMessageSender", fields: [senderId], references: [id], onDelete: Cascade, map: "direct_messages_senderid_fkey")
+  reads          message_reads[]
+
+  @@index([conversationId, createdAt(sort: Desc)], map: "idx_direct_msg_conv_created")
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([isImportant])
+  @@index([isReported])
+  @@index([createdAt])
+}
+
+model message_reads {
+  id        String           @id @default(cuid())
+  messageId String
+  userId    String           @db.Uuid
+  readAt    DateTime         @default(now())
+  message   direct_messages  @relation(fields: [messageId], references: [id], onDelete: Cascade, map: "message_reads_messageid_fkey")
+  user      users            @relation("MessageReads", fields: [userId], references: [id], onDelete: Cascade, map: "message_reads_userid_fkey")
+
+  @@unique([messageId, userId], map: "message_reads_message_user_unique")
+  @@index([messageId])
+  @@index([userId])
+  @@index([readAt])
+}
+

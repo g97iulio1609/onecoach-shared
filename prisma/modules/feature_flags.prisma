@@ -1,0 +1,74 @@
+// ============================================================================
+// FEATURE FLAGS MODULE - Feature Flags, Metrics, Feedback
+// ============================================================================
+
+enum RolloutStrategy {
+  ALL
+  ROLE_BASED
+  PERCENTAGE
+  RANDOM
+  BETA_USERS
+  COMBINED
+}
+
+enum FlagEventType {
+  ENABLED
+  DISABLED
+  EVALUATED
+  ERROR
+}
+
+model feature_flags {
+  id          String                  @id @default(cuid())
+  key         String                  @unique @db.VarChar(128)
+  name        String                  @db.VarChar(255)
+  description String?
+  enabled     Boolean                 @default(false)
+  strategy    RolloutStrategy         @default(ALL)
+  config      Json?
+  metadata    Json?
+  createdBy   String
+  updatedBy   String?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  feedback    feature_flag_feedback[]
+  metrics     feature_flag_metrics[]
+
+  @@index([key])
+  @@index([enabled])
+  @@index([strategy])
+  @@index([createdAt])
+}
+
+model feature_flag_metrics {
+  id        String        @id @default(cuid())
+  flagKey   String
+  userId    String?
+  event     FlagEventType
+  value     Boolean?
+  metadata  Json?
+  timestamp DateTime      @default(now())
+  flag      feature_flags @relation(fields: [flagKey], references: [key], onDelete: Cascade)
+
+  @@index([flagKey])
+  @@index([userId])
+  @@index([event])
+  @@index([timestamp])
+}
+
+model feature_flag_feedback {
+  id        String        @id @default(cuid())
+  flagKey   String
+  rating    Int
+  comment   String?
+  metadata  Json?
+  createdAt DateTime      @default(now())
+  userId    String?       @db.Uuid
+  flag      feature_flags @relation(fields: [flagKey], references: [key], onDelete: Cascade)
+
+  @@index([flagKey])
+  @@index([rating])
+  @@index([createdAt])
+  @@index([userId])
+}
+

@@ -1,0 +1,85 @@
+// ============================================================================
+// POLICIES MODULE - Policies, Policy History, User Consents
+// ============================================================================
+
+enum PolicyType {
+  PRIVACY
+  TERMS
+  GDPR
+  CONTENT
+}
+
+enum PolicyStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model policies {
+  id              String           @id @default(cuid())
+  slug            String           @unique @db.VarChar(64)
+  type            PolicyType       @unique
+  title           String           @db.VarChar(255)
+  content         String
+  metaDescription String?          @db.VarChar(500)
+  status          PolicyStatus     @default(DRAFT)
+  version         Int              @default(1)
+  publishedAt     DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime
+  createdById     String?          @db.Uuid
+  updatedById     String?          @db.Uuid
+  createdBy       users?          @relation("policies_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, map: "policies_createdbyid_fkey")
+  updatedBy       users?          @relation("policies_updatedByIdTousers", fields: [updatedById], references: [id], onDelete: NoAction, map: "policies_updatedbyid_fkey")
+  policy_history  policy_history[]
+  user_consents   user_consents[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([type])
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model policy_history {
+  id              String       @id @default(cuid())
+  policyId        String
+  version         Int
+  slug            String       @db.VarChar(64)
+  type            PolicyType
+  title           String       @db.VarChar(255)
+  content         String
+  metaDescription String?      @db.VarChar(500)
+  status          PolicyStatus
+  changedBy       String
+  changeReason    String?
+  createdAt       DateTime     @default(now())
+  policies        policies     @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  @@unique([policyId, version])
+  @@index([policyId])
+  @@index([createdAt])
+}
+
+model user_consents {
+  id            String     @id @default(cuid())
+  policyId      String
+  policyType    PolicyType
+  policyVersion Int
+  consented     Boolean    @default(true)
+  consentedAt   DateTime   @default(now())
+  withdrawnAt   DateTime?
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  userId        String?    @db.Uuid
+  policies      policies   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  users         users?     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_consents_userid_fkey")
+
+  @@index([policyId])
+  @@index([policyType])
+  @@index([consentedAt])
+  @@index([userId])
+}
+

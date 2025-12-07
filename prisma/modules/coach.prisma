@@ -1,0 +1,55 @@
+// ============================================================================
+// COACH MODULE - Coach Profiles and Vetting Requests
+// ============================================================================
+
+enum CoachVerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum VettingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model coach_profiles {
+  id                 String                  @id @default(cuid())
+  bio                String?
+  credentials        String?
+  coachingStyle      String?
+  linkedinUrl        String?
+  instagramUrl       String?
+  websiteUrl         String?
+  verificationStatus CoachVerificationStatus @default(PENDING)
+  isPubliclyVisible  Boolean                 @default(false)
+  totalSales         Int                     @default(0)
+  averageRating      Decimal?                @db.Decimal(3, 2)
+  totalReviews       Int                     @default(0)
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  userId             String?                 @unique(map: "coach_profiles_userid_key") @db.Uuid
+  users              users?                  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "coach_profiles_userid_fkey")
+
+  @@index([verificationStatus])
+  @@index([isPubliclyVisible])
+}
+
+model coach_vetting_requests {
+  id                  String        @id @default(cuid())
+  credentialDocuments Json?
+  status              VettingStatus @default(PENDING)
+  submittedAt         DateTime      @default(now())
+  reviewedAt          DateTime?
+  reviewedBy          String?
+  reviewNotes         String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  userId              String?       @db.Uuid
+  users               users?        @relation(fields: [userId], references: [id], onDelete: Cascade, map: "coach_vetting_requests_userid_fkey")
+
+  @@index([status])
+  @@index([userId])
+}
+

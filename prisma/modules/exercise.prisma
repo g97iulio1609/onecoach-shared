@@ -1,0 +1,249 @@
+// ============================================================================
+// EXERCISE MODULE - Exercise Catalog, Body Parts, Muscles, Equipment
+// ============================================================================
+
+enum ExerciseApprovalStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ExerciseRelationType {
+  ALTERNATIVE
+  COMPLEMENTARY
+  PROGRESSION
+}
+
+enum MuscleRole {
+  PRIMARY
+  SECONDARY
+}
+
+model body_part_translations {
+  id          String     @id
+  locale      String     @db.VarChar(8)
+  name        String     @db.VarChar(255)
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  bodyPartId  String
+  body_parts  body_parts @relation(fields: [bodyPartId], references: [id], onDelete: Cascade)
+
+  @@unique([bodyPartId, locale])
+  @@index([bodyPartId])
+  @@index([locale])
+}
+
+model body_parts {
+  name                   String                   @unique @db.VarChar(64)
+  slug                   String                   @unique
+  imageUrl               String?
+  id                     String                   @id
+  body_part_translations body_part_translations[]
+  exercise_body_parts    exercise_body_parts[]
+
+  @@index([name])
+}
+
+model equipment_translations {
+  id          String     @id
+  locale      String     @db.VarChar(8)
+  name        String     @db.VarChar(255)
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  equipmentId String
+  equipments  equipments @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+
+  @@unique([equipmentId, locale])
+  @@index([equipmentId])
+  @@index([locale])
+}
+
+model equipments {
+  name                   String                   @unique @db.VarChar(64)
+  slug                   String                   @unique
+  imageUrl               String?
+  id                     String                   @id
+  equipment_translations equipment_translations[]
+  exercise_equipments    exercise_equipments[]
+
+  @@index([name])
+}
+
+model exercise_body_parts {
+  exerciseId String
+  bodyPartId String
+  body_parts body_parts @relation(fields: [bodyPartId], references: [id], onDelete: Cascade)
+  exercises  exercises  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, bodyPartId])
+  @@index([bodyPartId])
+}
+
+model exercise_equipments {
+  exerciseId  String
+  equipmentId String
+  equipments  equipments @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  exercises   exercises  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, equipmentId])
+  @@index([equipmentId])
+}
+
+model exercise_muscles {
+  exerciseId String
+  role       MuscleRole
+  muscleId   String
+  exercises  exercises  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  muscles    muscles    @relation(fields: [muscleId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, muscleId, role])
+  @@index([muscleId])
+  @@index([role])
+}
+
+model exercise_relations {
+  id                                             String               @id
+  fromId                                         String
+  toId                                           String
+  relation                                       ExerciseRelationType @default(ALTERNATIVE)
+  createdAt                                      DateTime             @default(now())
+  exercises_exercise_relations_fromIdToexercises exercises            @relation("exercise_relations_fromIdToexercises", fields: [fromId], references: [id], onDelete: Cascade)
+  exercises_exercise_relations_toIdToexercises   exercises            @relation("exercise_relations_toIdToexercises", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@unique([fromId, toId, relation])
+  @@index([toId])
+}
+
+model exercise_translations {
+  id          String    @id
+  exerciseId  String
+  locale      String    @db.VarChar(8)
+  name        String    @db.VarChar(255)
+  shortName   String?   @db.VarChar(128)
+  description String?
+  searchTerms String[]  @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  exercises   exercises @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, locale])
+  @@index([exerciseId])
+  @@index([locale])
+  @@index([name])
+  @@index([exerciseId, locale, name], map: "idx_exercise_translations_covering")
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_exercise_translations_name_trgm", type: Gin)
+}
+
+model exercise_type_translations {
+  id             String         @id
+  locale         String         @db.VarChar(8)
+  name           String         @db.VarChar(255)
+  description    String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime
+  exerciseTypeId String
+  exercise_types exercise_types @relation(fields: [exerciseTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseTypeId, locale])
+  @@index([exerciseTypeId])
+  @@index([locale])
+}
+
+model exercise_types {
+  name                       String                       @unique @db.VarChar(64)
+  imageUrl                   String?
+  id                         String                       @id
+  exercise_type_translations exercise_type_translations[]
+  exercises                  exercises[]
+
+  @@index([name])
+}
+
+model exercise_versions {
+  id          String    @id @default(cuid())
+  exerciseId  String
+  version     Int
+  diff        Json
+  baseVersion Int?
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+  createdById String?   @db.Uuid
+  users       users?    @relation(fields: [createdById], references: [id], onDelete: NoAction, map: "exercise_versions_createdbyid_fkey")
+  exercises   exercises @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, version])
+  @@index([createdAt])
+  @@index([exerciseId])
+  @@index([createdById])
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model exercises {
+  id                                  String                         @id @db.VarChar(40)
+  slug                                String                         @unique @db.VarChar(128)
+  overview                            String?
+  imageUrl                            String?
+  videoUrl                            String?
+  keywords                            String[]                       @default([])
+  instructions                        String[]                       @default([])
+  exerciseTips                        String[]                       @default([])
+  variations                          String[]                       @default([])
+  approvalStatus                      ExerciseApprovalStatus         @default(PENDING)
+  approvedAt                          DateTime?
+  isUserGenerated                     Boolean                        @default(false)
+  version                             Int                            @default(1)
+  createdAt                           DateTime                       @default(now())
+  updatedAt                           DateTime
+  exerciseTypeId                      String?
+  createdById                         String?                        @db.Uuid
+  approvedById                        String?                        @db.Uuid
+  exercise_body_parts                 exercise_body_parts[]
+  exercise_equipments                 exercise_equipments[]
+  exercise_muscles                    exercise_muscles[]
+  exercise_performance_records        exercise_performance_records[]
+  relatedFrom                         exercise_relations[]           @relation("exercise_relations_fromIdToexercises")
+  relatedTo                           exercise_relations[]           @relation("exercise_relations_toIdToexercises")
+  exercise_translations               exercise_translations[]
+  exercise_versions                   exercise_versions[]
+  users_exercises_approvedByIdTousers users?                         @relation("exercises_approvedByIdTousers", fields: [approvedById], references: [id], onDelete: NoAction, map: "exercises_approvedbyid_fkey")
+  users_exercises_createdByIdTousers  users?                         @relation("exercises_createdByIdTousers", fields: [createdById], references: [id], onDelete: NoAction, map: "exercises_createdbyid_fkey")
+  exercise_types                      exercise_types?                @relation(fields: [exerciseTypeId], references: [id])
+  user_one_rep_max                    user_one_rep_max[]
+
+  @@index([approvalStatus])
+  @@index([createdAt])
+  @@index([exerciseTypeId])
+  @@index([approvalStatus, createdAt(sort: Desc)], map: "idx_exercises_approval_created")
+  @@index([approvedById])
+  @@index([createdById])
+}
+
+model muscle_translations {
+  id          String   @id
+  locale      String   @db.VarChar(8)
+  name        String   @db.VarChar(255)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  muscleId    String
+  muscles     muscles  @relation(fields: [muscleId], references: [id], onDelete: Cascade)
+
+  @@unique([muscleId, locale])
+  @@index([locale])
+  @@index([muscleId])
+}
+
+model muscles {
+  name                String                @unique @db.VarChar(64)
+  slug                String                @unique
+  imageUrl            String?
+  id                  String                @id
+  exercise_muscles    exercise_muscles[]
+  muscle_translations muscle_translations[]
+
+  @@index([name])
+}
+

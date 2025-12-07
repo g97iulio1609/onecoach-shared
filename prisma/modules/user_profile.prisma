@@ -1,0 +1,224 @@
+// ============================================================================
+// USER PROFILE MODULE - User Profiles, Body Measurements, Progress Snapshots, Goals
+// ============================================================================
+
+enum DietType {
+  OMNIVORE
+  VEGETARIAN
+  VEGAN
+  PESCATARIAN
+  KETO
+  PALEO
+  MEDITERRANEAN
+}
+
+model user_profiles {
+  id                  String         @id
+  age                 Int?
+  sex                 Sex?
+  heightCm            Int?
+  weightKg            Decimal?       @db.Decimal(5, 2)
+  activityLevel       ActivityLevel? @default(MODERATE)
+  trainingFrequency   Int?           @default(3)
+  dailyCalories       Int?
+  workoutGoal         WorkoutGoal?   @default(GENERAL_FITNESS)
+  equipment           String[]       @default([])
+  dietaryRestrictions String[]       @default([])
+  dietaryPreferences  String[]       @default([])
+  healthNotes         String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @default(now())
+  weightUnit          WeightUnit     @default(KG)
+  workoutGoals        String[]       @default([])
+  nutritionGoals      String[]       @default([])
+  dietType            DietType?      @default(OMNIVORE)
+  userId              String?        @unique(map: "user_profiles_userid_key") @db.Uuid
+  users               users?         @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_profiles_userid_fkey")
+
+  @@index([dietaryRestrictions], map: "idx_user_profiles_dietary_restrictions_gin", type: Gin)
+  @@index([equipment], map: "idx_user_profiles_equipment_gin", type: Gin)
+  @@index([nutritionGoals], map: "idx_user_profiles_nutrition_goals_gin", type: Gin)
+  @@index([workoutGoals], map: "idx_user_profiles_workout_goals_gin", type: Gin)
+}
+
+model body_measurements {
+  id         String   @id @default(cuid())
+  date       DateTime @db.Date
+  weight     Decimal? @db.Decimal(5, 2)
+  bodyFat    Decimal? @db.Decimal(4, 2)
+  muscleMass Decimal? @db.Decimal(5, 2)
+  chest      Decimal? @db.Decimal(5, 2)
+  waist      Decimal? @db.Decimal(5, 2)
+  hips       Decimal? @db.Decimal(5, 2)
+  thigh      Decimal? @db.Decimal(5, 2)
+  arm        Decimal? @db.Decimal(5, 2)
+  calf       Decimal? @db.Decimal(5, 2)
+  neck       Decimal? @db.Decimal(5, 2)
+  shoulders  Decimal? @db.Decimal(5, 2)
+  notes      String?
+  photos     String[] @default([])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  userId     String?  @db.Uuid
+  users      users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "body_measurements_userid_fkey")
+
+  @@index([date])
+  @@index([userId])
+  @@index([userId, date(sort: Desc)], map: "idx_body_measurements_user_date")
+}
+
+model user_progress_snapshots {
+  id                  String   @id @default(cuid())
+  date                DateTime @db.Date
+  weight              Decimal? @db.Decimal(5, 2)
+  bodyFat             Decimal? @db.Decimal(4, 2)
+  muscleMass          Decimal? @db.Decimal(5, 2)
+  workoutSessions7d   Int      @default(0)
+  workoutSessions30d  Int      @default(0)
+  avgVolumePerSession Decimal? @db.Decimal(8, 2)
+  strengthProgress    Json?
+  nutritionLogs7d     Int      @default(0)
+  nutritionLogs30d    Int      @default(0)
+  avgCalories         Decimal? @db.Decimal(6, 2)
+  avgProtein          Decimal? @db.Decimal(6, 2)
+  avgCarbs            Decimal? @db.Decimal(6, 2)
+  avgFats             Decimal? @db.Decimal(6, 2)
+  adherenceRate       Decimal? @db.Decimal(5, 2)
+  activeGoals         String[] @default([])
+  completedGoals      String[] @default([])
+  createdAt           DateTime @default(now())
+  userId              String?  @db.Uuid
+  users               users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_progress_snapshots_userid_fkey")
+
+  @@index([date])
+  @@index([userId])
+}
+
+model user_goals {
+  id            String    @id @default(cuid())
+  type          String
+  target        Json
+  deadline      DateTime? @db.Date
+  status        String    @default("ACTIVE")
+  startDate     DateTime  @db.Date
+  completedDate DateTime? @db.Date
+  progressLogs  Json[]
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
+  userId        String?   @db.Uuid
+  users         users?    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_goals_userid_fkey")
+
+  @@index([status])
+  @@index([deadline])
+  @@index([userId, status], map: "idx_user_goals_user_status")
+  @@index([userId])
+}
+
+model user_onboarding_progress {
+  id              String    @id @default(cuid())
+  isCompleted     Boolean   @default(false)
+  currentStep     Int       @default(1)
+  completedSteps  Json      @default("{}")
+  skippedSteps    Json      @default("{}")
+  metadata        Json?
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  lastInteraction DateTime  @updatedAt
+  userId          String?   @unique(map: "user_onboarding_progress_userid_key") @db.Uuid
+  user            users?    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_onboarding_progress_userid_fkey")
+
+  @@index([isCompleted])
+  @@index([lastInteraction])
+}
+
+/// User-created custom skills
+model user_skills {
+  id             String    @id @default(cuid())
+  name           String
+  description    String?
+  version        String    @default("1.0.0")
+  category       String?
+  tags           Json?     @default("[]")
+  inputSchema    Json
+  outputSchema   Json?
+  implementation Json
+  generatedCode  String?
+  codeHash       String?
+  isPublic       Boolean   @default(false)
+  isActive       Boolean   @default(true)
+  deployedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  userId         String?   @db.Uuid
+  user           users?    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_skills_userid_fkey")
+
+  @@index([category])
+  @@index([isActive])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+/// User-created agent workflows  
+model user_workflows {
+  id          String           @id @default(cuid())
+  name        String
+  description String?
+  version     String           @default("1.0.0")
+  domain      String?
+  entryNodeId String?
+  isPublic    Boolean          @default(false)
+  isActive    Boolean          @default(true)
+  deployedAt  DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  userId      String?          @db.Uuid
+  user        users?           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "user_workflows_userid_fkey")
+  edges       workflow_edges[]
+  nodes       workflow_nodes[]
+
+  @@index([domain])
+  @@index([isActive])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+/// Workflow graph nodes
+model workflow_nodes {
+  id            String           @id @default(cuid())
+  workflowId    String
+  type          String
+  label         String
+  position      Json
+  config        Json
+  order         Int?             @default(0)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  outgoingEdges workflow_edges[] @relation("SourceNode")
+  incomingEdges workflow_edges[] @relation("TargetNode")
+  workflow      user_workflows   @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId])
+  @@index([type])
+}
+
+/// Workflow graph edges (connections)
+model workflow_edges {
+  id         String         @id @default(cuid())
+  workflowId String
+  sourceId   String
+  targetId   String
+  label      String?
+  condition  Json?
+  order      Int?           @default(0)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  source     workflow_nodes @relation("SourceNode", fields: [sourceId], references: [id], onDelete: Cascade)
+  target     workflow_nodes @relation("TargetNode", fields: [targetId], references: [id], onDelete: Cascade)
+  workflow   user_workflows @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId])
+  @@index([sourceId])
+  @@index([targetId])
+}
+

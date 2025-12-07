@@ -1,0 +1,83 @@
+// ============================================================================
+// BASE MODULE - Generator, Datasource, and Common Enums
+// ============================================================================
+// This module contains the Prisma configuration and shared enums used across
+// multiple domains. DO NOT add domain-specific models here.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
+  engineType    = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// COMMON ENUMS - Used across multiple domains
+// ============================================================================
+
+enum AIProvider {
+  GOOGLE
+  ANTHROPIC
+  OPENAI
+  XAI
+  OPENROUTER
+  MINIMAX
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  COACH
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+enum ConversationRole {
+  USER
+  ASSISTANT
+  SYSTEM
+  TOOL
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHT
+  MODERATE
+  ACTIVE
+  VERY_ACTIVE
+}
+
+enum DifficultyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum WeightUnit {
+  KG
+  LBS
+}
+
+enum TransactionType {
+  PURCHASE
+  CONSUMPTION
+  REFUND
+  ADMIN_ADJUSTMENT
+  SUBSCRIPTION_RENEWAL
+  PROMOTION
+}
+

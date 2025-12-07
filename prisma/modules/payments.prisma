@@ -1,0 +1,150 @@
+// ============================================================================
+// PAYMENTS MODULE - Payments, Subscriptions, Credit Transactions, Promotions
+// ============================================================================
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentType {
+  SUBSCRIPTION
+  CREDITS
+  MARKETPLACE
+}
+
+enum SubscriptionPlan {
+  PLUS
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PAST_DUE
+}
+
+enum PromotionType {
+  STRIPE_COUPON
+  BONUS_CREDITS
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+model payments {
+  id                    String           @id
+  subscriptionId        String?
+  stripePaymentId       String           @unique
+  amount                Int
+  currency              String           @default("eur")
+  status                PaymentStatus    @default(PENDING)
+  type                  PaymentType
+  creditsAdded          Int?
+  metadata              Json?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime
+  stripePaymentIntentId String?          @unique
+  userId                String?          @db.Uuid
+  subscriptions         subscriptions?   @relation(fields: [subscriptionId], references: [id])
+  users                 users?           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "payments_userid_fkey")
+  promotion_uses        promotion_uses[]
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([stripePaymentIntentId])
+  @@index([metadata], map: "idx_payments_metadata_gin", type: Gin)
+  @@index([userId, createdAt(sort: Desc)], map: "idx_payments_user_created")
+  @@index([userId, status], map: "idx_payments_user_status")
+  @@index([userId])
+  @@index([subscriptionId])
+}
+
+model subscriptions {
+  id                   String             @id
+  plan                 SubscriptionPlan
+  status               SubscriptionStatus @default(ACTIVE)
+  stripeSubscriptionId String?            @unique
+  stripeCustomerId     String?
+  stripePriceId        String?
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime
+  userId               String?            @db.Uuid
+  payments             payments[]
+  users                users?             @relation(fields: [userId], references: [id], onDelete: Cascade, map: "subscriptions_userid_fkey")
+
+  @@index([status])
+  @@index([stripeSubscriptionId])
+  @@index([userId, status], map: "idx_subscriptions_user_status")
+  @@index([userId])
+}
+
+model credit_transactions {
+  id           String          @id @default(cuid())
+  amount       Int
+  type         TransactionType
+  description  String
+  metadata     Json?
+  balanceAfter Int
+  createdAt    DateTime        @default(now())
+  userId       String?         @db.Uuid
+  users        users?          @relation(fields: [userId], references: [id], onDelete: Cascade, map: "credit_transactions_userid_fkey")
+
+  @@index([createdAt])
+  @@index([type])
+  @@index([userId])
+}
+
+model promotions {
+  id             String           @id @default(cuid())
+  code           String           @unique
+  type           PromotionType
+  stripeCouponId String?
+  discountType   DiscountType?
+  discountValue  Decimal?
+  bonusCredits   Int?
+  maxUses        Int?
+  maxUsesPerUser Int              @default(1)
+  validFrom      DateTime
+  validUntil     DateTime?
+  isActive       Boolean          @default(true)
+  description    String?
+  createdBy      String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  promotion_uses promotion_uses[]
+
+  @@index([code])
+  @@index([isActive])
+  @@index([validFrom])
+  @@index([validUntil])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model promotion_uses {
+  id                      String     @id @default(cuid())
+  promotionId             String
+  paymentId               String?
+  stripeCheckoutSessionId String?
+  appliedAt               DateTime   @default(now())
+  metadata                Json?
+  userId                  String?    @db.Uuid
+  payments                payments?  @relation(fields: [paymentId], references: [id])
+  promotions              promotions @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  users                   users?     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "promotion_uses_userid_fkey")
+
+  @@index([promotionId])
+  @@index([paymentId])
+  @@index([appliedAt])
+  @@index([userId])
+}
+

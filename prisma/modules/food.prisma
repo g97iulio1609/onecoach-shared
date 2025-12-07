@@ -1,0 +1,91 @@
+// ============================================================================
+// FOOD MODULE - Food Items, Brands, Categories, Translations
+// ============================================================================
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model food_items {
+  id                     String                   @id @default(cuid())
+  name                   String                   @db.VarChar(255)
+  nameNormalized         String                   @db.VarChar(255)
+  barcode                String?                  @unique @db.VarChar(128)
+  macrosPer100g          Json
+  servingSize            Decimal                  @db.Decimal(6, 2)
+  unit                   String                   @default("g")
+  metadata               Json?
+  imageUrl               String?                  @db.VarChar(512)
+  brandId                String?
+  proteinPct             Decimal                  @db.Decimal(5, 2)
+  carbPct                Decimal                  @db.Decimal(5, 2)
+  fatPct                 Decimal                  @db.Decimal(5, 2)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  mainMacro              Json
+  categories             food_item_categories[]
+  food_item_translations food_item_translations[]
+  brand                  food_brands?             @relation(fields: [brandId], references: [id])
+
+  @@index([name])
+  @@index([nameNormalized])
+  @@index([barcode])
+  @@index([brandId])
+  @@index([proteinPct])
+  @@index([carbPct])
+  @@index([fatPct])
+  @@index([createdAt])
+  @@index([createdAt, name])
+  @@index([id, name, nameNormalized, proteinPct, carbPct, fatPct], map: "idx_food_items_covering")
+  @@index([macrosPer100g], map: "idx_food_items_macros_gin", type: Gin)
+  @@index([metadata], map: "idx_food_items_metadata_gin", type: Gin)
+  @@index([nameNormalized(ops: raw("gin_trgm_ops"))], map: "idx_food_items_name_normalized_trgm", type: Gin)
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_food_items_name_trgm", type: Gin)
+}
+
+model food_item_translations {
+  id          String     @id @default(cuid())
+  foodItemId  String
+  locale      String     @db.VarChar(8)
+  name        String     @db.VarChar(255)
+  description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  food_items  food_items @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+
+  @@unique([foodItemId, locale])
+  @@index([foodItemId])
+  @@index([locale])
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_food_item_translations_name_trgm", type: Gin)
+}
+
+model food_brands {
+  id             String       @id @default(cuid())
+  name           String       @unique @db.VarChar(128)
+  nameNormalized String       @db.VarChar(128)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  items          food_items[]
+
+  @@index([nameNormalized])
+}
+
+model food_categories {
+  id        String                 @id @default(cuid())
+  name      String                 @unique @db.VarChar(128)
+  slug      String                 @unique @db.VarChar(128)
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  items     food_item_categories[]
+
+  @@index([slug])
+}
+
+model food_item_categories {
+  foodItemId      String
+  categoryId      String
+  createdAt       DateTime        @default(now())
+  food_categories food_categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  food_items      food_items      @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+
+  @@id([foodItemId, categoryId])
+  @@index([categoryId])
+}
+

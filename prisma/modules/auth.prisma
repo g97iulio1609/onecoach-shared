@@ -1,0 +1,148 @@
+// ============================================================================
+// AUTH MODULE - Authentication and User Management
+// ============================================================================
+
+model accounts {
+  id                String  @id
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  userId            String? @db.Uuid
+  users             users?  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "accounts_userid_fkey")
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model sessions {
+  id           String   @id
+  sessionToken String   @unique
+  expires      DateTime
+  userId       String?  @db.Uuid
+  users        users?   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "sessions_userid_fkey")
+
+  @@index([userId])
+}
+
+model users {
+  email                                   String                         @unique @db.Citext
+  name                                    String?
+  password                                String
+  role                                    UserRole                       @default(USER)
+  status                                  UserStatus                     @default(ACTIVE)
+  credits                                 Int                            @default(0)
+  stripeCustomerId                        String?                        @unique
+  emailVerified                           DateTime?
+  image                                   String?
+  createdAt                               DateTime                       @default(now())
+  updatedAt                               DateTime
+  autoRecalculateMacros                   Boolean                        @default(false)
+  healthLastSync                          DateTime?
+  healthPlatform                          String?
+  betaEnabled                             Boolean                        @default(false)
+  invitationId                            String?
+  copilotEnabled                          Boolean                        @default(true)
+  id                                      String                         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planning_plans                          planning_plans[]
+  accounts                                accounts[]
+  affiliate_rewards                       affiliate_rewards[]
+  body_measurements                       body_measurements[]
+  calendar_assignments                    calendar_assignments[]
+  carts                                   carts[]
+  coach_profile                           coach_profiles?
+  coach_vetting_requests                  coach_vetting_requests[]
+  conversations                           conversations[]
+  credit_transactions                     credit_transactions[]
+  exercise_performance_records            exercise_performance_records[]
+  exercise_versions                       exercise_versions[]
+  exercises_exercises_approvedByIdTousers exercises[]                    @relation("exercises_approvedByIdTousers")
+  exercises_exercises_createdByIdTousers  exercises[]                    @relation("exercises_createdByIdTousers")
+  health_active_calories                  health_active_calories[]
+  health_heart_rate                       health_heart_rate[]
+  health_steps                            health_steps[]
+  health_weight                           health_weight[]
+  health_workout                          health_workout[]
+  invitation_uses                         invitation_uses[]
+  created_invitations                     invitations[]                  @relation("CreatedInvitations")
+  marketplace_plans_as_coach              marketplace_plans[]            @relation("CoachMarketplacePlans")
+  meal_templates                          meal_templates[]
+  nutrition_adherence_metrics             nutrition_adherence_metrics[]
+  nutrition_day_logs                      nutrition_day_logs[]
+  nutrition_plans                         nutrition_plans[]
+  nutrition_templates                     nutrition_templates[]
+  password_reset_tokens                   password_reset_tokens[]
+  payments                                payments[]
+  payout_audit_logs                       payout_audit_log[]             @relation("payout_audit_log_user")
+  plan_purchases                          plan_purchases[]
+  plan_ratings                            plan_ratings[]
+  policies_createdByIdTousers             policies[]                     @relation("policies_createdByIdTousers")
+  policies_updatedByIdTousers             policies[]                     @relation("policies_updatedByIdTousers")
+  promotion_uses                          promotion_uses[]
+  referral_attributions_as_referred       referral_attributions[]        @relation("ReferralReferred")
+  referral_attributions_as_referrer       referral_attributions[]        @relation("ReferralReferrer")
+  referral_code                           referral_codes?
+  sessions                                sessions[]
+  subscriptions                           subscriptions[]
+  user_api_keys                           user_api_keys[]
+  user_consents                           user_consents[]
+  user_goals                              user_goals[]
+  user_onboarding_progress                user_onboarding_progress?
+  user_one_rep_max                        user_one_rep_max[]
+  user_payout_profile                     user_payout_profiles?
+  user_profiles                           user_profiles?
+  user_progress_snapshots                 user_progress_snapshots[]
+  user_skills                             user_skills[]
+  user_workflows                          user_workflows[]
+  direct_conversations_as_coach           direct_conversations[]            @relation("CoachDirectConversations")
+  direct_conversations_as_athlete         direct_conversations[]            @relation("AthleteDirectConversations")
+  direct_messages_sent                    direct_messages[]                 @relation("DirectMessageSender")
+  message_reads                           message_reads[]                   @relation("MessageReads")
+  user_memory                             user_memories?                    @relation("UserMemory")
+  user_memory_versions                    user_memory_versions[]            @relation("UserMemoryVersions")
+  user_memory_timeline                    user_memory_timeline[]            @relation("UserMemoryTimeline")
+  invitation                              invitations?                   @relation("UserInvitation", fields: [invitationId], references: [id])
+  workout_programs                        workout_programs[]
+  workout_sessions                        workout_sessions[]
+  workout_templates                       workout_templates[]
+  chat_usage_logs                         chat_usage_logs[]              @relation("ChatUsageLogs")
+  copilot_settings                        copilot_settings?              @relation("CopilotSettings")
+
+  @@index([role])
+  @@index([status])
+  @@index([stripeCustomerId])
+  @@index([email])
+  @@index([betaEnabled])
+  @@index([createdAt], map: "idx_users_created")
+  @@index([role, status], map: "idx_users_role_status")
+  @@index([invitationId])
+}
+
+model verification_tokens {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model password_reset_tokens {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  userId    String?   @db.Uuid
+  user      users?    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "password_reset_tokens_userid_fkey")
+
+  @@index([token])
+  @@index([expiresAt])
+  @@index([userId])
+}
+

@@ -1,0 +1,146 @@
+// ============================================================================
+// NUTRITION MODULE - Nutrition Plans, Day Logs, Adherence Metrics, Goals
+// ============================================================================
+
+enum NutritionStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+model nutrition_plan_versions {
+  id               String          @id
+  planId           String
+  version          Int
+  name             String
+  description      String
+  durationWeeks    Int
+  targetMacros     Json
+  restrictions     String[]
+  preferences      String[]
+  status           NutritionStatus
+  metadata         Json?
+  createdBy        String
+  createdAt        DateTime        @default(now())
+  goals            String[]
+  weeks            Json
+  adaptations      Json?
+  personalizedPlan Json?
+  userProfile      Json?
+  nutrition_plans  nutrition_plans @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, version])
+  @@index([createdAt])
+  @@index([planId])
+}
+
+model nutrition_plans {
+  id                          String                        @id
+  name                        String
+  description                 String
+  durationWeeks               Int
+  targetMacros                Json
+  restrictions                String[]
+  preferences                 String[]
+  status                      NutritionStatus               @default(ACTIVE)
+  metadata                    Json?
+  version                     Int                           @default(1)
+  createdAt                   DateTime                      @default(now())
+  updatedAt                   DateTime
+  goals                       String[]
+  weeks                       Json
+  adaptations                 Json?
+  personalizedPlan            Json?
+  userProfile                 Json?
+  userId                      String?                       @db.Uuid
+  marketplace_plan            marketplace_plans?
+  nutrition_adherence_metrics nutrition_adherence_metrics[]
+  nutrition_day_logs          nutrition_day_logs[]
+  nutrition_plan_versions     nutrition_plan_versions[]
+  users                       users?                        @relation(fields: [userId], references: [id], onDelete: Cascade, map: "nutrition_plans_userid_fkey")
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([userId, createdAt(sort: Desc)], map: "idx_nutrition_plans_user_created")
+  @@index([userId, status], map: "idx_nutrition_plans_user_status")
+  @@index([userId])
+  @@index([targetMacros], map: "idx_nutrition_plans_targetmacros_gin", type: Gin)
+  @@index([userProfile], map: "idx_nutrition_plans_userprofile_gin", type: Gin)
+  @@index([weeks], map: "idx_nutrition_plans_weeks_gin", type: Gin)
+}
+
+model nutrition_day_logs {
+  id                String          @id @default(cuid())
+  planId            String
+  weekNumber        Int
+  dayNumber         Int
+  date              DateTime        @db.Date
+  meals             Json
+  actualDailyMacros Json?
+  waterIntake       Decimal?        @db.Decimal(4, 2)
+  notes             String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @default(now())
+  userId            String?         @db.Uuid
+  nutrition_plans   nutrition_plans @relation(fields: [planId], references: [id], onDelete: Cascade)
+  users             users?          @relation(fields: [userId], references: [id], onDelete: Cascade, map: "nutrition_day_logs_userid_fkey")
+
+  @@index([planId])
+  @@index([date])
+  @@index([planId, weekNumber], map: "idx_nutrition_day_logs_plan_week")
+  @@index([userId, date(sort: Desc)], map: "idx_nutrition_day_logs_user_date")
+  @@index([userId])
+}
+
+model nutrition_adherence_metrics {
+  id               String          @id @default(cuid())
+  planId           String
+  weekNumber       Int
+  startDate        DateTime        @db.Date
+  endDate          DateTime        @db.Date
+  daysLogged       Int
+  totalDays        Int
+  adherenceRate    Decimal         @db.Decimal(5, 2)
+  avgCalories      Decimal         @db.Decimal(6, 2)
+  avgProtein       Decimal         @db.Decimal(6, 2)
+  avgCarbs         Decimal         @db.Decimal(6, 2)
+  avgFats          Decimal         @db.Decimal(6, 2)
+  avgWaterIntake   Decimal?        @db.Decimal(4, 2)
+  caloriesVariance Decimal         @db.Decimal(6, 2)
+  proteinVariance  Decimal         @db.Decimal(6, 2)
+  carbsVariance    Decimal         @db.Decimal(6, 2)
+  fatsVariance     Decimal         @db.Decimal(6, 2)
+  createdAt        DateTime        @default(now())
+  userId           String?         @db.Uuid
+  nutrition_plans  nutrition_plans @relation(fields: [planId], references: [id], onDelete: Cascade)
+  users            users?          @relation(fields: [userId], references: [id], onDelete: Cascade, map: "nutrition_adherence_metrics_userid_fkey")
+
+  @@index([planId])
+  @@index([startDate])
+  @@index([planId, weekNumber], map: "idx_nutrition_adherence_plan_week")
+  @@index([userId])
+}
+
+model nutrition_goals {
+  id                          String                        @id @default(cuid())
+  name                        String                        @unique @db.VarChar(64)
+  slug                        String                        @unique
+  nutrition_goal_translations nutrition_goal_translations[]
+}
+
+model nutrition_goal_translations {
+  id              String          @id @default(cuid())
+  nutritionGoalId String
+  locale          String          @db.VarChar(8)
+  name            String          @db.VarChar(255)
+  description     String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @default(now())
+  nutrition_goals nutrition_goals @relation(fields: [nutritionGoalId], references: [id], onDelete: Cascade)
+
+  @@unique([nutritionGoalId, locale])
+  @@index([nutritionGoalId])
+  @@index([locale])
+}
+

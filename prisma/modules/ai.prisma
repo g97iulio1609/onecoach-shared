@@ -1,0 +1,216 @@
+// ============================================================================
+// AI MODULE - AI Configuration, Prompts, Models, and Chat
+// ============================================================================
+
+enum OperationType {
+  GENERAL_CHAT
+  VISION_ANALYSIS
+  FOOD_LABEL_ANALYSIS
+  MEAL_SEGMENTATION
+  PLAN_GENERATION
+  PLAN_MODIFICATION
+  PLAN_RECALCULATION
+  EXERCISE_GENERATION
+  EXERCISE_AUTOCOMPLETE
+  ANALYTICS_INSIGHTS
+  PROGRESS_ANALYSIS
+  WORKOUT_IMPORT
+}
+
+enum AIChatFeature {
+  MODEL_SELECTOR
+  SPEECH_RECOGNITION
+  CHECKPOINT
+  CONTEXT
+  CONVERSATION
+  SOURCES
+  SUGGESTION
+  TASK
+  ARTIFACT
+  WEB_PREVIEW
+  REASONING
+  QUEUE
+}
+
+model ai_config_history {
+  id             String        @id @default(cuid())
+  operationType  OperationType
+  model          String
+  creditCost     Int
+  maxTokens      Int
+  thinkingBudget Int
+  changedBy      String
+  changeReason   String?
+  createdAt      DateTime      @default(now())
+
+  @@index([createdAt])
+  @@index([operationType])
+}
+
+model ai_operation_configs {
+  id                     String        @id @default(cuid())
+  operationType          OperationType
+  model                  String
+  creditCost             Int
+  maxTokens              Int           @default(65000)
+  thinkingBudget         Int           @default(32000)
+  isActive               Boolean       @default(true)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime
+  recalculateCreditsCost Int?          @default(1)
+
+  @@unique([operationType, model])
+  @@unique([operationType, model], map: "ai_operation_configs_operationtype_model_key")
+  @@index([isActive])
+  @@index([operationType])
+}
+
+model ai_provider_configs {
+  id             String     @id @default(cuid())
+  provider       AIProvider @unique
+  isEnabled      Boolean    @default(true)
+  defaultModel   String?
+  metadata       Json?
+  updatedBy      String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime
+  vercelEnvVarId String?
+}
+
+model ai_framework_configs {
+  id          String   @id @default(cuid())
+  feature     String   @unique
+  isEnabled   Boolean  @default(false)
+  config      Json?
+  description String?
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([feature])
+  @@index([isEnabled])
+}
+
+model ai_framework_config_history {
+  id           String   @id @default(cuid())
+  feature      String
+  isEnabled    Boolean
+  config       Json?
+  changedBy    String
+  changeReason String?
+  createdAt    DateTime @default(now())
+
+  @@index([feature])
+  @@index([createdAt])
+}
+
+model ai_system_prompts {
+  id             String                     @id @default(cuid())
+  agentId        String                     @unique
+  agentCategory  String
+  agentName      String
+  isActive       Boolean                    @default(false)
+  promptTemplate String
+  variables      Json?
+  description    String?
+  defaultPrompt  String
+  updatedBy      String?
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+  history        ai_system_prompt_history[]
+
+  @@index([agentCategory])
+  @@index([isActive])
+  @@index([agentId])
+}
+
+model ai_system_prompt_history {
+  id             String            @id @default(cuid())
+  promptId       String
+  promptTemplate String
+  isActive       Boolean
+  changedBy      String
+  changeReason   String?
+  createdAt      DateTime          @default(now())
+  prompt         ai_system_prompts @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@index([promptId])
+  @@index([createdAt])
+}
+
+model ai_external_models {
+  id                       String   @id @default(cuid())
+  provider                 String   @default("openrouter")
+  modelId                  String   @unique
+  name                     String
+  description              String?
+  contextLength            Int?
+  maxOutputTokens          Int?
+  promptPrice              Decimal  @db.Decimal(10, 6)
+  completionPrice          Decimal  @db.Decimal(10, 6)
+  supportsImages           Boolean  @default(false)
+  supportsReasoning        Boolean  @default(false)
+  reasoningEffort          String?
+  supportsStructuredOutput Boolean  @default(false)
+  isActive                 Boolean  @default(true)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  @@index([provider])
+  @@index([isActive])
+}
+
+model ai_chat_models {
+  id                    String                 @id @default(cuid())
+  provider              AIProvider
+  modelId               String
+  displayName           String
+  description           String?
+  isActive              Boolean                @default(true)
+  isDefault             Boolean                @default(false)
+  maxTokens             Int                    @default(8192)
+  contextWindow         Int                    @default(128000)
+  inputPricePerMillion  Decimal?               @db.Decimal(10, 4)
+  outputPricePerMillion Decimal?               @db.Decimal(10, 4)
+  supportsVision        Boolean                @default(false)
+  supportsTools         Boolean                @default(true)
+  supportsStreaming     Boolean                @default(true)
+  metadata              Json?
+  sortOrder             Int                    @default(0)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @default(now()) @updatedAt
+  modelAccess           ai_chat_model_access[]
+
+  @@unique([provider, modelId])
+  @@index([isActive])
+  @@index([isDefault])
+  @@index([provider])
+  @@index([sortOrder])
+}
+
+model ai_chat_feature_configs {
+  id              String        @id @default(cuid())
+  feature         AIChatFeature @unique
+  isEnabled       Boolean       @default(false)
+  enabledForRoles UserRole[]    @default([])
+  config          Json?
+  description     String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
+
+  @@index([isEnabled])
+}
+
+model ai_chat_model_access {
+  id        String         @id @default(cuid())
+  modelId   String
+  role      UserRole
+  canSelect Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now()) @updatedAt
+  model     ai_chat_models @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  @@unique([modelId, role])
+  @@index([role])
+}
+

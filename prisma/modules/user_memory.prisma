@@ -1,0 +1,61 @@
+// ============================================================================
+// USER MEMORY MODULE - Dynamic User Memory for AI Personalization
+// ============================================================================
+
+model user_memories {
+  id             String                 @id @default(cuid())
+  userId         String                 @unique @db.Uuid
+  memory         Json                   @default("{}") // Structured memory with domain sections
+  version        Int                    @default(1) // Memory structure version for migrations
+  lastAnalyzedAt DateTime? // Last time periodic analysis ran
+  updatedAt      DateTime               @updatedAt
+  createdAt      DateTime               @default(now())
+  users          users                  @relation("UserMemory", fields: [userId], references: [id], onDelete: Cascade, map: "user_memories_userid_fkey")
+  versions       user_memory_versions[] @relation("UserMemoryVersions")
+  timeline       user_memory_timeline[] @relation("UserMemoryTimeline")
+
+  @@index([userId])
+  @@index([lastAnalyzedAt])
+  @@index([updatedAt])
+  // GIN index on JSONB for efficient queries
+  @@index([memory(ops: JsonbPathOps)], type: Gin, map: "idx_user_memories_memory_gin")
+}
+
+// Version history for memory (KISS: simple versioning with snapshot)
+model user_memory_versions {
+  id            String   @id @default(cuid())
+  userId        String   @db.Uuid
+  versionNumber Int      // Sequential version number
+  memory        Json     // Snapshot of memory at this version
+  changeType    String   // 'manual' | 'auto' | 'enhanced'
+  changeNote    String?  // Optional note about what changed
+  changedBy     String?  // 'user' | 'ai' | 'system'
+  createdAt     DateTime @default(now())
+  users         users    @relation("UserMemoryVersions", fields: [userId], references: [id], onDelete: Cascade, map: "user_memory_versions_userid_fkey")
+  user_memory   user_memories? @relation("UserMemoryVersions", fields: [userId], references: [userId], onDelete: Cascade, map: "user_memory_versions_userid_fkey2")
+
+  @@index([userId])
+  @@index([userId, versionNumber])
+  @@index([createdAt])
+}
+
+// Timeline of significant events (KISS: simple event log)
+model user_memory_timeline {
+  id          String   @id @default(cuid())
+  userId      String   @db.Uuid
+  eventType   String   // 'progress' | 'injury' | 'goal' | 'milestone' | 'note'
+  domain      String?  // 'workout' | 'nutrition' | 'oneagenda' | 'general'
+  title       String
+  description String?
+  data        Json?    // Additional event data
+  date        DateTime @db.Date
+  createdAt   DateTime @default(now())
+  users       users    @relation("UserMemoryTimeline", fields: [userId], references: [id], onDelete: Cascade, map: "user_memory_timeline_userid_fkey")
+  user_memory user_memories? @relation("UserMemoryTimeline", fields: [userId], references: [userId], onDelete: Cascade, map: "user_memory_timeline_userid_fkey2")
+
+  @@index([userId])
+  @@index([userId, date])
+  @@index([eventType])
+  @@index([domain])
+}
+
