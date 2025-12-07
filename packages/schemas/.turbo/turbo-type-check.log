@@ -1,4 +1,6 @@
 
-> @OneCoach/schemas@0.0.0 type-check /Users/giulioleone/Sviluppo/CoachOne/submodules/coachone-shared/packages/schemas
+
+> @onecoach/schemas@0.0.0 type-check /Users/giulioleone/Sviluppo/CoachOne/submodules/onecoach-shared/packages/schemas
 > tsc -b
 
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed.[39m

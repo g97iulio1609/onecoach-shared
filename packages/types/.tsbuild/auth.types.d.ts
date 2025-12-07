@@ -63,3 +63,30 @@ export interface ChangePasswordData {
     currentPassword: string;
     newPassword: string;
 }
+export type AppUserRole = 'USER' | 'ADMIN' | 'SUPER_ADMIN' | 'COACH';
+export declare const ADMIN_ROLES: ReadonlyArray<AppUserRole>;
+/**
+ * Normalizza qualsiasi input ruolo (enum, stringa, alias) in un valore canonico.
+ */
+export declare function normalizeRole(role?: string | null): AppUserRole | null;
+/**
+ * Verifica se il ruolo soddisfa quello richiesto, includendo ereditarietà.
+ */
+export declare function roleSatisfies(requiredRole: AppUserRole, role?: string | null): boolean;
+export declare function isAdminRole(role?: string | null): boolean;
+export declare function isSuperAdminRole(role?: string | null): boolean;
+export declare function isCoachRole(role?: string | null): boolean;
+export declare function isUserRole(role?: string | null): boolean;
+/**
+ * Authenticated User - Client-Safe Type
+ * Informazioni utente autenticato senza dipendenze server
+ */
+export type AuthenticatedUser = {
+    id: string;
+    email: string;
+    name: string | null;
+    role: string;
+    credits: number;
+    image?: string | null;
+    copilotEnabled: boolean;
+};

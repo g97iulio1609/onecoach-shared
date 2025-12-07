@@ -1,4 +1,5 @@
 
-> @OneCoach/types@0.0.0 type-check /Users/giulioleone/Sviluppo/CoachOne/submodules/coachone-shared/packages/types
+
+> @onecoach/types@0.0.0 type-check /Users/giulioleone/Sviluppo/CoachOne/submodules/onecoach-shared/packages/types
 > tsc -b
 
