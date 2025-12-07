@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Exercise Main Tables
+-- onecoach Database - Exercise Main Tables
 -- =============================================================================
 -- Module 0005: Exercises and Relationships
 -- Following KISS, SOLID, and DRY principles

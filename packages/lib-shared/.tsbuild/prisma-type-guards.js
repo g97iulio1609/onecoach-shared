@@ -11,7 +11,7 @@
  */
 import { Prisma } from '@prisma/client';
 import { generateId } from './id-generator';
-import { isSetJson, isExerciseJson, isPlanMetadata, isExecutionMetadata, isCheckpointMetadata, } from '@OneCoach/types';
+import { isSetJson, isExerciseJson, isPlanMetadata, isExecutionMetadata, isCheckpointMetadata, } from '@onecoach/types';
 /**
  * Type guard: verifica se un valore è un oggetto Macros valido
  *
@@ -192,7 +192,7 @@ export function toExerciseArray(json) {
  * Type guard: verifica se un oggetto ha proprietà setGroups valide
  * SSOT: Usa SOLO setGroups, non sets legacy
  *
- * @deprecated Usa hasValidSetGroups da @OneCoach/lib-workout invece
+ * @deprecated Usa hasValidSetGroups da @onecoach/lib-workout invece
  * @param exercise - Exercise object
  * @returns true se ha setGroups array valido
  */

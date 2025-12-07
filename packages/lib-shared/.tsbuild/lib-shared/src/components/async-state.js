@@ -7,7 +7,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Loader2, AlertCircle, AlertTriangle } from 'lucide-react';
-import { Button } from '@OneCoach/ui';
+import { Button } from '@onecoach/ui';
 /**
  * Loading state component
  */

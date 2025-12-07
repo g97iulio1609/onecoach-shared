@@ -4,7 +4,7 @@
  * Tipi centralizzati per la gestione dei massimali (1RM).
  * Tutti i componenti, API e store devono importare da qui.
  *
- * @module @OneCoach/types/maxes
+ * @module @onecoach/types/maxes
  */
 
 // ============================================================================

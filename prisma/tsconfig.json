@@ -18,9 +18,9 @@
       "hooks/*": ["../packages/hooks/src/*"],
       "types/*": ["../packages/types/src/*"],
       "design-system/*": ["../packages/design-system/src/*"],
-      "@OneCoach/constants": ["../packages/constants/src/index.ts"],
-      "@OneCoach/constants/*": ["../packages/constants/src/*"],
-      "@OneCoach/types": ["../packages/types/src/index.ts"]
+      "@onecoach/constants": ["../packages/constants/src/index.ts"],
+      "@onecoach/constants/*": ["../packages/constants/src/*"],
+      "@onecoach/types": ["../packages/types/src/index.ts"]
     },
     "strict": true
   },

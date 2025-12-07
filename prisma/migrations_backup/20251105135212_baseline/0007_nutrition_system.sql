@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Nutrition System
+-- onecoach Database - Nutrition System
 -- =============================================================================
 -- Module 0007: Food Database and Nutrition Plans
 -- Following KISS, SOLID, and DRY principles

@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Coach and Marketplace System
+-- onecoach Database - Coach and Marketplace System
 -- =============================================================================
 -- Module 0009: Coach Profiles, Vetting, and Marketplace Plans
 -- Following KISS, SOLID, and DRY principles

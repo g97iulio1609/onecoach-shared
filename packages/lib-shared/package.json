@@ -150,8 +150,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@OneCoach/types": "workspace:*",
-    "@OneCoach/schemas": "workspace:*",
+    "@onecoach/types": "workspace:*",
+    "@onecoach/schemas": "workspace:*",
     "@prisma/client": "7.0.0"
   },
   "devDependencies": {

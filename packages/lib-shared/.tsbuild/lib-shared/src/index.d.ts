@@ -1,5 +1,5 @@
 /**
- * @OneCoach/lib-shared
+ * @onecoach/lib-shared
  *
  * Utilities condivise tra tutti i package
  */

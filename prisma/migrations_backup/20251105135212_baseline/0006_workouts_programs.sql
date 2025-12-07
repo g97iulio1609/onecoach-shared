@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Workout Programs and Sessions
+-- onecoach Database - Workout Programs and Sessions
 -- =============================================================================
 -- Module 0006: Workout Programs, Sessions, and Performance Tracking
 -- Following KISS, SOLID, and DRY principles

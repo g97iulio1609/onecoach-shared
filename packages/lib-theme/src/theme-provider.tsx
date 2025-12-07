@@ -43,7 +43,7 @@ export function ThemeProvider({
         if ((initialTheme || defaultTheme) && store.theme === 'system' && typeof window !== 'undefined') {
             // Check if localStorage already has a value (user has toggled before)
             try {
-                const stored = localStorage.getItem('OneCoach-theme');
+                const stored = localStorage.getItem('onecoach-theme');
                 if (!stored) {
                     // No stored preference, use server-provided initial or default
                     store.setTheme(initialTheme ?? defaultTheme);

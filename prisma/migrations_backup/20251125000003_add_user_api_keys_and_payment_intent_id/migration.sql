@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - User API Keys and Payment Intent ID
+-- onecoach Database - User API Keys and Payment Intent ID
 -- =============================================================================
 -- Migration: Add user_api_keys table and stripePaymentIntentId to payments
 -- Following KISS, SOLID, and DRY principles

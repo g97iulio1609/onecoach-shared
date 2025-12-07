@@ -2,15 +2,15 @@
  * Chat Schemas
  *
  * Schemi per la chat AI
- * Base ChatMessage type is defined in @OneCoach/types to avoid circular dependency
+ * Base ChatMessage type is defined in @onecoach/types to avoid circular dependency
  */
 
 import { z } from 'zod';
-import { AI_REASONING_CONFIG } from '@OneCoach/constants/analytics-constants';
+import { AI_REASONING_CONFIG } from '@onecoach/constants/analytics-constants';
 
 /**
  * Schema for base chat message (without UI-specific fields like id, timestamp, metadata)
- * This matches the base structure of ChatMessage in @OneCoach/types
+ * This matches the base structure of ChatMessage in @onecoach/types
  */
 export const chatMessageSchema = z.object({
   role: z.enum(['user', 'assistant', 'system']),

@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Core User System
+-- onecoach Database - Core User System
 -- =============================================================================
 -- Module 0002: User Management and Authentication
 -- Following KISS, SOLID, and DRY principles

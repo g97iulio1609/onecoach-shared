@@ -7,7 +7,7 @@
  * Cross-platform: createApiErrorResponse returns plain objects.
  * createNextErrorResponse is Next.js-specific wrapper.
  */
-import { ERROR_CODES, HTTP_STATUS } from '@OneCoach/lib-ai-agents/constants';
+import { ERROR_CODES, HTTP_STATUS } from '@onecoach/lib-ai-agents/constants';
 import { getErrorDetails, isZodError } from './core';
 import {
   AppError,
@@ -19,7 +19,7 @@ import {
   ConflictError,
   ValidationError,
 } from './custom-errors';
-import { createErrorResponseObject } from '@OneCoach/lib-api/error-handler/core';
+import { createErrorResponseObject } from '@onecoach/lib-api/error-handler/core';
 /**
  * Create standardized API error response (cross-platform)
  *

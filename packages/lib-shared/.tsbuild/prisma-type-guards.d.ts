@@ -10,7 +10,7 @@
  * - SOLID: Single responsibility per ogni funzione
  */
 import { Prisma } from '@prisma/client';
-import type { Macros, Exercise, ExerciseSet, SetJson, ExerciseJson, PlanMetadata, ExecutionMetadata, CheckpointMetadata } from '@OneCoach/types';
+import type { Macros, Exercise, ExerciseSet, SetJson, ExerciseJson, PlanMetadata, ExecutionMetadata, CheckpointMetadata } from '@onecoach/types';
 /**
  * Type guard: verifica se un valore è un oggetto Macros valido
  *
@@ -83,7 +83,7 @@ export declare function toExerciseArray(json: Prisma.JsonValue | null | undefine
  * Type guard: verifica se un oggetto ha proprietà setGroups valide
  * SSOT: Usa SOLO setGroups, non sets legacy
  *
- * @deprecated Usa hasValidSetGroups da @OneCoach/lib-workout invece
+ * @deprecated Usa hasValidSetGroups da @onecoach/lib-workout invece
  * @param exercise - Exercise object
  * @returns true se ha setGroups array valido
  */

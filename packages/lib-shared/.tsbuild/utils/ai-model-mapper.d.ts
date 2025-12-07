@@ -4,7 +4,7 @@
  * Utility functions for mapping between different AI model and operation representations.
  * Follows KISS, DRY, SOLID principles.
  */
-import type { OperationType } from '@OneCoach/types';
+import type { OperationType } from '@onecoach/types';
 /**
  * Map domain and operation to OperationType enum
  *

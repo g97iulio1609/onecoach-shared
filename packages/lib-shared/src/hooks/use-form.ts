@@ -10,7 +10,7 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
-import { getErrorMessage } from '@OneCoach/lib-shared/utils/api-error-handler';
+import { getErrorMessage } from '@onecoach/lib-shared/utils/api-error-handler';
 
 export type FieldValidator<T extends object, K extends keyof T = keyof T> = (
   value: T[K],

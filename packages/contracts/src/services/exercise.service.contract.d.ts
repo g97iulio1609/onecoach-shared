@@ -4,8 +4,8 @@
  * Interfaccia per il servizio esercizi
  * UNICA FONTE DI VERITÀ per il contratto del servizio
  */
-import type { CreateExerciseInput, UpdateExerciseInput, ExerciseQueryParams, ExerciseDetailQueryParams } from '@OneCoach/schemas';
-import type { Exercise } from '@OneCoach/types';
+import type { CreateExerciseInput, UpdateExerciseInput, ExerciseQueryParams, ExerciseDetailQueryParams } from '@onecoach/schemas';
+import type { Exercise } from '@onecoach/types';
 export interface IExerciseService {
     create(input: CreateExerciseInput): Promise<Exercise>;
     update(id: string, input: UpdateExerciseInput): Promise<Exercise>;

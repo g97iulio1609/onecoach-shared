@@ -5,7 +5,7 @@
  * Uses React Native Alert API for mobile
  *
  * Usage:
- *   import { dialog } from '@OneCoach/lib-shared/utils/dialog-global';
+ *   import { dialog } from '@onecoach/lib-shared/utils/dialog-global';
  *   await dialog.alert('Message');
  *   const confirmed = await dialog.confirm('Are you sure?');
  *   const value = await dialog.prompt('Enter value:');

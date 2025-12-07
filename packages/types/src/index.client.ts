@@ -6,8 +6,8 @@
  *
  * Use this import path in client components instead of importing from @prisma/client:
  * @example
- * import type { ActivityLevel, Sex, WeightUnit } from '@OneCoach/types/client';
- * import { ActivityLevel } from '@OneCoach/types/client'; // for runtime values
+ * import type { ActivityLevel, Sex, WeightUnit } from '@onecoach/types/client';
+ * import { ActivityLevel } from '@onecoach/types/client'; // for runtime values
  */
 
 // Re-export everything from client-safe types (both const objects and types)

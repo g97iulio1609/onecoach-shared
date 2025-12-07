@@ -51,4 +51,4 @@ export * from './dnd.types';
 // Maxes types (1RM)
 export * from './maxes.types';
 // Note: Client-safe enums are exported from './index.client.ts' to avoid conflicts
-// Use '@OneCoach/types/client' in client components to avoid Prisma bundler warnings
+// Use '@onecoach/types/client' in client components to avoid Prisma bundler warnings

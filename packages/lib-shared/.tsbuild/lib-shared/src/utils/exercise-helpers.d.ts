@@ -4,7 +4,7 @@
  * Funzioni pure per formattazione e trasformazione dati esercizi.
  * Testabili e riutilizzabili.
  */
-import type { LocalizedExercise } from '@OneCoach/lib-exercise';
+import type { LocalizedExercise } from '@onecoach/lib-exercise';
 import { ExerciseApprovalStatus } from '@prisma/client';
 export declare const STATUS_LABELS: Record<ExerciseApprovalStatus, string>;
 export declare const STATUS_BADGE_STYLES: Record<ExerciseApprovalStatus, string>;

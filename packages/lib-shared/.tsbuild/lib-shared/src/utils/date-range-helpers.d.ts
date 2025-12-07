@@ -4,7 +4,7 @@
  * Utility functions for calculating date ranges from periods.
  * Following DRY principle - centralized date range logic for analytics.
  */
-import type { Period as AnalyticsPeriod } from '@OneCoach/lib-analytics/coach-analytics.service';
+import type { Period as AnalyticsPeriod } from '@onecoach/lib-analytics/coach-analytics.service';
 export interface DateRange {
     startDate: Date;
     endDate: Date;

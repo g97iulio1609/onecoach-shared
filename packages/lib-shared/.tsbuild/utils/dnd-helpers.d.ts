@@ -5,7 +5,7 @@
  * They are completely independent of any drag and drop library and can be
  * used in both web (React) and mobile (React Native) contexts.
  */
-import type { ReorderOperation, ReorderResult, MoveOperation, MoveResult } from '@OneCoach/types/dnd.types';
+import type { ReorderOperation, ReorderResult, MoveOperation, MoveResult } from '@onecoach/types/dnd.types';
 /**
  * Reorder items within the same array (immutable)
  *

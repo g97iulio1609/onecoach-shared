@@ -1,5 +1,5 @@
 {
-  "name": "@OneCoach/contracts",
+  "name": "@onecoach/contracts",
   "version": "0.0.0",
   "description": "Interfacce e contratti per tutti i servizi",
   "main": "src/index.ts",
@@ -8,8 +8,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@OneCoach/types": "workspace:*",
-    "@OneCoach/schemas": "workspace:*"
+    "@onecoach/types": "workspace:*",
+    "@onecoach/schemas": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

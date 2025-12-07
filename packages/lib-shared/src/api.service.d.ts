@@ -4,7 +4,7 @@
  * Wrapper per fetch con retry logic, timeout e error handling
  * Implementa SRP (Single Responsibility Principle)
  */
-import type { ApiResponse } from '@OneCoach/types';
+import type { ApiResponse } from '@onecoach/types';
 /**
  * Interface per API Service
  */

@@ -8,8 +8,8 @@
  * createNextErrorResponse is Next.js-specific wrapper.
  */
 import type { NextResponse } from 'next/server';
-import type { ApiErrorResponse } from '@OneCoach/lib-api/error-handler/core';
-export type { ApiErrorResponse } from '@OneCoach/lib-api/error-handler/core';
+import type { ApiErrorResponse } from '@onecoach/lib-api/error-handler/core';
+export type { ApiErrorResponse } from '@onecoach/lib-api/error-handler/core';
 /**
  * Create standardized API error response (cross-platform)
  *

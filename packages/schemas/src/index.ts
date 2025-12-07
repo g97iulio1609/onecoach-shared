@@ -1,5 +1,5 @@
 /**
- * @OneCoach/schemas
+ * @onecoach/schemas
  *
  * UNICA FONTE DI VERITÀ per tutti gli schemi Zod
  * Esportazione centralizzata per uso cross-package

@@ -4,7 +4,7 @@
  * Funzioni per validazione input
  */
 
-import type { WorkoutProgram, NutritionPlan, Macros } from '@OneCoach/types';
+import type { WorkoutProgram, NutritionPlan, Macros } from '@onecoach/types';
 
 /**
  * Valida un workout program

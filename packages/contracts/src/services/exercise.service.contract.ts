@@ -10,8 +10,8 @@ import type {
   UpdateExerciseInput,
   ExerciseQueryParams,
   ExerciseDetailQueryParams,
-} from '@OneCoach/schemas';
-import type { Exercise } from '@OneCoach/types';
+} from '@onecoach/schemas';
+import type { Exercise } from '@onecoach/types';
 
 export interface IExerciseService {
   create(input: CreateExerciseInput): Promise<Exercise>;

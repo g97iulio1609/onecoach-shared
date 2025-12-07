@@ -9,8 +9,8 @@
  * Principi: KISS, SOLID (Single Responsibility), DRY
  */
 import { getModelByTier } from '@onecoach/lib-ai-agents/core/providers';
-import { createAIProvider, createCostCalculator } from '@OneCoach/one-agent';
-import { TOKEN_LIMITS } from '@OneCoach/constants/models';
+import { createAIProvider, createCostCalculator } from '@onecoach/one-agent';
+import { TOKEN_LIMITS } from '@onecoach/constants/models';
 /**
  * Crea configurazione comune per agent AI
  *

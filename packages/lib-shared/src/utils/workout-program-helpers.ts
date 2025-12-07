@@ -6,7 +6,7 @@
  * Mirrors the structure of nutrition-plan-helpers.ts for consistency.
  */
 
-import type { WorkoutProgram, WorkoutWeek, WorkoutDay } from '@OneCoach/types';
+import type { WorkoutProgram, WorkoutWeek, WorkoutDay } from '@onecoach/types';
 
 /**
  * Get all goals from a workout program

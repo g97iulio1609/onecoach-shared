@@ -1,5 +1,5 @@
 /**
- * @OneCoach/lib-shared
+ * @onecoach/lib-shared
  *
  * Utilities condivise tra tutti i package
  */
@@ -17,5 +17,5 @@ export * from './utils';
 // Hooks
 export * from './hooks';
 
-// Components - Must be imported from @OneCoach/lib-shared/components to avoid UI deps in backend
+// Components - Must be imported from @onecoach/lib-shared/components to avoid UI deps in backend
 // export * from './components';

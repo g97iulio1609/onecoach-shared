@@ -3,7 +3,7 @@
  *
  * Utility functions per conversione e formattazione pesi
  */
-import { kgToLbs, lbsToKg } from '@OneCoach/lib-workout/intensity-calculator';
+import { kgToLbs, lbsToKg } from '@onecoach/lib-workout/intensity-calculator';
 /**
  * Formatta il peso in base all'unità preferita
  * @param weightKg - Peso in chilogrammi (può essere null)

@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Templates System
+-- onecoach Database - Templates System
 -- =============================================================================
 -- Module 0008: Meal, Nutrition, and Workout Templates
 -- Following KISS, SOLID, and DRY principles

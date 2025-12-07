@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Extensions and Setup
+-- onecoach Database - Extensions and Setup
 -- =============================================================================
 -- Module 0000: Database Extensions and Basic Setup
 -- Following KISS, SOLID, and DRY principles

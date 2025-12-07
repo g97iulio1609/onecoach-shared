@@ -1,5 +1,5 @@
 /**
- * Storage keys shared across OneCoach clients.
+ * Storage keys shared across onecoach clients.
  */
 export declare const STORAGE_KEYS: {
     readonly WORKOUTS: "workouts";

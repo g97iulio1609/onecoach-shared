@@ -6,7 +6,7 @@
  *
  * Storage keys:
  * - 'ui-storage' (JSON) - Zustand persist middleware
- * - 'OneCoach-theme' (string) - For layout.tsx SSR script
+ * - 'onecoach-theme' (string) - For layout.tsx SSR script
  */
 
 import { useCallback, useRef, useSyncExternalStore, useEffect } from 'react';
@@ -26,7 +26,7 @@ import type {
 // CONSTANTS
 // ============================================================================
 
-export const THEME_STORAGE_KEY = 'OneCoach-theme';
+export const THEME_STORAGE_KEY = 'onecoach-theme';
 const ZUSTAND_STORAGE_KEY = 'lib-theme-storage';
 
 // ============================================================================

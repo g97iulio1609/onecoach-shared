@@ -8,7 +8,7 @@
 'use client';
 
 import { Loader2, AlertCircle, AlertTriangle } from 'lucide-react';
-import { Button } from '@OneCoach/ui';
+import { Button } from '@onecoach/ui';
 
 export interface LoadingStateProps {
   message?: string;

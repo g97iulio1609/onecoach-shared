@@ -5,7 +5,7 @@
  * UNICA FONTE DI VERITÀ per i contratti dei servizi AI
  */
 import type { OperationType, ai_operation_configs } from '@prisma/client';
-import type { Message, Conversation, ParsedAiResponse, RequestType } from '@OneCoach/types';
+import type { Message, Conversation, ParsedAiResponse, RequestType } from '@onecoach/types';
 /**
  * AI Config Service Contract
  */

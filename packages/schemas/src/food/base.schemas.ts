@@ -9,9 +9,9 @@ import { z } from 'zod';
 
 /**
  * Main Macro Schema - Predominant macronutrient
- * Type is defined in @OneCoach/types to avoid circular dependency
+ * Type is defined in @onecoach/types to avoid circular dependency
  */
-import type { MainMacro } from '@OneCoach/types';
+import type { MainMacro } from '@onecoach/types';
 
 export const mainMacroSchema: z.ZodType<MainMacro> = z.object({
   type: z.enum(['PROTEIN', 'CARBS', 'FATS', 'BALANCED']),

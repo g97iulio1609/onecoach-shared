@@ -8,7 +8,7 @@
  */
 'use client';
 import { useState, useCallback } from 'react';
-import { getErrorMessage } from '@OneCoach/lib-shared/utils/api-error-handler';
+import { getErrorMessage } from '@onecoach/lib-shared/utils/api-error-handler';
 /**
  * Hook for managing async state
  *

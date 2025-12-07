@@ -1,5 +1,5 @@
 /**
- * @OneCoach/lib-theme
+ * @onecoach/lib-theme
  *
  * Cross-platform theming system with Zustand store and React provider.
  */

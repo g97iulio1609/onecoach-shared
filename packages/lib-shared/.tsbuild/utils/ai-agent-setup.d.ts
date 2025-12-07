@@ -6,8 +6,8 @@
  * @throws Error se API key non configurata
  */
 export function createAIAgentConfig(options?: {}): Promise<{
-    provider: import("@OneCoach/one-agent").AIProvider;
-    costCalculator: import("@OneCoach/one-agent").CostCalculator;
+    provider: import("@onecoach/one-agent").AIProvider;
+    costCalculator: import("@onecoach/one-agent").CostCalculator;
     model: any;
     temperature: any;
     maxTokens: any;

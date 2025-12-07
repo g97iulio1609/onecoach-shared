@@ -5,7 +5,7 @@
  * UNICA FONTE DI VERITÀ per il contratto del servizio
  */
 
-import type { NutritionPlan, ApiResponse } from '@OneCoach/types';
+import type { NutritionPlan, ApiResponse } from '@onecoach/types';
 
 export interface INutritionService {
   create(plan: Omit<NutritionPlan, 'id' | 'createdAt' | 'updatedAt'>): ApiResponse<NutritionPlan>;

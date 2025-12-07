@@ -3,7 +3,7 @@
  *
  * Utilities for normalizing macros from specific quantities to per-100g values
  */
-import type { Macros } from '@OneCoach/types';
+import type { Macros } from '@onecoach/types';
 /**
  * Convert macros from a specific quantity to per-100g values
  *

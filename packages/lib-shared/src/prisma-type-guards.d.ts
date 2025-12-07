@@ -19,7 +19,7 @@ import type {
   PlanMetadata,
   ExecutionMetadata,
   CheckpointMetadata,
-} from '@OneCoach/types';
+} from '@onecoach/types';
 /**
  * Type guard: verifica se un valore è un oggetto Macros valido
  *
@@ -105,7 +105,7 @@ export declare function toExerciseArray(
  * Type guard: verifica se un oggetto ha proprietà setGroups valide
  * SSOT: Usa SOLO setGroups, non sets legacy
  *
- * @deprecated Usa hasValidSetGroups da @OneCoach/lib-workout invece
+ * @deprecated Usa hasValidSetGroups da @onecoach/lib-workout invece
  * @param exercise - Exercise object
  * @returns true se ha setGroups array valido
  */

@@ -2,7 +2,7 @@
  * Nutrition Types
  *
  * Type definitions per il dominio nutrizione
- * Gli schemi Zod sono in @OneCoach/schemas (unica fonte di verità)
+ * Gli schemi Zod sono in @onecoach/schemas (unica fonte di verità)
  */
 import { NutritionStatus } from './database.types';
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'pre-workout' | 'post-workout';

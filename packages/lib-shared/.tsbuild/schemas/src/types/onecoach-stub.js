@@ -1,4 +1,4 @@
-// Stub module for external @OneCoach/* deps not present in shared workspace
+// Stub module for external @onecoach/* deps not present in shared workspace
 const anyModule = new Proxy({}, {
     get: () => anyModule,
     apply: () => anyModule,

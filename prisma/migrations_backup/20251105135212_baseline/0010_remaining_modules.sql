@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Remaining Modules
+-- onecoach Database - Remaining Modules
 -- =============================================================================
 -- Module 0010: Affiliate, AI, Policy, Planning, Analytics, Progress, Versioning, and Translations
 -- Following KISS, SOLID, and DRY principles

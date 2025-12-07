@@ -4,7 +4,7 @@
  * Core value objects per il dominio nutrizione.
  * Pattern-based schemas sono in pattern.schemas.ts
  *
- * @module @OneCoach/schemas/nutrition
+ * @module @onecoach/schemas/nutrition
  */
 
 import { z } from 'zod';

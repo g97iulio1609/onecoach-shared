@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Promotions System
+-- onecoach Database - Promotions System
 -- =============================================================================
 -- Migration: Add promotions and promotion_uses tables
 -- Following KISS, SOLID, and DRY principles

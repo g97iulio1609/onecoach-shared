@@ -1,5 +1,5 @@
 {
-  "name": "coachone-shared",
+  "name": "onecoach-shared",
   "private": true,
   "packageManager": "pnpm@10.20.0",
   "scripts": {

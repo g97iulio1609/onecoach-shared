@@ -4,7 +4,7 @@
  * Unified utility functions for calculating and manipulating nutritional macros.
  * Following KISS and DRY principles.
  */
-import type { Food, Meal, NutritionDay } from '@OneCoach/types';
+import type { Food, Meal, NutritionDay } from '@onecoach/types';
 export interface Macros {
     calories: number;
     protein: number;

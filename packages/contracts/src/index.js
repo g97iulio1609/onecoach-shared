@@ -1,5 +1,5 @@
 /**
- * @OneCoach/contracts
+ * @onecoach/contracts
  *
  * Interfacce e contratti per tutti i servizi
  * UNICA FONTE DI VERITÀ per i contratti dei servizi

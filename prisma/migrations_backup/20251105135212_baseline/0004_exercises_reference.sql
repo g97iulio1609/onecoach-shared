@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Exercise Reference Data
+-- onecoach Database - Exercise Reference Data
 -- =============================================================================
 -- Module 0004: Exercise Types, Muscles, Body Parts, Equipment
 -- Following KISS, SOLID, and DRY principles

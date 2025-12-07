@@ -1,5 +1,5 @@
 {
-    "name": "@OneCoach/lib-theme",
+    "name": "@onecoach/lib-theme",
     "version": "0.0.0",
     "description": "Cross-platform theming system with Zustand store and React provider",
     "main": "src/index.ts",

@@ -10,8 +10,8 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@OneCoach/constants": ["./src/index.ts"],
-      "@OneCoach/constants/*": ["./src/*"],
+      "@onecoach/constants": ["./src/index.ts"],
+      "@onecoach/constants/*": ["./src/*"],
       "types/*": ["../types/src/*"],
       "types": ["../types/src/index.ts"]
     },

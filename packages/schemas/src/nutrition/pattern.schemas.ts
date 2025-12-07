@@ -6,7 +6,7 @@
  * - MealVariants: varianti intelligenti per ogni pasto
  * - WeeklyRotation: assemblaggio settimane ruotando i pattern
  *
- * @module @OneCoach/schemas/nutrition/pattern
+ * @module @onecoach/schemas/nutrition/pattern
  */
 
 import { z } from 'zod';

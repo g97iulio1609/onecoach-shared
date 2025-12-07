@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Enum Definitions
+-- onecoach Database - Enum Definitions
 -- =============================================================================
 -- Module 0001: All Enum Types
 -- Following KISS, SOLID, and DRY principles

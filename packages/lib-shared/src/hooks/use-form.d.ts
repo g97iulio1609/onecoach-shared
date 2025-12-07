@@ -6,7 +6,7 @@
  *
  * Eliminates repetitive form state and validation patterns
  */
-import type { Validator } from '@OneCoach/lib-shared/utils/validation';
+import type { Validator } from '@onecoach/lib-shared/utils/validation';
 export interface UseFormOptions<T extends Record<string, unknown>> {
   initialValues: T;
   onSubmit: (values: T) => Promise<void> | void;

@@ -2,14 +2,14 @@
  * Nutrition Types
  *
  * Type definitions per il dominio nutrizione
- * Gli schemi Zod sono in @OneCoach/schemas (unica fonte di verità)
+ * Gli schemi Zod sono in @onecoach/schemas (unica fonte di verità)
  */
 
 // Types are defined directly here to avoid circular dependency with schemas
 // Schemas can use these types to create Zod schemas, but types don't depend on schemas
 import { NutritionStatus } from './database.types';
 
-// Note: Zod schemas are available in @OneCoach/schemas - import them directly when needed
+// Note: Zod schemas are available in @onecoach/schemas - import them directly when needed
 // The types defined below match the Zod schemas but are defined independently
 // to avoid circular dependencies between types and schemas packages
 

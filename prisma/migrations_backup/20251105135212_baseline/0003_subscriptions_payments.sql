@@ -1,5 +1,5 @@
 -- =============================================================================
--- OneCoach Database - Subscription and Payment System
+-- onecoach Database - Subscription and Payment System
 -- =============================================================================
 -- Module 0003: Payment Processing and Subscription Management
 -- Following KISS, SOLID, and DRY principles

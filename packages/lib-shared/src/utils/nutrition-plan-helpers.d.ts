@@ -4,7 +4,7 @@
  * Future-proof utility functions for accessing NutritionPlan data.
  * Centralizes access patterns to avoid schema inconsistencies.
  */
-import type { NutritionPlan, NutritionWeek, NutritionDay } from '@OneCoach/types';
+import type { NutritionPlan, NutritionWeek, NutritionDay } from '@onecoach/types';
 /**
  * Get all goals from a nutrition plan
  */

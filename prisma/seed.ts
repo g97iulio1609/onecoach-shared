@@ -193,8 +193,8 @@ async function main() {
   // Don't log credentials in production for security
   if (process.env.NODE_ENV !== 'production') {
     console.warn('\n📧 Login credentials (development only):');
-    console.warn('   Admin: admin@OneCoach.com / Admin123!');
-    console.warn('   Demo:  demo@OneCoach.com / Demo123!');
+    console.warn('   Admin: admin@onecoach.com / Admin123!');
+    console.warn('   Demo:  demo@onecoach.com / Demo123!');
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * @OneCoach/schemas - Workout Module
+ * @onecoach/schemas - Workout Module
  *
  * UNICA FONTE DI VERITÀ (SSOT) per tutti gli schemi Zod workout.
  * Questo modulo è la sorgente canonica per:
@@ -20,7 +20,7 @@
  *   workoutProgramSchema,
  *   type Exercise,
  *   type SetGroup
- * } from '@OneCoach/schemas/workout';
+ * } from '@onecoach/schemas/workout';
  */
 
 // Base schemas - SSOT per tutti i tipi workout

@@ -4,7 +4,7 @@
  * Interfaccia per il servizio analytics
  * UNICA FONTE DI VERITÀ per il contratto del servizio
  */
-import type { UserAnalyticsReport, AnalyticsChartData, BodyMeasurement, UserGoal } from '@OneCoach/types';
+import type { UserAnalyticsReport, AnalyticsChartData, BodyMeasurement, UserGoal } from '@onecoach/types';
 export interface IAnalyticsService {
     getUserAnalytics(userId: string): Promise<UserAnalyticsReport>;
     getChartData(userId: string, chartType: string, period?: string): Promise<AnalyticsChartData>;

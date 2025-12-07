@@ -3,7 +3,7 @@
  *
  * Funzioni per formattare dati (calorie, macros, date, numeri)
  */
-import type { Macros } from '@OneCoach/types';
+import type { Macros } from '@onecoach/types';
 /**
  * Formatta calorie con unità
  *

@@ -8,7 +8,7 @@
  */
 'use client';
 import { useState, useCallback, useMemo } from 'react';
-import { getErrorMessage } from '@OneCoach/lib-shared/utils/api-error-handler';
+import { getErrorMessage } from '@onecoach/lib-shared/utils/api-error-handler';
 /**
  * Generic form hook with validation
  * Supports both Uncontrolled (internal state) and Controlled (external state) modes.
