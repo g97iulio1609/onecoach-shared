@@ -1,0 +1,52 @@
+/**
+ * Chat Schemas
+ *
+ * Schemi per la chat AI
+ * Base ChatMessage type is defined in @OneCoach/types to avoid circular dependency
+ */
+import { z } from 'zod';
+/**
+ * Schema for base chat message (without UI-specific fields like id, timestamp, metadata)
+ * This matches the base structure of ChatMessage in @OneCoach/types
+ */
+export declare const chatMessageSchema: z.ZodObject<{
+    role: z.ZodEnum<{
+        user: "user";
+        system: "system";
+        assistant: "assistant";
+    }>;
+    content: z.ZodString;
+}, z.core.$strip>;
+export declare const chatStreamRequestSchema: z.ZodObject<{
+    messages: z.ZodArray<z.ZodObject<{
+        role: z.ZodEnum<{
+            user: "user";
+            system: "system";
+            assistant: "assistant";
+        }>;
+        content: z.ZodString;
+    }, z.core.$strip>>;
+    tier: z.ZodDefault<z.ZodOptional<z.ZodEnum<{
+        balanced: "balanced";
+        fast: "fast";
+        quality: "quality";
+    }>>>;
+    provider: z.ZodOptional<z.ZodEnum<{
+        google: "google";
+        openrouter: "openrouter";
+        anthropic: "anthropic";
+        openai: "openai";
+        xai: "xai";
+    }>>;
+    model: z.ZodOptional<z.ZodString>;
+    temperature: z.ZodOptional<z.ZodNumber>;
+    enableIntentDetection: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+    enableTools: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+    reasoning: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+    reasoningEffort: z.ZodDefault<z.ZodOptional<z.ZodEnum<{
+        high: "high";
+        low: "low";
+        medium: "medium";
+    }>>>;
+}, z.core.$strip>;
+export type ChatStreamRequest = z.infer<typeof chatStreamRequestSchema>;

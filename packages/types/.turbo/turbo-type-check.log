@@ -1,0 +1,4 @@
+
+> @OneCoach/types@0.0.0 type-check /Users/giulioleone/Sviluppo/CoachOne/packages/types
+> tsc --noEmit
+

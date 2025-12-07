@@ -1,0 +1,18 @@
+{
+  "name": "@OneCoach/contracts",
+  "version": "0.0.0",
+  "description": "Interfacce e contratti per tutti i servizi",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@OneCoach/types": "workspace:*",
+    "@OneCoach/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "sideEffects": false
+}

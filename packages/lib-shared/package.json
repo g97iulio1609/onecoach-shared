@@ -1,0 +1,161 @@
+{
+  "name": "@OneCoach/lib-shared",
+  "version": "0.0.0",
+  "description": "Utilities condivise tra tutti i package",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./id-generator": {
+      "types": "./src/id-generator.ts",
+      "default": "./src/id-generator.ts"
+    },
+    "./storage.service": {
+      "types": "./src/storage.service.ts",
+      "default": "./src/storage.service.ts"
+    },
+    "./api.service": {
+      "types": "./src/api.service.ts",
+      "default": "./src/api.service.ts"
+    },
+    "./date-utils": {
+      "types": "./src/date-utils.ts",
+      "default": "./src/date-utils.ts"
+    },
+    "./macro-calculations": {
+      "types": "./src/macro-calculations.ts",
+      "default": "./src/macro-calculations.ts"
+    },
+    "./prisma-type-guards": {
+      "types": "./src/prisma-type-guards.ts",
+      "default": "./src/prisma-type-guards.ts"
+    },
+    "./utils": {
+      "types": "./src/utils/index.ts",
+      "default": "./src/utils/index.ts"
+    },
+    "./utils/*": {
+      "types": "./src/utils/*.ts",
+      "default": "./src/utils/*.ts"
+    },
+    "./utils/error": {
+      "types": "./src/utils/error/index.ts",
+      "default": "./src/utils/error/index.ts"
+    },
+    "./utils/error/*": {
+      "types": "./src/utils/error/*.ts",
+      "default": "./src/utils/error/*.ts"
+    },
+    "./utils/logger": {
+      "types": "./src/utils/logger/index.ts",
+      "default": "./src/utils/logger/index.ts"
+    },
+    "./utils/logger/*": {
+      "types": "./src/utils/logger/*.ts",
+      "default": "./src/utils/logger/*.ts"
+    },
+    "./utils/id-generator": {
+      "types": "./src/utils/id-generator.ts",
+      "default": "./src/utils/id-generator.ts"
+    },
+    "./utils/dialog-global": {
+      "types": "./src/utils/dialog-global.ts",
+      "default": "./src/utils/dialog-global.ts"
+    },
+    "./utils/api-error-handler": {
+      "types": "./src/utils/api-error-handler.ts",
+      "default": "./src/utils/api-error-handler.ts"
+    },
+    "./utils/validation": {
+      "types": "./src/utils/validation.ts",
+      "default": "./src/utils/validation.ts"
+    },
+    "./utils/formatters": {
+      "types": "./src/utils/formatters.ts",
+      "default": "./src/utils/formatters.ts"
+    },
+    "./utils/validators": {
+      "types": "./src/utils/validators.ts",
+      "default": "./src/utils/validators.ts"
+    },
+    "./utils/date-range-helpers": {
+      "types": "./src/utils/date-range-helpers.ts",
+      "default": "./src/utils/date-range-helpers.ts"
+    },
+    "./utils/dnd-helpers": {
+      "types": "./src/utils/dnd-helpers.ts",
+      "default": "./src/utils/dnd-helpers.ts"
+    },
+    "./utils/weight-converter": {
+      "types": "./src/utils/weight-converter.ts",
+      "default": "./src/utils/weight-converter.ts"
+    },
+    "./utils/ai-model-mapper": {
+      "types": "./src/utils/ai-model-mapper.ts",
+      "default": "./src/utils/ai-model-mapper.ts"
+    },
+    "./utils/prisma-type-guards": {
+      "types": "./src/utils/prisma-type-guards.ts",
+      "default": "./src/utils/prisma-type-guards.ts"
+    },
+    "./mappers": {
+      "types": "./src/mappers/index.ts",
+      "default": "./src/mappers/index.ts"
+    },
+    "./mappers/*": {
+      "types": "./src/mappers/*.ts",
+      "default": "./src/mappers/*.ts"
+    },
+    "./hooks": {
+      "types": "./src/hooks/index.ts",
+      "default": "./src/hooks/index.ts"
+    },
+    "./hooks/*": {
+      "types": "./src/hooks/*.ts",
+      "default": "./src/hooks/*.ts"
+    },
+    "./components": {
+      "types": "./src/components/index.ts",
+      "default": "./src/components/index.ts"
+    },
+    "./components/*": {
+      "types": "./src/components/*.tsx",
+      "default": "./src/components/*.tsx"
+    },
+    "./batch-processing": {
+      "types": "./src/utils/batch-processing.ts",
+      "default": "./src/utils/batch-processing.ts"
+    },
+    "./simple-cache": {
+      "types": "./src/utils/simple-cache.ts",
+      "default": "./src/utils/simple-cache.ts"
+    },
+    "./url-normalizer": {
+      "types": "./src/utils/url-normalizer.ts",
+      "default": "./src/utils/url-normalizer.ts"
+    },
+    "./utils/image-url-sanitizer": {
+      "types": "./src/utils/image-url-sanitizer.ts",
+      "default": "./src/utils/image-url-sanitizer.ts"
+    },
+    "./utils/macro-normalization": {
+      "types": "./src/utils/macro-normalization.ts",
+      "default": "./src/utils/macro-normalization.ts"
+    }
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@OneCoach/types": "workspace:*",
+    "@OneCoach/schemas": "workspace:*",
+    "@prisma/client": "7.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "sideEffects": false
+}
