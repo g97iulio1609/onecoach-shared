@@ -1,0 +1,27 @@
+{
+  "version": "0.0.0",
+  "name": "@OneCoach/constants",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./models": "./src/models.ts",
+    "./supported-locales": "./src/supported-locales.ts",
+    "./onboarding-constants": "./src/onboarding-constants.ts",
+    "./subscription-prices": "./src/subscription-prices.ts",
+    "./credit-packs": "./src/credit-packs.ts",
+    "./health.config": "./src/health.config.ts",
+    "./iap.config": "./src/iap.config.ts",
+    "./config": "./src/config/index.ts",
+    "./config/*": "./src/config/*.ts",
+    "./prompts": "./src/prompts.ts",
+    "./colors": "./src/colors.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "sideEffects": false
+}

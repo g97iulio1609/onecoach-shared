@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@OneCoach/constants": ["./src/index.ts"],
+      "@OneCoach/constants/*": ["./src/*"],
+      "types/*": ["../types/src/*"],
+      "types": ["../types/src/index.ts"]
+    },
+    "strict": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
