@@ -166,6 +166,11 @@ model users {
   nutrition_day_logs                      nutrition_day_logs[]
   nutrition_plans                         nutrition_plans[]
   nutrition_templates                     nutrition_templates[]
+  agenda_habits                           agenda_habits[]
+  agenda_projects                         agenda_projects[]
+  agenda_tasks                            agenda_tasks[]
+  agenda_goals                            agenda_goals[]
+  agenda_user_preferences                 agenda_user_preferences?
   password_reset_tokens                   password_reset_tokens[]
   payments                                payments[]
   payout_audit_logs                       payout_audit_log[]             @relation("payout_audit_log_user")
@@ -255,6 +260,7 @@ enum OperationType {
   ANALYTICS_INSIGHTS
   PROGRESS_ANALYSIS
   WORKOUT_IMPORT
+  COMPLEXITY_EVALUATION
 }
 
 enum AIChatFeature {
@@ -415,6 +421,10 @@ model ai_chat_models {
   supportsVision        Boolean                @default(false)
   supportsTools         Boolean                @default(true)
   supportsStreaming     Boolean                @default(true)
+  // Custom endpoint URL (es. "https://api.openai.com/v1" o endpoint personalizzato)
+  endpoint              String?
+  // Riferimento a quale API key usare (es. "OPENAI_API_KEY", "custom_key_123")
+  apiKeyRef             String?
   metadata              Json?
   sortOrder             Int                    @default(0)
   createdAt             DateTime               @default(now())
@@ -2320,8 +2330,224 @@ enum HabitFrequency {
   CUSTOM
 }
 
-// Models are defined in schema.prisma with @@map directives
-// This file only contains enums used by the oneagenda module
+enum GoalStatus {
+  DRAFT
+  ACTIVE
+  ON_TRACK
+  AT_RISK
+  COMPLETED
+  ABANDONED
+}
+
+enum GoalTimeHorizon {
+  SHORT_TERM
+  MEDIUM_TERM
+  LONG_TERM
+}
+
+model agenda_habit_logs {
+  id            String        @id(map: "HabitLog_pkey") @default(cuid())
+  habitId       String
+  date          DateTime      @db.Date
+  completed     Boolean       @default(true)
+  value         Int?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  agenda_habits agenda_habits @relation(fields: [habitId], references: [id], onDelete: Cascade, map: "oneagenda_habitlog_habitId_fkey")
+
+  @@unique([habitId, date], map: "HabitLog_habitId_date_key")
+  @@index([date], map: "HabitLog_date_idx")
+  @@index([habitId], map: "HabitLog_habitId_idx")
+  @@index([habitId, date], map: "idx_habitlog_habit_date")
+  @@map("oneagenda_habit_logs")
+}
+
+model agenda_habits {
+  id                String              @id(map: "Habit_pkey") @default(cuid())
+  name              String
+  description       String?
+  frequency         HabitFrequency      @default(DAILY)
+  targetDays        Int[]
+  color             String?
+  icon              String?
+  archived          Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  userId            String?             @db.Uuid
+  agenda_habit_logs agenda_habit_logs[]
+  users             users?              @relation(fields: [userId], references: [id], onDelete: Cascade, map: "oneagenda_habit_userId_fkey")
+
+  @@index([archived], map: "Habit_archived_idx")
+  @@index([userId], map: "Habit_userId_idx")
+  @@index([userId, archived], map: "idx_habit_user_archived")
+  @@map("oneagenda_habits")
+}
+
+model agenda_milestone_dependencies {
+  id                                                                          String            @id(map: "MilestoneDependency_pkey") @default(cuid())
+  blockerId                                                                   String
+  blockedId                                                                   String
+  createdAt                                                                   DateTime          @default(now())
+  agenda_milestones_agenda_milestone_dependencies_blockedIdToagenda_milestones agenda_milestones @relation("agenda_milestone_dependencies_blockedIdToagenda_milestones", fields: [blockedId], references: [id], onDelete: Cascade, map: "oneagenda_mildep_blockedId_fkey")
+  agenda_milestones_agenda_milestone_dependencies_blockerIdToagenda_milestones agenda_milestones @relation("agenda_milestone_dependencies_blockerIdToagenda_milestones", fields: [blockerId], references: [id], onDelete: Cascade, map: "oneagenda_mildep_blockerId_fkey")
+
+  @@unique([blockerId, blockedId], map: "MilestoneDependency_blockerId_blockedId_key")
+  @@index([blockedId], map: "MilestoneDependency_blockedId_idx")
+  @@index([blockerId], map: "MilestoneDependency_blockerId_idx")
+  @@map("oneagenda_milestone_dependencies")
+}
+
+model agenda_milestones {
+  id                                                                              String                          @id(map: "Milestone_pkey") @default(cuid())
+  projectId                                                                       String
+  name                                                                            String
+  description                                                                     String?
+  dueDate                                                                         DateTime?
+  status                                                                          MilestoneStatus                 @default(PENDING)
+  order                                                                           Int                             @default(0)
+  createdAt                                                                       DateTime                        @default(now())
+  updatedAt                                                                       DateTime                        @updatedAt
+  agenda_milestone_dependencies_agenda_milestone_dependencies_blockedIdToagenda_milestones agenda_milestone_dependencies[] @relation("agenda_milestone_dependencies_blockedIdToagenda_milestones")
+  agenda_milestone_dependencies_agenda_milestone_dependencies_blockerIdToagenda_milestones agenda_milestone_dependencies[] @relation("agenda_milestone_dependencies_blockerIdToagenda_milestones")
+  agenda_projects                                                                 agenda_projects                 @relation(fields: [projectId], references: [id], onDelete: Cascade, map: "oneagenda_milestone_projectId_fkey")
+  agenda_tasks                                                                    agenda_tasks[]
+
+  @@index([projectId], map: "Milestone_projectId_idx")
+  @@map("oneagenda_milestones")
+}
+
+model agenda_projects {
+  id                String              @id(map: "Project_pkey") @default(cuid())
+  name              String
+  description       String?
+  status            ProjectStatus       @default(ACTIVE)
+  startDate         DateTime?
+  endDate           DateTime?
+  color             String?             @default("#3B82F6")
+  icon              String?
+  metadata          Json?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  userId            String?             @db.Uuid
+  agenda_milestones agenda_milestones[]
+  users             users?              @relation(fields: [userId], references: [id], onDelete: Cascade, map: "oneagenda_project_userId_fkey")
+  agenda_tasks      agenda_tasks[]
+
+  @@index([status], map: "Project_status_idx")
+  @@index([userId], map: "Project_userId_idx")
+  @@map("oneagenda_projects")
+}
+
+model agenda_task_dependencies {
+  id                                                                String       @id(map: "TaskDependency_pkey") @default(cuid())
+  blockerId                                                         String
+  blockedId                                                         String
+  createdAt                                                         DateTime     @default(now())
+  agenda_tasks_agenda_task_dependencies_blockedIdToagenda_tasks     agenda_tasks @relation("agenda_task_dependencies_blockedIdToagenda_tasks", fields: [blockedId], references: [id], onDelete: Cascade, map: "oneagenda_taskdep_blockedId_fkey")
+  agenda_tasks_agenda_task_dependencies_blockerIdToagenda_tasks     agenda_tasks @relation("agenda_task_dependencies_blockerIdToagenda_tasks", fields: [blockerId], references: [id], onDelete: Cascade, map: "oneagenda_taskdep_blockerId_fkey")
+
+  @@unique([blockerId, blockedId], map: "TaskDependency_blockerId_blockedId_key")
+  @@index([blockedId], map: "TaskDependency_blockedId_idx")
+  @@index([blockerId], map: "TaskDependency_blockerId_idx")
+  @@map("oneagenda_task_dependencies")
+}
+
+model agenda_tasks {
+  id                                                                            String                     @id(map: "Task_pkey") @default(cuid())
+  projectId                                                                     String?
+  milestoneId                                                                   String?
+  title                                                                         String
+  description                                                                   String?
+  status                                                                        TaskStatus                 @default(TODO)
+  priority                                                                      TaskPriority               @default(MEDIUM)
+  dueDate                                                                       DateTime?
+  completedAt                                                                   DateTime?
+  order                                                                         Int                        @default(0)
+  metadata                                                                      Json?
+  createdAt                                                                     DateTime                   @default(now())
+  updatedAt                                                                     DateTime                   @updatedAt
+  parentId                                                                      String?
+  userId                                                                        String?                    @db.Uuid
+  goalId                                                                        String?
+  estimatedMinutes                                                              Int?                       @default(30)
+  actualMinutes                                                                 Int?
+  complexity                                                                    String?                    @default("MODERATE")
+  confidence                                                                    Decimal?                   @default(0.5) @db.Decimal
+  deadline                                                                      DateTime?                  @db.Timestamptz(6)
+  scheduledStart                                                                DateTime?                  @db.Timestamptz(6)
+  scheduledEnd                                                                  DateTime?                  @db.Timestamptz(6)
+  blockedBy                                                                     String[]                   @default([])
+  dependencies                                                                  String[]                   @default([])
+  tags                                                                          String[]                   @default([])
+  context                                                                       Json?                      @default("{}")
+  createdBy                                                                     String?                    @db.Uuid
+  agenda_task_dependencies_agenda_task_dependencies_blockedIdToagenda_tasks     agenda_task_dependencies[] @relation("agenda_task_dependencies_blockedIdToagenda_tasks")
+  agenda_task_dependencies_agenda_task_dependencies_blockerIdToagenda_tasks     agenda_task_dependencies[] @relation("agenda_task_dependencies_blockerIdToagenda_tasks")
+  agenda_milestones                                                             agenda_milestones?         @relation(fields: [milestoneId], references: [id], map: "oneagenda_task_milestoneId_fkey")
+  agenda_tasks                                                                  agenda_tasks?              @relation("agenda_tasksToagenda_tasks", fields: [parentId], references: [id], onDelete: Cascade, map: "oneagenda_task_parentId_fkey")
+  other_agenda_tasks                                                            agenda_tasks[]             @relation("agenda_tasksToagenda_tasks")
+  agenda_projects                                                               agenda_projects?           @relation(fields: [projectId], references: [id], onDelete: Cascade, map: "oneagenda_task_projectId_fkey")
+  users                                                                         users?                     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "oneagenda_task_userId_fkey")
+
+  @@index([dueDate], map: "Task_dueDate_idx")
+  @@index([milestoneId], map: "Task_milestoneId_idx")
+  @@index([parentId], map: "Task_parentId_idx")
+  @@index([projectId], map: "Task_projectId_idx")
+  @@index([status], map: "Task_status_idx")
+  @@index([userId], map: "Task_userId_idx")
+  @@index([deadline], map: "idx_oneagenda_tasks_deadline")
+  @@index([goalId], map: "idx_oneagenda_tasks_goal")
+  @@index([userId], map: "idx_oneagenda_tasks_user")
+  @@index([projectId, order], map: "idx_task_project_order")
+  @@index([projectId, status], map: "idx_task_project_status")
+  @@map("oneagenda_tasks")
+}
+
+model agenda_goals {
+  id                      String          @id @default(cuid())
+  userId                  String          @db.Uuid
+  title                   String
+  description             String?
+  status                  GoalStatus      @default(ACTIVE)
+  timeHorizon             GoalTimeHorizon @default(MEDIUM_TERM)
+  startDate               DateTime?       @default(now())
+  targetDate              DateTime?
+  completedAt             DateTime?
+  completedMilestones     Int             @default(0)
+  totalMilestones         Int             @default(0)
+  completedTasks          Int             @default(0)
+  totalTasks              Int             @default(0)
+  percentComplete         Float           @default(0)
+  daysRemaining           Int?
+  projectedCompletionDate DateTime?
+  parentGoalId            String?
+  tags                    String[]        @default([])
+  category                String?
+  aiInsights              Json?           @default("[]")
+  dailyProgressNotes      Json?           @default("[]")
+  milestoneIds            String[]        @default([])
+  context                 Json?           @default("{}")
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+  users                   users           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("oneagenda_goals")
+}
+
+model agenda_user_preferences {
+  userId            String   @id @db.Uuid
+  workingHoursStart String?
+  workingHoursEnd   String?
+  timezone          String?
+  focusBlocks       Int?
+  breakDuration     Int?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  users             users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("oneagenda_user_preferences")
+}
 
 // ============================================================================
 // MODULE: health

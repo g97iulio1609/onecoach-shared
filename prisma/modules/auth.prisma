@@ -77,6 +77,11 @@ model users {
   nutrition_day_logs                      nutrition_day_logs[]
   nutrition_plans                         nutrition_plans[]
   nutrition_templates                     nutrition_templates[]
+  agenda_habits                           agenda_habits[]
+  agenda_projects                         agenda_projects[]
+  agenda_tasks                            agenda_tasks[]
+  agenda_goals                            agenda_goals[]
+  agenda_user_preferences                 agenda_user_preferences?
   password_reset_tokens                   password_reset_tokens[]
   payments                                payments[]
   payout_audit_logs                       payout_audit_log[]             @relation("payout_audit_log_user")

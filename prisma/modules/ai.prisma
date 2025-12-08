@@ -15,6 +15,7 @@ enum OperationType {
   ANALYTICS_INSIGHTS
   PROGRESS_ANALYSIS
   WORKOUT_IMPORT
+  COMPLEXITY_EVALUATION
 }
 
 enum AIChatFeature {
@@ -175,6 +176,10 @@ model ai_chat_models {
   supportsVision        Boolean                @default(false)
   supportsTools         Boolean                @default(true)
   supportsStreaming     Boolean                @default(true)
+  // Custom endpoint URL (es. "https://api.openai.com/v1" o endpoint personalizzato)
+  endpoint              String?
+  // Riferimento a quale API key usare (es. "OPENAI_API_KEY", "custom_key_123")
+  apiKeyRef             String?
   metadata              Json?
   sortOrder             Int                    @default(0)
   createdAt             DateTime               @default(now())
