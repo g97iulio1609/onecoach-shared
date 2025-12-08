@@ -16,6 +16,10 @@ export interface LoggerConfig {
   readonly enabledInProduction: boolean;
   readonly prefix?: string;
   readonly enableTimestamps: boolean;
+  readonly sampleRates?: Partial<Record<LogLevel, number>>;
+  readonly maxStringLength?: number;
+  readonly maxArrayLength?: number;
+  readonly maxObjectDepth?: number;
 }
 
 interface LogEntry {
@@ -34,10 +38,50 @@ const LOG_LEVELS: Record<LogLevel, number> = {
   error: 3,
 } as const;
 
+const parseLevel = (): LogLevel => {
+  const envLevel = process.env.LOG_LEVEL as LogLevel | undefined;
+  if (envLevel && LOG_LEVELS[envLevel] !== undefined) {
+    return envLevel;
+  }
+  return process.env.NODE_ENV === 'production' ? 'warn' : 'info';
+};
+
+const parseBoolean = (value: string | undefined, fallback: boolean): boolean => {
+  if (value === undefined) return fallback;
+  return value === 'true';
+};
+
+const clampNumber = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
+
+const parseRate = (value: string | undefined): number | undefined => {
+  if (value === undefined) return undefined;
+  const parsed = Number.parseFloat(value);
+  if (Number.isNaN(parsed)) return undefined;
+  return clampNumber(parsed, 0, 1);
+};
+
+const parseIntWithFallback = (value: string | undefined, fallback: number): number => {
+  const parsed = Number.parseInt(value ?? '', 10);
+  if (Number.isNaN(parsed)) return fallback;
+  return parsed;
+};
+
+const DEFAULT_SAMPLE_RATES: Record<LogLevel, number> = {
+  debug: parseRate(process.env.LOG_SAMPLE_DEBUG) ?? (process.env.NODE_ENV === 'production' ? 0 : 1),
+  info: parseRate(process.env.LOG_SAMPLE_INFO) ?? 1,
+  warn: parseRate(process.env.LOG_SAMPLE_WARN) ?? 1,
+  error: parseRate(process.env.LOG_SAMPLE_ERROR) ?? 1,
+};
+
 const DEFAULT_CONFIG: LoggerConfig = {
-  level: (process.env.LOG_LEVEL as LogLevel) || 'info',
-  enabledInProduction: process.env.LOG_IN_PRODUCTION === 'true',
+  level: parseLevel(),
+  enabledInProduction: parseBoolean(process.env.LOG_IN_PRODUCTION, true),
   enableTimestamps: true,
+  sampleRates: DEFAULT_SAMPLE_RATES,
+  maxStringLength: parseIntWithFallback(process.env.LOG_MAX_STRING, 500),
+  maxArrayLength: parseIntWithFallback(process.env.LOG_MAX_ARRAY, 20),
+  maxObjectDepth: parseIntWithFallback(process.env.LOG_MAX_DEPTH, 3),
 } as const;
 
 /**
@@ -47,11 +91,22 @@ export class Logger {
   private readonly config: LoggerConfig;
   private readonly isDevelopment: boolean;
   private readonly isServer: boolean;
+  private readonly sampleRates: Record<LogLevel, number>;
+  private readonly maxStringLength: number;
+  private readonly maxArrayLength: number;
+  private readonly maxObjectDepth: number;
 
   constructor(config: Partial<LoggerConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.isDevelopment = process.env.NODE_ENV === 'development';
     this.isServer = typeof window === 'undefined';
+    this.sampleRates = {
+      ...DEFAULT_SAMPLE_RATES,
+      ...(config.sampleRates || {}),
+    };
+    this.maxStringLength = config.maxStringLength ?? DEFAULT_CONFIG.maxStringLength ?? 500;
+    this.maxArrayLength = config.maxArrayLength ?? DEFAULT_CONFIG.maxArrayLength ?? 20;
+    this.maxObjectDepth = config.maxObjectDepth ?? DEFAULT_CONFIG.maxObjectDepth ?? 3;
   }
 
   /**
@@ -82,6 +137,71 @@ export class Logger {
 
     // Check if this level should be logged based on configured level
     return LOG_LEVELS[level] >= LOG_LEVELS[this.config.level];
+  }
+
+  /**
+   * Sampling to reduce noise in production
+   */
+  private shouldSample(level: LogLevel): boolean {
+    const rate = this.sampleRates[level] ?? 1;
+    if (rate >= 1) return true;
+    if (rate <= 0) return false;
+    return Math.random() < rate;
+  }
+
+  /**
+   * Sanitize context to avoid heavy payloads and cycles
+   */
+  private sanitizeContext(context?: LogContext): LogContext | undefined {
+    if (!context) return undefined;
+
+    const seen = new WeakSet();
+    const sanitizeValue = (value: unknown, depth: number): unknown => {
+      if (value === null || value === undefined) return value;
+
+      if (typeof value === 'string') {
+        if (value.length <= this.maxStringLength) return value;
+        return `${value.slice(0, this.maxStringLength)}... [truncated ${value.length - this.maxStringLength} chars]`;
+      }
+
+      if (typeof value === 'number' || typeof value === 'boolean') {
+        return value;
+      }
+
+      if (Array.isArray(value)) {
+        if (depth >= this.maxObjectDepth) return '[array]';
+        const limited = value.slice(0, this.maxArrayLength).map((item) => sanitizeValue(item, depth + 1));
+        if (value.length > this.maxArrayLength) {
+          limited.push(`[+${value.length - this.maxArrayLength} more items]`);
+        }
+        return limited;
+      }
+
+      if (typeof value === 'object') {
+        if (seen.has(value as object)) return '[circular]';
+        seen.add(value as object);
+
+        if (depth >= this.maxObjectDepth) return '[object]';
+
+        const entries = Object.entries(value as Record<string, unknown>);
+        const limitedEntries = entries.slice(0, this.maxArrayLength);
+        const result: Record<string, unknown> = {};
+
+        for (const [key, val] of limitedEntries) {
+          result[key] = sanitizeValue(val, depth + 1);
+        }
+
+        if (entries.length > this.maxArrayLength) {
+          result.__truncatedKeys = entries.length - this.maxArrayLength;
+        }
+
+        return result;
+      }
+
+      return String(value);
+    };
+
+    return sanitizeValue(context, 0) as LogContext;
   }
 
   /**
@@ -162,8 +282,10 @@ export class Logger {
    */
   private log(level: LogLevel, message: string, context?: LogContext): void {
     if (!this.shouldLog(level)) return;
+    if (!this.shouldSample(level)) return;
 
-    const entry = this.formatLogEntry(level, message, context);
+    const safeContext = this.sanitizeContext(context);
+    const entry = this.formatLogEntry(level, message, safeContext);
 
     // Development: Pretty console output
     if (this.isDevelopment) {

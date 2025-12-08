@@ -23,10 +23,10 @@ importers:
 
   packages/contracts:
     dependencies:
-      '@OneCoach/schemas':
+      '@onecoach/schemas':
         specifier: workspace:*
         version: link:../schemas
-      '@OneCoach/types':
+      '@onecoach/types':
         specifier: workspace:*
         version: link:../types
     devDependencies:
@@ -36,10 +36,10 @@ importers:
 
   packages/lib-shared:
     dependencies:
-      '@OneCoach/schemas':
+      '@onecoach/schemas':
         specifier: workspace:*
         version: link:../schemas
-      '@OneCoach/types':
+      '@onecoach/types':
         specifier: workspace:*
         version: link:../types
       '@prisma/client':
@@ -50,12 +50,34 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/lib-theme:
+    dependencies:
+      clsx:
+        specifier: ^2.0.0
+        version: 2.1.1
+      react:
+        specifier: '>=18.0.0 <20'
+        version: 19.2.1
+      tailwind-merge:
+        specifier: ^2.0.0
+        version: 2.6.0
+      zustand:
+        specifier: ^5.0.0
+        version: 5.0.9(@types/react@19.2.7)(react@19.2.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.5
+        version: 19.2.7
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/schemas:
     dependencies:
-      '@OneCoach/constants':
+      '@onecoach/constants':
         specifier: workspace:*
         version: link:../constants
-      '@OneCoach/types':
+      '@onecoach/types':
         specifier: workspace:*
         version: link:../types
       '@prisma/client':
@@ -71,7 +93,7 @@ importers:
 
   packages/types:
     dependencies:
-      '@OneCoach/constants':
+      '@onecoach/constants':
         specifier: workspace:*
         version: link:../constants
       '@prisma/client':
@@ -202,6 +224,10 @@ packages:
 
   citty@0.1.6:
     resolution: {integrity: sha512-tskPPKEs8D2KPafUypv2gxwJP8h/OaJmC82QQGGDQcHvXX43xF2VDACcJVmZ0EuSxkpO9Kc4MlrA3q0+FG58AQ==}
+
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
 
   confbox@0.2.2:
     resolution: {integrity: sha512-1NB+BKqhtNipMsov4xI/NnhCKp9XG9NamYp5PVm9klAT0fsrNPjaFICsCFhNhwZJKNh7zB/3q8qXz0E9oaMNtQ==}
@@ -420,6 +446,9 @@ packages:
   std-env@3.9.0:
     resolution: {integrity: sha512-UGvjygr6F6tpH7o2qyqR6QYpwraIjKSdtzyBdyytFOHmPZY917kwdwLG0RbOjWOnKmnm3PeHjaoLLMie7kPLQw==}
 
+  tailwind-merge@2.6.0:
+    resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
+
   tinyexec@1.0.2:
     resolution: {integrity: sha512-W/KYk+NFhkmsYpuHq5JykngiOCnxeVL8v8dFnqxSD8qEEdRfXk1SDM6JzNqcERbcGYj9tMrDQBYV9cjgnunFIg==}
     engines: {node: '>=18'}
@@ -451,6 +480,24 @@ packages:
 
   zod@4.1.13:
     resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
+
+  zustand@5.0.9:
+    resolution: {integrity: sha512-ALBtUj0AfjJt3uNRQoL1tL2tMvj6Gp/6e39dnfT6uzpelGru8v1tPOGBzayOWbPJvujM8JojDk3E1LxeFisBNg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
 snapshots:
 
@@ -602,6 +649,8 @@ snapshots:
   citty@0.1.6:
     dependencies:
       consola: 3.4.2
+
+  clsx@2.1.1: {}
 
   confbox@0.2.2: {}
 
@@ -794,6 +843,8 @@ snapshots:
 
   std-env@3.9.0: {}
 
+  tailwind-merge@2.6.0: {}
+
   tinyexec@1.0.2: {}
 
   type-fest@4.41.0: {}
@@ -813,3 +864,8 @@ snapshots:
       grammex: 3.1.12
 
   zod@4.1.13: {}
+
+  zustand@5.0.9(@types/react@19.2.7)(react@19.2.1):
+    optionalDependencies:
+      '@types/react': 19.2.7
+      react: 19.2.1
