@@ -26,6 +26,23 @@ export interface UserProfileData {
   dietaryRestrictions: string[];
   dietaryPreferences: string[];
   healthNotes: string | null;
+  // Body composition
+  bodyFat: number | null;
+  muscleMass: number | null;
+  visceralFat: number | null;
+  waterPercentage: number | null;
+  boneMass: number | null;
+  metabolicAge: number | null;
+  bmr: number | null;
+  // Circumferences (cm)
+  chest: number | null;
+  waist: number | null;
+  hips: number | null;
+  thigh: number | null;
+  arm: number | null;
+  calf: number | null;
+  neck: number | null;
+  shoulders: number | null;
 }
 
 /**
@@ -46,6 +63,23 @@ export const EMPTY_PROFILE: UserProfileData = {
   dietaryRestrictions: [],
   dietaryPreferences: [],
   healthNotes: null,
+  // Body composition
+  bodyFat: null,
+  muscleMass: null,
+  visceralFat: null,
+  waterPercentage: null,
+  boneMass: null,
+  metabolicAge: null,
+  bmr: null,
+  // Circumferences
+  chest: null,
+  waist: null,
+  hips: null,
+  thigh: null,
+  arm: null,
+  calf: null,
+  neck: null,
+  shoulders: null,
 };
 
 /**

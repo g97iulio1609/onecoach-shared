@@ -165,6 +165,12 @@ export interface BodyMeasurement extends BaseEntity {
   calf?: number; // cm
   neck?: number; // cm
   shoulders?: number; // cm
+  height?: number; // cm
+  visceralFat?: number; // rating 0-59
+  waterPercentage?: number; // percentage
+  boneMass?: number; // kg
+  metabolicAge?: number;
+  bmr?: number; // kcal
   notes?: string;
   photos?: string[]; // URLs
 }
