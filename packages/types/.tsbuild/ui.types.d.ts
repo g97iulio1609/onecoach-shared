@@ -24,6 +24,21 @@ export interface UserProfileData {
     dietaryRestrictions: string[];
     dietaryPreferences: string[];
     healthNotes: string | null;
+    bodyFat: number | null;
+    muscleMass: number | null;
+    visceralFat: number | null;
+    waterPercentage: number | null;
+    boneMass: number | null;
+    metabolicAge: number | null;
+    bmr: number | null;
+    chest: number | null;
+    waist: number | null;
+    hips: number | null;
+    thigh: number | null;
+    arm: number | null;
+    calf: number | null;
+    neck: number | null;
+    shoulders: number | null;
 }
 /**
  * Profilo vuoto per default

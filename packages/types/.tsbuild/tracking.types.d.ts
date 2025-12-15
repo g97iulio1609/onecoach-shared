@@ -147,6 +147,12 @@ export interface BodyMeasurement extends BaseEntity {
     calf?: number;
     neck?: number;
     shoulders?: number;
+    height?: number;
+    visceralFat?: number;
+    waterPercentage?: number;
+    boneMass?: number;
+    metabolicAge?: number;
+    bmr?: number;
     notes?: string;
     photos?: string[];
 }
