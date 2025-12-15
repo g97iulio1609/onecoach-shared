@@ -17,24 +17,24 @@ import type { ExerciseApprovalStatus } from './index';
  * - Lookup 1RM per calcolo intensità
  */
 export interface CatalogExerciseReference {
-  /** ID dell'esercizio nel catalogo (exercises.id) - OBBLIGATORIO */
-  catalogExerciseId: string;
-  /** Nome dell'esercizio per display */
-  name: string;
-  /** Slug dell'esercizio (opzionale) */
-  slug?: string;
+    /** ID dell'esercizio nel catalogo (exercises.id) - OBBLIGATORIO */
+    catalogExerciseId: string;
+    /** Nome dell'esercizio per display */
+    name: string;
+    /** Slug dell'esercizio (opzionale) */
+    slug?: string;
 }
 /**
  * Esercizio selezionato per i massimali.
  * Estende CatalogExerciseReference con metadati opzionali.
  */
 export interface ExerciseForOneRepMax extends CatalogExerciseReference {
-  /** Categoria dell'esercizio */
-  category?: string;
-  /** Gruppi muscolari */
-  muscleGroups?: string[];
-  /** Equipment necessario */
-  equipment?: string[];
+    /** Categoria dell'esercizio */
+    category?: string;
+    /** Gruppi muscolari */
+    muscleGroups?: string[];
+    /** Equipment necessario */
+    equipment?: string[];
 }
 /**
  * Tipo per i filtri di stato
@@ -44,11 +44,12 @@ export type FilterStatus = 'ALL' | ExerciseApprovalStatus;
  * Parameters for fetching exercises
  */
 export interface FetchParams {
-  page?: number;
-  search?: string;
-  status?: FilterStatus;
-  exerciseTypeId?: string;
-  equipmentIds?: string[];
-  bodyPartIds?: string[];
-  muscleIds?: string[];
+    page?: number;
+    search?: string;
+    status?: FilterStatus;
+    exerciseTypeId?: string;
+    equipmentIds?: string[];
+    bodyPartIds?: string[];
+    muscleIds?: string[];
 }
+//# sourceMappingURL=exercise.types.d.ts.map

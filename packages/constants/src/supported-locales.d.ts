@@ -4,18 +4,7 @@
  * List of all languages that must have translations for food items.
  * When creating a new food item, translations MUST be created for ALL these locales.
  */
-export declare const SUPPORTED_FOOD_LOCALES: readonly [
-  'en',
-  'it',
-  'es',
-  'fr',
-  'de',
-  'pt',
-  'nl',
-  'pl',
-  'ja',
-  'zh',
-];
+export declare const SUPPORTED_FOOD_LOCALES: readonly ["en", "it", "es", "fr", "de", "pt", "nl", "pl", "ja", "zh"];
 export type SupportedFoodLocale = (typeof SUPPORTED_FOOD_LOCALES)[number];
 /**
  * Locale names in their native language
@@ -33,3 +22,4 @@ export declare function isSupportedFoodLocale(locale: string): locale is Support
  * Get all supported locales as array
  */
 export declare function getAllSupportedFoodLocales(): readonly SupportedFoodLocale[];
+//# sourceMappingURL=supported-locales.d.ts.map

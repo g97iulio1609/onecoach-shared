@@ -2,18 +2,18 @@
  * Credit pack option (for UI display)
  */
 export interface CreditPackOption {
-  id: string;
-  credits: number;
-  price: number;
-  currency: string;
-  popular?: boolean;
-  savings?: string;
+    id: string;
+    credits: number;
+    price: number;
+    currency: string;
+    popular?: boolean;
+    savings?: string;
 }
 /**
  * Credit pack pricing (with Stripe price ID)
  */
 export interface CreditPackPricing extends CreditPackOption {
-  stripePriceId: string;
+    stripePriceId: string;
 }
 /**
  * Catalogo credito per utilizzo lato client (UI)
@@ -38,3 +38,4 @@ export declare function findCreditPackOption(credits: number): CreditPackOption 
  * @returns Numero di crediti o null se non trovato
  */
 export declare function getCreditsFromPriceId(priceId: string): number | null;
+//# sourceMappingURL=credit-packs.d.ts.map

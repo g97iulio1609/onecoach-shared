@@ -7,19 +7,19 @@
  * Eliminates repetitive useState patterns for async operations
  */
 export interface UseAsyncStateOptions<T> {
-  initialData?: T | null;
-  onSuccess?: (data: T) => void;
-  onError?: (error: Error) => void;
+    initialData?: T | null;
+    onSuccess?: (data: T) => void;
+    onError?: (error: Error) => void;
 }
 export interface UseAsyncStateReturn<T> {
-  data: T | null;
-  isLoading: boolean;
-  error: Error | null;
-  setData: (data: T | null) => void;
-  setError: (error: Error | null) => void;
-  setLoading: (loading: boolean) => void;
-  execute: (asyncFn: () => Promise<T>) => Promise<T | null>;
-  reset: () => void;
+    data: T | null;
+    isLoading: boolean;
+    error: Error | null;
+    setData: (data: T | null) => void;
+    setError: (error: Error | null) => void;
+    setLoading: (loading: boolean) => void;
+    execute: (asyncFn: () => Promise<T>) => Promise<T | null>;
+    reset: () => void;
 }
 /**
  * Hook for managing async state
@@ -34,6 +34,5 @@ export interface UseAsyncStateReturn<T> {
  * });
  * ```
  */
-export declare function useAsyncState<T = unknown>(
-  options?: UseAsyncStateOptions<T>
-): UseAsyncStateReturn<T>;
+export declare function useAsyncState<T = unknown>(options?: UseAsyncStateOptions<T>): UseAsyncStateReturn<T>;
+//# sourceMappingURL=use-async-state.d.ts.map

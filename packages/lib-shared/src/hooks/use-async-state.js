@@ -23,44 +23,43 @@ import { getErrorMessage } from '@onecoach/lib-shared/utils/api-error-handler';
  * ```
  */
 export function useAsyncState(options = {}) {
-  const { initialData = null, onSuccess, onError } = options;
-  const [data, setData] = useState(initialData);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const execute = useCallback(
-    async (asyncFn) => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const result = await asyncFn();
-        setData(result);
-        onSuccess?.(result);
-        return result;
-      } catch (err) {
-        const errorMessage = getErrorMessage(err);
-        const error = new Error(errorMessage);
-        setError(error);
-        onError?.(error);
-        return null;
-      } finally {
+    const { initialData = null, onSuccess, onError } = options;
+    const [data, setData] = useState(initialData);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const execute = useCallback(async (asyncFn) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await asyncFn();
+            setData(result);
+            onSuccess?.(result);
+            return result;
+        }
+        catch (err) {
+            const errorMessage = getErrorMessage(err);
+            const error = new Error(errorMessage);
+            setError(error);
+            onError?.(error);
+            return null;
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }, [onSuccess, onError]);
+    const reset = useCallback(() => {
+        setData(initialData);
+        setError(null);
         setIsLoading(false);
-      }
-    },
-    [onSuccess, onError]
-  );
-  const reset = useCallback(() => {
-    setData(initialData);
-    setError(null);
-    setIsLoading(false);
-  }, [initialData]);
-  return {
-    data,
-    isLoading,
-    error,
-    setData,
-    setError,
-    setLoading: setIsLoading,
-    execute,
-    reset,
-  };
+    }, [initialData]);
+    return {
+        data,
+        isLoading,
+        error,
+        setData,
+        setError,
+        setLoading: setIsLoading,
+        execute,
+        reset,
+    };
 }

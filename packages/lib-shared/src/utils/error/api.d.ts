@@ -8,8 +8,9 @@
  * createNextErrorResponse is Next.js-specific wrapper.
  */
 import type { NextResponse } from 'next/server';
-import type { ApiErrorResponse } from '@onecoach/lib-api/error-handler/core';
-export type { ApiErrorResponse } from '@onecoach/lib-api/error-handler/core';
+import type { ApiErrorResponse } from './core-types';
+export type { ApiErrorResponse, ApiResponse, CreateErrorResponseParams } from './core-types';
+export { createErrorResponseObject, createApiResponseObject } from './core-types';
 /**
  * Create standardized API error response (cross-platform)
  *
@@ -19,14 +20,9 @@ export type { ApiErrorResponse } from '@onecoach/lib-api/error-handler/core';
  * @param details - Optional additional details
  * @returns Structured error response with status
  */
-export declare function createApiErrorResponse(
-  error: string,
-  code: string,
-  status: number,
-  details?: Record<string, unknown>
-): {
-  response: ApiErrorResponse;
-  status: number;
+export declare function createApiErrorResponse(error: string, code: string, status: number, details?: Record<string, unknown>): {
+    response: ApiErrorResponse;
+    status: number;
 };
 /**
  * Create Next.js Response from error
@@ -34,18 +30,13 @@ export declare function createApiErrorResponse(
  * Only available in Next.js context. For generic APIs, use createApiErrorResponse.
  * This is a Next.js-specific wrapper that converts the cross-platform error object to NextResponse.
  */
-export declare function createNextErrorResponse(
-  error: string,
-  code: string,
-  status: number,
-  details?: Record<string, unknown>
-): NextResponse<ApiErrorResponse>;
+export declare function createNextErrorResponse(error: string, code: string, status: number, details?: Record<string, unknown>): NextResponse<ApiErrorResponse>;
 /**
  * Map custom errors to API responses
  */
 export declare function mapErrorToApiResponse(error: unknown): {
-  response: ApiErrorResponse;
-  status: number;
+    response: ApiErrorResponse;
+    status: number;
 };
 /**
  * Generic error handler for API routes
@@ -58,3 +49,4 @@ export declare function mapErrorToApiResponse(error: unknown): {
  * }
  */
 export declare function handleApiError(error: unknown): NextResponse<ApiErrorResponse>;
+//# sourceMappingURL=api.d.ts.map

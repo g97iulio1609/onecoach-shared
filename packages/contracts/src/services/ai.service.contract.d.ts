@@ -16,3 +16,4 @@ export interface IChatService {
     deleteConversation(id: string): boolean;
     parseAiResponse<T>(response: string, type: RequestType): ParsedAiResponse<T>;
 }
+//# sourceMappingURL=ai.service.contract.d.ts.map

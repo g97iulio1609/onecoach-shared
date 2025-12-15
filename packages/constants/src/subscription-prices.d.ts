@@ -6,3 +6,4 @@ export type SubscriptionPlanType = 'FREE' | 'BASIC' | 'PRO' | 'PLUS';
  * Gets the Stripe Price ID for a given subscription plan from environment variables.
  */
 export declare function getSubscriptionPriceId(plan: string): string | null;
+//# sourceMappingURL=subscription-prices.d.ts.map

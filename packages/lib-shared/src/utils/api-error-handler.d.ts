@@ -8,9 +8,9 @@
  * Standard API error response
  */
 export interface ApiErrorResponse {
-  error: string;
-  message?: string;
-  code?: string;
+    error: string;
+    message?: string;
+    code?: string;
 }
 /**
  * Handle API error response
@@ -28,3 +28,4 @@ export declare function handleApiError(response: Response): Promise<Error>;
  * @returns Error message string
  */
 export declare function getErrorMessage(error: unknown): string;
+//# sourceMappingURL=api-error-handler.d.ts.map

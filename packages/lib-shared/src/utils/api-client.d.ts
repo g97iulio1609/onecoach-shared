@@ -3,13 +3,13 @@
  * Eliminates 500+ lines of duplicated fetch/error handling across hooks
  */
 export declare class APIError extends Error {
-  status: number;
-  statusText: string;
-  data?: unknown | undefined;
-  constructor(message: string, status: number, statusText: string, data?: unknown | undefined);
+    status: number;
+    statusText: string;
+    data?: unknown;
+    constructor(message: string, status: number, statusText: string, data?: unknown);
 }
 export interface FetchOptions extends RequestInit {
-  timeout?: number;
+    timeout?: number;
 }
 /**
  * Type-safe fetch wrapper with consistent error handling
@@ -19,16 +19,14 @@ export declare function fetchAPI<T>(url: string, options?: FetchOptions): Promis
  * Convenience methods for common HTTP verbs
  */
 export declare const api: {
-  get: <T>(url: string, options?: FetchOptions) => Promise<T>;
-  post: <T>(url: string, data?: unknown, options?: FetchOptions) => Promise<T>;
-  put: <T>(url: string, data?: unknown, options?: FetchOptions) => Promise<T>;
-  patch: <T>(url: string, data?: unknown, options?: FetchOptions) => Promise<T>;
-  delete: <T>(url: string, options?: FetchOptions) => Promise<T>;
+    get: <T>(url: string, options?: FetchOptions) => Promise<T>;
+    post: <T>(url: string, data?: unknown, options?: FetchOptions) => Promise<T>;
+    put: <T>(url: string, data?: unknown, options?: FetchOptions) => Promise<T>;
+    patch: <T>(url: string, data?: unknown, options?: FetchOptions) => Promise<T>;
+    delete: <T>(url: string, options?: FetchOptions) => Promise<T>;
 };
 /**
  * Build URL with query parameters
  */
-export declare function buildURL(
-  base: string,
-  params?: Record<string, string | number | boolean | undefined | null>
-): string;
+export declare function buildURL(base: string, params?: Record<string, string | number | boolean | undefined | null>): string;
+//# sourceMappingURL=api-client.d.ts.map

@@ -7,6 +7,7 @@ export * from './common.types';
 export * from './workout.types';
 export * from './nutrition.types';
 export * from './tracking.types';
+export * from './analytics.types';
 export * from './chat.types';
 export * from './intent.types';
 export * from './api.types';
@@ -28,3 +29,4 @@ export * from './planning.types';
 export * from './generation.types';
 export * from './dnd.types';
 export * from './maxes.types';
+//# sourceMappingURL=index.d.ts.map

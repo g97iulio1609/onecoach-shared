@@ -7,15 +7,13 @@
 /**
  * Result type for safe async operations
  */
-export type Result<T, E = string> =
-  | {
-      readonly ok: true;
-      readonly value: T;
-    }
-  | {
-      readonly ok: false;
-      readonly error: E;
-    };
+export type Result<T, E = string> = {
+    readonly ok: true;
+    readonly value: T;
+} | {
+    readonly ok: false;
+    readonly error: E;
+};
 /**
  * Safe async wrapper that returns Result instead of throwing
  *
@@ -29,19 +27,16 @@ export type Result<T, E = string> =
  *   console.error(result.error);
  * }
  */
-export declare function safeAsync<T>(
-  fn: () => Promise<T>,
-  errorMessage?: string
-): Promise<Result<T, string>>;
+export declare function safeAsync<T>(fn: () => Promise<T>, errorMessage?: string): Promise<Result<T, string>>;
 /**
  * Retry configuration options
  */
 export interface RetryOptions {
-  readonly maxRetries?: number;
-  readonly initialDelay?: number;
-  readonly maxDelay?: number;
-  readonly backoffFactor?: number;
-  readonly shouldRetry?: (error: unknown) => boolean;
+    readonly maxRetries?: number;
+    readonly initialDelay?: number;
+    readonly maxDelay?: number;
+    readonly backoffFactor?: number;
+    readonly shouldRetry?: (error: unknown) => boolean;
 }
 /**
  * Retry async function with exponential backoff
@@ -63,11 +58,7 @@ export declare function retryAsync<T>(fn: () => Promise<T>, options?: RetryOptio
  *   'Fetch timed out'
  * );
  */
-export declare function withTimeout<T>(
-  promise: Promise<T>,
-  timeoutMs: number,
-  errorMessage?: string
-): Promise<T>;
+export declare function withTimeout<T>(promise: Promise<T>, timeoutMs: number, errorMessage?: string): Promise<T>;
 /**
  * Combine timeout and retry
  *
@@ -78,8 +69,5 @@ export declare function withTimeout<T>(
  *   { maxRetries: 3 }
  * );
  */
-export declare function withTimeoutAndRetry<T>(
-  fn: () => Promise<T>,
-  timeoutMs: number,
-  retryOptions?: RetryOptions
-): Promise<T>;
+export declare function withTimeoutAndRetry<T>(fn: () => Promise<T>, timeoutMs: number, retryOptions?: RetryOptions): Promise<T>;
+//# sourceMappingURL=utils.d.ts.map

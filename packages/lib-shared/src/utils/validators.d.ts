@@ -56,3 +56,4 @@ export declare function isInRange(value: number, min: number, max: number): bool
  * @returns true se non vuoto
  */
 export declare function isNonEmptyArray<T>(array: T[]): boolean;
+//# sourceMappingURL=validators.d.ts.map

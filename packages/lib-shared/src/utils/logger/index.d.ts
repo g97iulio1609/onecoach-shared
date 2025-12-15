@@ -20,31 +20,17 @@
  */
 export { Logger, type LogLevel, type LogContext, type LoggerConfig } from './core';
 export { AILogger } from './domain';
-export {
-  createLogger,
-  createAILogger,
-  createStreamingLogger,
-  createAgentLogger,
-  createIntentLogger,
-} from './factories';
+export { createLogger, createAILogger, createStreamingLogger, createAgentLogger, createIntentLogger, } from './factories';
 import { Logger } from './core';
 export declare const logger: Logger;
 export declare const log: {
-  debug: (message: string, context?: import('./core').LogContext | string | unknown) => void;
-  info: (message: string, context?: import('./core').LogContext | string | unknown) => void;
-  warn: (message: string, context?: import('./core').LogContext | string | unknown) => void;
-  error: (
-    message: string,
-    error?: Error | unknown,
-    context?: import('./core').LogContext | string | unknown
-  ) => void;
-  time: (label: string) => void;
-  timeEnd: (label: string) => void;
-  measure: <T>(
-    label: string,
-    fn: () => Promise<T> | T,
-    context?: import('./core').LogContext
-  ) => Promise<T>;
+    debug: any;
+    info: any;
+    warn: any;
+    error: any;
+    time: any;
+    timeEnd: any;
+    measure: any;
 };
 export declare const orchestratorLogger: Logger;
 export declare const agentLogger: Logger;
@@ -58,8 +44,5 @@ export declare const executorLogger: Logger;
  * @param error - Error object or unknown
  * @param context - Optional additional context
  */
-export declare function logError(
-  message: string,
-  error?: Error | unknown,
-  context?: Record<string, unknown>
-): void;
+export declare function logError(message: string, error?: Error | unknown, context?: Record<string, unknown>): void;
+//# sourceMappingURL=index.d.ts.map

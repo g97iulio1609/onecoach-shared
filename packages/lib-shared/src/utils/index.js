@@ -26,14 +26,7 @@ export * from '../prisma-type-guards';
 // API Error Handler - use error/api instead
 export { handleApiError, getErrorMessage } from './api-error-handler';
 // Validation (excludes isValidEmail which is already exported from validators)
-export {
-  validatePassword,
-  passwordsMatch,
-  isRequired,
-  isValidNumber,
-  isValidUrl,
-  createValidator,
-} from './validation';
+export { validatePassword, passwordsMatch, isRequired, isValidNumber, isValidUrl, createValidator, } from './validation';
 // AI Agent Setup (server-only) - non riesportare nel barrel usato lato client
 // export * from './ai-agent-setup';
 // Import direttamente da 'lib/utils/ai-agent-setup' nei file server
@@ -42,7 +35,7 @@ export * from './batch-processing';
 // URL Normalizer
 export * from './url-normalizer';
 // Dialog Global
-export * from './dialog-global';
+// export * from './dialog-global'; // Moved to lib-stores
 // Simple Cache
 export * from './simple-cache';
 // AI Model Mapper

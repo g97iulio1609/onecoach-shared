@@ -130,3 +130,4 @@ export interface ICoachService {
     updateVettingStatus(requestId: string, status: VettingStatus, reviewNotes?: string, reviewedBy?: string): Promise<coach_vetting_requests>;
     updateCoachStats(userId: string): Promise<coach_profiles>;
 }
+//# sourceMappingURL=marketplace.service.contract.d.ts.map

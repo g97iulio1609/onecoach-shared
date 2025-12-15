@@ -27,19 +27,20 @@
  * // Returns: "event: subtask-start\ndata: {...}\n\n"
  */
 export function serializeEventToSSE(event) {
-  // Include both data and debug fields in the event payload
-  // This ensures debug information (like context snapshots) is always available
-  // Type-safe handling: event.data is unknown, so we need to check if it's an object
-  // In practice, event data is always an object, but TypeScript doesn't know this
-  const dataIsObject =
-    event.data !== null && typeof event.data === 'object' && !Array.isArray(event.data);
-  // Build payload: merge data (if object) with debug field
-  const payload = dataIsObject ? { ...event.data } : { data: event.data };
-  // Add debug field if present
-  if (event.debug) {
-    payload.debug = event.debug;
-  }
-  return `event: ${event.type}\ndata: ${JSON.stringify(payload)}\n\n`;
+    // Include both data and debug fields in the event payload
+    // This ensures debug information (like context snapshots) is always available
+    // Type-safe handling: event.data is unknown, so we need to check if it's an object
+    // In practice, event data is always an object, but TypeScript doesn't know this
+    const dataIsObject = event.data !== null && typeof event.data === 'object' && !Array.isArray(event.data);
+    // Build payload: merge data (if object) with debug field
+    const payload = dataIsObject
+        ? { ...event.data }
+        : { data: event.data };
+    // Add debug field if present
+    if (event.debug) {
+        payload.debug = event.debug;
+    }
+    return `event: ${event.type}\ndata: ${JSON.stringify(payload)}\n\n`;
 }
 /**
  * Create an SSE event sender function
@@ -54,8 +55,8 @@ export function serializeEventToSSE(event) {
  * sendEvent({ type: 'subtask-start', ... });
  */
 export function createSSEEventSender(encoder, controller) {
-  return (event) => {
-    const message = serializeEventToSSE(event);
-    controller.enqueue(encoder.encode(message));
-  };
+    return (event) => {
+        const message = serializeEventToSSE(event);
+        controller.enqueue(encoder.encode(message));
+    };
 }

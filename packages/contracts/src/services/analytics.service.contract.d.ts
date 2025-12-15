@@ -13,3 +13,4 @@ export interface IAnalyticsService {
     getUserGoals(userId: string): Promise<UserGoal[]>;
     createUserGoal(userId: string, goal: Omit<UserGoal, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<UserGoal>;
 }
+//# sourceMappingURL=analytics.service.contract.d.ts.map

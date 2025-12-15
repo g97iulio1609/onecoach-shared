@@ -12,14 +12,14 @@
  * Generic SSE Event type
  */
 export interface SSEEvent {
-  type: string;
-  planId?: string;
-  executionId?: string;
-  taskId?: string;
-  subtaskId?: string;
-  timestamp: string;
-  data?: Record<string, unknown>;
-  debug?: Record<string, unknown>;
+    type: string;
+    planId?: string;
+    executionId?: string;
+    taskId?: string;
+    subtaskId?: string;
+    timestamp: string;
+    data?: Record<string, unknown>;
+    debug?: Record<string, unknown>;
 }
 /**
  * Serialize an event to SSE format
@@ -51,7 +51,5 @@ export declare function serializeEventToSSE(event: SSEEvent): string;
  * const sendEvent = createSSEEventSender(encoder, controller);
  * sendEvent({ type: 'subtask-start', ... });
  */
-export declare function createSSEEventSender(
-  encoder: TextEncoder,
-  controller: ReadableStreamDefaultController<Uint8Array>
-): (event: SSEEvent) => void;
+export declare function createSSEEventSender(encoder: TextEncoder, controller: ReadableStreamDefaultController<Uint8Array>): (event: SSEEvent) => void;
+//# sourceMappingURL=sse-event-serializer.d.ts.map

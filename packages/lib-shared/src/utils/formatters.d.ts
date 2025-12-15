@@ -85,3 +85,4 @@ export declare function formatNumber(value: number, decimals?: number): string;
  * @returns Slug normalizzato
  */
 export declare function toSlug(value: string): string;
+//# sourceMappingURL=formatters.d.ts.map

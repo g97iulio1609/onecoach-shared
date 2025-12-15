@@ -10,16 +10,7 @@
  * - SOLID: Single responsibility per ogni funzione
  */
 import { Prisma } from '@prisma/client';
-import type {
-  Macros,
-  Exercise,
-  ExerciseSet,
-  SetJson,
-  ExerciseJson,
-  PlanMetadata,
-  ExecutionMetadata,
-  CheckpointMetadata,
-} from '@onecoach/types';
+import type { Macros, Exercise, ExerciseSet, SetJson, ExerciseJson, PlanMetadata, ExecutionMetadata, CheckpointMetadata } from '@onecoach/types';
 /**
  * Type guard: verifica se un valore è un oggetto Macros valido
  *
@@ -49,8 +40,8 @@ export declare function toMacrosArray(json: Prisma.JsonValue | null | undefined)
  * Type guard: verifica se un valore è un Prisma Decimal
  */
 export declare function isPrismaDecimal(value: unknown): value is {
-  toNumber: () => number;
-  toString: () => string;
+    toNumber: () => number;
+    toString: () => string;
 };
 /**
  * Converte Prisma Decimal in number type-safe
@@ -62,29 +53,18 @@ export declare function ensureDecimalNumber(value: number | null | undefined): n
 /**
  * Converte un valore che può essere Decimal, number, string o null in number | null
  */
-export declare function convertDecimalToNumber(
-  value:
-    | number
-    | string
-    | {
-        toNumber: () => number;
-      }
-    | null
-    | undefined
-): number | null;
+export declare function convertDecimalToNumber(value: number | string | {
+    toNumber: () => number;
+} | null | undefined): number | null;
 /**
  * Converte un valore JSON-serializzabile in Prisma.InputJsonValue type-safe
  * Elimina la necessità di usare 'as unknown as Prisma.InputJsonValue'
  */
-export declare function toPrismaJsonValue(
-  value: string | number | boolean | null | Record<string, unknown> | unknown[]
-): Prisma.InputJsonValue;
+export declare function toPrismaJsonValue(value: string | number | boolean | null | Record<string, unknown> | unknown[]): Prisma.InputJsonValue;
 /**
  * Converte un valore nullable in Prisma.NullableJsonNullValueInput
  */
-export declare function toNullablePrismaJsonValue(
-  value: string | number | boolean | null | Record<string, unknown> | unknown[] | undefined
-): Prisma.NullableJsonNullValueInput;
+export declare function toNullablePrismaJsonValue(value: string | number | boolean | null | Record<string, unknown> | unknown[] | undefined): Prisma.NullableJsonNullValueInput;
 /**
  * Type guard: verifica se un valore è un array di oggetti Exercise valido
  *
@@ -98,9 +78,7 @@ export declare function isExerciseArray(value: unknown): value is Array<Record<s
  * @param json - JsonValue da Prisma
  * @returns Array di exercise objects
  */
-export declare function toExerciseArray(
-  json: Prisma.JsonValue | null | undefined
-): Array<Record<string, unknown>>;
+export declare function toExerciseArray(json: Prisma.JsonValue | null | undefined): Array<Record<string, unknown>>;
 /**
  * Type guard: verifica se un oggetto ha proprietà setGroups valide
  * SSOT: Usa SOLO setGroups, non sets legacy
@@ -123,9 +101,7 @@ export declare function extractSetValue(value: unknown): number;
  * @param json - JsonValue da Prisma
  * @returns Record object o empty object
  */
-export declare function toJsonObject(
-  json: Prisma.JsonValue | null | undefined
-): Record<string, unknown>;
+export declare function toJsonObject(json: Prisma.JsonValue | null | undefined): Record<string, unknown>;
 /**
  * Converte un JsonValue in array generico type-safe
  *
@@ -153,9 +129,7 @@ export declare function isFood(value: unknown): value is Record<string, unknown>
  * @param json - JsonValue da Prisma
  * @returns Array di meal objects
  */
-export declare function toMealsArray(
-  json: Prisma.JsonValue | null | undefined
-): Array<Record<string, unknown>>;
+export declare function toMealsArray(json: Prisma.JsonValue | null | undefined): Array<Record<string, unknown>>;
 /**
  * Estrae totalMacros da un meal object con fallback
  *
@@ -190,9 +164,7 @@ export declare function toSetJson(json: Prisma.JsonValue | null | undefined): Se
  * @param json - JsonValue da Prisma
  * @returns ExerciseJson o null se non valido
  */
-export declare function toExerciseJson(
-  json: Prisma.JsonValue | null | undefined
-): ExerciseJson | null;
+export declare function toExerciseJson(json: Prisma.JsonValue | null | undefined): ExerciseJson | null;
 /**
  * Converte SetJson in ExerciseSet type-safe
  *
@@ -228,27 +200,21 @@ export declare function toExerciseArrayTyped(json: Prisma.JsonValue | null | und
  * @param json - JsonValue da Prisma
  * @returns PlanMetadata o null se non valido
  */
-export declare function toPlanMetadata(
-  json: Prisma.JsonValue | null | undefined
-): PlanMetadata | null;
+export declare function toPlanMetadata(json: Prisma.JsonValue | null | undefined): PlanMetadata | null;
 /**
  * Converte JsonValue in ExecutionMetadata type-safe
  *
  * @param json - JsonValue da Prisma
  * @returns ExecutionMetadata o null se non valido
  */
-export declare function toExecutionMetadata(
-  json: Prisma.JsonValue | null | undefined
-): ExecutionMetadata | null;
+export declare function toExecutionMetadata(json: Prisma.JsonValue | null | undefined): ExecutionMetadata | null;
 /**
  * Converte JsonValue in CheckpointMetadata type-safe
  *
  * @param json - JsonValue da Prisma
  * @returns CheckpointMetadata o null se non valido
  */
-export declare function toCheckpointMetadata(
-  json: Prisma.JsonValue | null | undefined
-): CheckpointMetadata | null;
+export declare function toCheckpointMetadata(json: Prisma.JsonValue | null | undefined): CheckpointMetadata | null;
 /**
  * Calcola il volume di un set (reps * weight)
  *
@@ -256,3 +222,4 @@ export declare function toCheckpointMetadata(
  * @returns Volume in kg (reps * weight) o 0 se dati mancanti
  */
 export declare function calculateSetVolume(set: ExerciseSet): number;
+//# sourceMappingURL=prisma-type-guards.d.ts.map

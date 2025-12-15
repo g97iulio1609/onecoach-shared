@@ -9,10 +9,10 @@ import { z } from 'zod';
  * Prisma error interface (not importing from @prisma/client to avoid dependency)
  */
 export interface PrismaError {
-  code: string;
-  meta?: Record<string, unknown>;
-  message: string;
-  clientVersion?: string;
+    code: string;
+    meta?: Record<string, unknown>;
+    message: string;
+    clientVersion?: string;
 }
 /**
  * Type guard: Error instance
@@ -49,13 +49,13 @@ export declare function getErrorMessage(error: unknown, fallback?: string): stri
  * Structured error details for logging and debugging
  */
 export interface ErrorDetails {
-  readonly message: string;
-  readonly name?: string;
-  readonly stack?: string;
-  readonly code?: string;
-  readonly meta?: Record<string, unknown>;
-  readonly zodIssues?: z.ZodIssue[];
-  readonly prismaCode?: string;
+    readonly message: string;
+    readonly name?: string;
+    readonly stack?: string;
+    readonly code?: string;
+    readonly meta?: Record<string, unknown>;
+    readonly zodIssues?: z.ZodIssue[];
+    readonly prismaCode?: string;
 }
 /**
  * Extract detailed error information
@@ -64,3 +64,4 @@ export interface ErrorDetails {
  * @returns Structured error details
  */
 export declare function getErrorDetails(error: unknown): ErrorDetails;
+//# sourceMappingURL=core.d.ts.map

@@ -11,6 +11,8 @@ export * from './workout.types';
 export * from './nutrition.types';
 // Tracking types
 export * from './tracking.types';
+// Analytics types
+export * from './analytics.types';
 // Chat types
 export * from './chat.types';
 // Intent types

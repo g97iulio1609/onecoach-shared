@@ -20,25 +20,19 @@
  */
 export { Logger } from './core';
 export { AILogger } from './domain';
-export {
-  createLogger,
-  createAILogger,
-  createStreamingLogger,
-  createAgentLogger,
-  createIntentLogger,
-} from './factories';
+export { createLogger, createAILogger, createStreamingLogger, createAgentLogger, createIntentLogger, } from './factories';
 // Singleton instance
 import { Logger } from './core';
 export const logger = new Logger();
 // Convenience exports (backward compatibility)
 export const log = {
-  debug: logger.debug.bind(logger),
-  info: logger.info.bind(logger),
-  warn: logger.warn.bind(logger),
-  error: logger.error.bind(logger),
-  time: logger.time.bind(logger),
-  timeEnd: logger.timeEnd.bind(logger),
-  measure: logger.measure.bind(logger),
+    debug: logger.debug.bind(logger),
+    info: logger.info.bind(logger),
+    warn: logger.warn.bind(logger),
+    error: logger.error.bind(logger),
+    time: logger.time.bind(logger),
+    timeEnd: logger.timeEnd.bind(logger),
+    measure: logger.measure.bind(logger),
 };
 // Domain-specific logger instances (backward compatibility)
 export const orchestratorLogger = logger.child('Orchestrator');
@@ -54,5 +48,5 @@ export const executorLogger = logger.child('Executor');
  * @param context - Optional additional context
  */
 export function logError(message, error, context) {
-  logger.error(message, error, context);
+    logger.error(message, error, context);
 }
