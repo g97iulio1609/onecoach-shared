@@ -9,8 +9,8 @@
  */
 export declare class AppError extends Error {
     readonly code: string;
-    readonly details?: unknown;
-    constructor(message: string, code: string, details?: unknown);
+    readonly details?: unknown | undefined;
+    constructor(message: string, code: string, details?: unknown | undefined);
 }
 /**
  * Validation error for input validation failures
@@ -57,15 +57,15 @@ export declare class ForbiddenError extends AppError {
  */
 export declare class NotFoundError extends AppError {
     readonly resource: string;
-    readonly resourceId?: string;
-    constructor(resource: string, resourceId?: string);
+    readonly resourceId?: string | undefined;
+    constructor(resource: string, resourceId?: string | undefined);
 }
 /**
  * Rate limit exceeded error
  */
 export declare class RateLimitError extends AppError {
-    readonly retryAfter?: number;
-    constructor(message?: string, retryAfter?: number);
+    readonly retryAfter?: number | undefined;
+    constructor(message?: string, retryAfter?: number | undefined);
 }
 /**
  * Conflict error for resource conflicts

@@ -36,8 +36,8 @@ declare const baseExercisePayloadSchema: z.ZodObject<{
     slug: z.ZodOptional<z.ZodString>;
     exerciseTypeId: z.ZodString;
     overview: z.ZodOptional<z.ZodString>;
-    imageUrl: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>>;
-    videoUrl: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>>;
+    imageUrl: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>>;
+    videoUrl: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>>;
     keywords: z.ZodOptional<z.ZodArray<z.ZodString>>;
     instructions: z.ZodOptional<z.ZodArray<z.ZodString>>;
     exerciseTips: z.ZodOptional<z.ZodArray<z.ZodString>>;
@@ -78,8 +78,8 @@ export declare const createExerciseSchema: z.ZodObject<{
     slug: z.ZodOptional<z.ZodString>;
     exerciseTypeId: z.ZodString;
     overview: z.ZodOptional<z.ZodString>;
-    imageUrl: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>>;
-    videoUrl: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>>;
+    imageUrl: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>>;
+    videoUrl: z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>>;
     keywords: z.ZodOptional<z.ZodArray<z.ZodString>>;
     instructions: z.ZodOptional<z.ZodArray<z.ZodString>>;
     exerciseTips: z.ZodOptional<z.ZodArray<z.ZodString>>;
@@ -118,8 +118,8 @@ declare const updateExerciseBaseSchema: z.ZodObject<{
     slug: z.ZodOptional<z.ZodOptional<z.ZodString>>;
     exerciseTypeId: z.ZodOptional<z.ZodString>;
     overview: z.ZodOptional<z.ZodOptional<z.ZodString>>;
-    imageUrl: z.ZodOptional<z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>>>;
-    videoUrl: z.ZodOptional<z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>>>;
+    imageUrl: z.ZodOptional<z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>>>;
+    videoUrl: z.ZodOptional<z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>>>;
     keywords: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString>>>;
     instructions: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString>>>;
     exerciseTips: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString>>>;
@@ -161,8 +161,8 @@ export declare const updateExerciseSchema: z.ZodObject<{
     slug: z.ZodOptional<z.ZodOptional<z.ZodString>>;
     exerciseTypeId: z.ZodOptional<z.ZodString>;
     overview: z.ZodOptional<z.ZodOptional<z.ZodString>>;
-    imageUrl: z.ZodOptional<z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>>>;
-    videoUrl: z.ZodOptional<z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>>>;
+    imageUrl: z.ZodOptional<z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>>>;
+    videoUrl: z.ZodOptional<z.ZodOptional<z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>>>;
     keywords: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString>>>;
     instructions: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString>>>;
     exerciseTips: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString>>>;
@@ -206,8 +206,8 @@ export declare const updateExerciseSchema: z.ZodObject<{
 export declare const exerciseQuerySchema: z.ZodObject<{
     locale: z.ZodDefault<z.ZodString>;
     search: z.ZodOptional<z.ZodString>;
-    page: z.ZodDefault<z.ZodPipe<z.ZodTransform<number, unknown>, z.ZodOptional<z.ZodNumber>>>;
-    pageSize: z.ZodDefault<z.ZodPipe<z.ZodTransform<number, unknown>, z.ZodOptional<z.ZodNumber>>>;
+    page: z.ZodDefault<z.ZodPipe<z.ZodTransform<number | undefined, unknown>, z.ZodOptional<z.ZodNumber>>>;
+    pageSize: z.ZodDefault<z.ZodPipe<z.ZodTransform<number | undefined, unknown>, z.ZodOptional<z.ZodNumber>>>;
     exerciseTypeId: z.ZodOptional<z.ZodString>;
     muscleIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodArray<z.ZodString>>>>;
     bodyPartIds: z.ZodOptional<z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodArray<z.ZodString>>>>;

@@ -11,6 +11,8 @@ generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
   engineType    = "binary"
+  // Output to monorepo root so all workspace packages use the same generated client
+  output        = "../../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -425,6 +427,8 @@ model ai_chat_models {
   endpoint              String?
   // Riferimento a quale API key usare (es. "OPENAI_API_KEY", "custom_key_123")
   apiKeyRef             String?
+  // OpenRouter provider routing - provider slug (es. "deepinfra", "together") per forzare l'uso di uno specifico provider
+  preferredProvider     String?
   metadata              Json?
   sortOrder             Int                    @default(0)
   createdAt             DateTime               @default(now())

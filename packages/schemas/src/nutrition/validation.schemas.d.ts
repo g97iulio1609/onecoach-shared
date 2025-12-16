@@ -242,8 +242,8 @@ export declare const nutritionPlanValidationSchema: z.ZodObject<{
     status: z.ZodDefault<z.ZodEnum<{
         ACTIVE: "ACTIVE";
         COMPLETED: "COMPLETED";
-        DRAFT: "DRAFT";
         ARCHIVED: "ARCHIVED";
+        DRAFT: "DRAFT";
     }>>;
     version: z.ZodDefault<z.ZodNumber>;
     userProfile: z.ZodOptional<z.ZodObject<{

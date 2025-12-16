@@ -11,8 +11,8 @@ import { z } from 'zod';
  */
 export declare const chatMessageSchema: z.ZodObject<{
     role: z.ZodEnum<{
-        system: "system";
         user: "user";
+        system: "system";
         assistant: "assistant";
     }>;
     content: z.ZodString;
@@ -20,8 +20,8 @@ export declare const chatMessageSchema: z.ZodObject<{
 export declare const chatStreamRequestSchema: z.ZodObject<{
     messages: z.ZodArray<z.ZodObject<{
         role: z.ZodEnum<{
-            system: "system";
             user: "user";
+            system: "system";
             assistant: "assistant";
         }>;
         content: z.ZodString;

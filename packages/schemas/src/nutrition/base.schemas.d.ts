@@ -57,6 +57,7 @@ export type NutritionGoal = z.infer<typeof NutritionGoalSchema>;
  * Tipi di dieta supportati
  */
 export declare const DietTypeSchema: z.ZodEnum<{
+    none: "none";
     omnivore: "omnivore";
     vegetarian: "vegetarian";
     vegan: "vegan";
@@ -64,7 +65,6 @@ export declare const DietTypeSchema: z.ZodEnum<{
     keto: "keto";
     paleo: "paleo";
     mediterranean: "mediterranean";
-    none: "none";
 }>;
 export type DietType = z.infer<typeof DietTypeSchema>;
 /**
@@ -343,8 +343,8 @@ export type NutritionWeek = z.infer<typeof NutritionWeekSchema>;
 export declare const PlanStatusSchema: z.ZodEnum<{
     ACTIVE: "ACTIVE";
     COMPLETED: "COMPLETED";
-    DRAFT: "DRAFT";
     ARCHIVED: "ARCHIVED";
+    DRAFT: "DRAFT";
 }>;
 export type PlanStatus = z.infer<typeof PlanStatusSchema>;
 /**
@@ -443,8 +443,8 @@ export declare const NutritionPlanBaseSchema: z.ZodObject<{
     status: z.ZodDefault<z.ZodEnum<{
         ACTIVE: "ACTIVE";
         COMPLETED: "COMPLETED";
-        DRAFT: "DRAFT";
         ARCHIVED: "ARCHIVED";
+        DRAFT: "DRAFT";
     }>>;
     version: z.ZodDefault<z.ZodNumber>;
     userProfile: z.ZodOptional<z.ZodObject<{
@@ -564,8 +564,8 @@ export declare const NutritionPlanSchema: z.ZodObject<{
     status: z.ZodDefault<z.ZodEnum<{
         ACTIVE: "ACTIVE";
         COMPLETED: "COMPLETED";
-        DRAFT: "DRAFT";
         ARCHIVED: "ARCHIVED";
+        DRAFT: "DRAFT";
     }>>;
     version: z.ZodDefault<z.ZodNumber>;
     userProfile: z.ZodOptional<z.ZodObject<{
@@ -744,6 +744,7 @@ export declare const DietaryRestrictionsSchema: z.ZodObject<{
     allergies: z.ZodDefault<z.ZodArray<z.ZodString>>;
     intolerances: z.ZodDefault<z.ZodArray<z.ZodString>>;
     dietType: z.ZodEnum<{
+        none: "none";
         omnivore: "omnivore";
         vegetarian: "vegetarian";
         vegan: "vegan";
@@ -751,7 +752,6 @@ export declare const DietaryRestrictionsSchema: z.ZodObject<{
         keto: "keto";
         paleo: "paleo";
         mediterranean: "mediterranean";
-        none: "none";
     }>;
     dislikedFoods: z.ZodDefault<z.ZodArray<z.ZodString>>;
     preferredFoods: z.ZodDefault<z.ZodArray<z.ZodString>>;

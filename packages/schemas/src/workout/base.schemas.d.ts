@@ -54,9 +54,9 @@ export type ExerciseSet = z.infer<typeof exerciseSetSchema>;
  */
 export declare const setProgressionSchema: z.ZodObject<{
     type: z.ZodEnum<{
-        rpe: "rpe";
         linear: "linear";
         percentage: "percentage";
+        rpe: "rpe";
     }>;
     steps: z.ZodArray<z.ZodObject<{
         fromSet: z.ZodNumber;
@@ -106,9 +106,9 @@ export declare const setGroupSchema: z.ZodObject<{
     }, z.core.$strip>;
     progression: z.ZodOptional<z.ZodObject<{
         type: z.ZodEnum<{
-            rpe: "rpe";
             linear: "linear";
             percentage: "percentage";
+            rpe: "rpe";
         }>;
         steps: z.ZodArray<z.ZodObject<{
             fromSet: z.ZodNumber;
@@ -159,19 +159,19 @@ export declare const exerciseSchema: z.ZodObject<{
         isolation: "isolation";
     }>;
     category: z.ZodEnum<{
+        core: "core";
         strength: "strength";
         cardio: "cardio";
         flexibility: "flexibility";
         balance: "balance";
         endurance: "endurance";
-        core: "core";
     }>;
     muscleGroup: z.ZodOptional<z.ZodString>;
     muscleGroups: z.ZodOptional<z.ZodArray<z.ZodEnum<{
-        chest: "chest";
-        shoulders: "shoulders";
         core: "core";
+        chest: "chest";
         back: "back";
+        shoulders: "shoulders";
         arms: "arms";
         legs: "legs";
         "full-body": "full-body";
@@ -200,9 +200,9 @@ export declare const exerciseSchema: z.ZodObject<{
         }, z.core.$strip>;
         progression: z.ZodOptional<z.ZodObject<{
             type: z.ZodEnum<{
-                rpe: "rpe";
                 linear: "linear";
                 percentage: "percentage";
+                rpe: "rpe";
             }>;
             steps: z.ZodArray<z.ZodObject<{
                 fromSet: z.ZodNumber;
@@ -262,19 +262,19 @@ export declare const workoutDaySchema: z.ZodObject<{
             isolation: "isolation";
         }>;
         category: z.ZodEnum<{
+            core: "core";
             strength: "strength";
             cardio: "cardio";
             flexibility: "flexibility";
             balance: "balance";
             endurance: "endurance";
-            core: "core";
         }>;
         muscleGroup: z.ZodOptional<z.ZodString>;
         muscleGroups: z.ZodOptional<z.ZodArray<z.ZodEnum<{
-            chest: "chest";
-            shoulders: "shoulders";
             core: "core";
+            chest: "chest";
             back: "back";
+            shoulders: "shoulders";
             arms: "arms";
             legs: "legs";
             "full-body": "full-body";
@@ -303,9 +303,9 @@ export declare const workoutDaySchema: z.ZodObject<{
             }, z.core.$strip>;
             progression: z.ZodOptional<z.ZodObject<{
                 type: z.ZodEnum<{
-                    rpe: "rpe";
                     linear: "linear";
                     percentage: "percentage";
+                    rpe: "rpe";
                 }>;
                 steps: z.ZodArray<z.ZodObject<{
                     fromSet: z.ZodNumber;
@@ -373,19 +373,19 @@ export declare const workoutWeekSchema: z.ZodObject<{
                 isolation: "isolation";
             }>;
             category: z.ZodEnum<{
+                core: "core";
                 strength: "strength";
                 cardio: "cardio";
                 flexibility: "flexibility";
                 balance: "balance";
                 endurance: "endurance";
-                core: "core";
             }>;
             muscleGroup: z.ZodOptional<z.ZodString>;
             muscleGroups: z.ZodOptional<z.ZodArray<z.ZodEnum<{
-                chest: "chest";
-                shoulders: "shoulders";
                 core: "core";
+                chest: "chest";
                 back: "back";
+                shoulders: "shoulders";
                 arms: "arms";
                 legs: "legs";
                 "full-body": "full-body";
@@ -414,9 +414,9 @@ export declare const workoutWeekSchema: z.ZodObject<{
                 }, z.core.$strip>;
                 progression: z.ZodOptional<z.ZodObject<{
                     type: z.ZodEnum<{
-                        rpe: "rpe";
                         linear: "linear";
                         percentage: "percentage";
+                        rpe: "rpe";
                     }>;
                     steps: z.ZodArray<z.ZodObject<{
                         fromSet: z.ZodNumber;
@@ -496,19 +496,19 @@ export declare const workoutProgramSchema: z.ZodObject<{
                     isolation: "isolation";
                 }>;
                 category: z.ZodEnum<{
+                    core: "core";
                     strength: "strength";
                     cardio: "cardio";
                     flexibility: "flexibility";
                     balance: "balance";
                     endurance: "endurance";
-                    core: "core";
                 }>;
                 muscleGroup: z.ZodOptional<z.ZodString>;
                 muscleGroups: z.ZodOptional<z.ZodArray<z.ZodEnum<{
-                    chest: "chest";
-                    shoulders: "shoulders";
                     core: "core";
+                    chest: "chest";
                     back: "back";
+                    shoulders: "shoulders";
                     arms: "arms";
                     legs: "legs";
                     "full-body": "full-body";
@@ -537,9 +537,9 @@ export declare const workoutProgramSchema: z.ZodObject<{
                     }, z.core.$strip>;
                     progression: z.ZodOptional<z.ZodObject<{
                         type: z.ZodEnum<{
-                            rpe: "rpe";
                             linear: "linear";
                             percentage: "percentage";
+                            rpe: "rpe";
                         }>;
                         steps: z.ZodArray<z.ZodObject<{
                             fromSet: z.ZodNumber;
@@ -622,9 +622,9 @@ export declare const aiSetGroupSchema: z.ZodObject<{
     }, z.core.$strip>;
     progression: z.ZodOptional<z.ZodObject<{
         type: z.ZodEnum<{
-            rpe: "rpe";
             linear: "linear";
             percentage: "percentage";
+            rpe: "rpe";
         }>;
         steps: z.ZodArray<z.ZodObject<{
             fromSet: z.ZodNumber;
@@ -668,19 +668,19 @@ export declare const aiExerciseSchema: z.ZodObject<{
         isolation: "isolation";
     }>;
     category: z.ZodEnum<{
+        core: "core";
         strength: "strength";
         cardio: "cardio";
         flexibility: "flexibility";
         balance: "balance";
         endurance: "endurance";
-        core: "core";
     }>;
     muscleGroup: z.ZodOptional<z.ZodString>;
     muscleGroups: z.ZodOptional<z.ZodArray<z.ZodEnum<{
-        chest: "chest";
-        shoulders: "shoulders";
         core: "core";
+        chest: "chest";
         back: "back";
+        shoulders: "shoulders";
         arms: "arms";
         legs: "legs";
         "full-body": "full-body";
@@ -709,9 +709,9 @@ export declare const aiExerciseSchema: z.ZodObject<{
         }, z.core.$strip>;
         progression: z.ZodOptional<z.ZodObject<{
             type: z.ZodEnum<{
-                rpe: "rpe";
                 linear: "linear";
                 percentage: "percentage";
+                rpe: "rpe";
             }>;
             steps: z.ZodArray<z.ZodObject<{
                 fromSet: z.ZodNumber;
@@ -771,19 +771,19 @@ export declare const aiWorkoutDaySchema: z.ZodObject<{
             isolation: "isolation";
         }>;
         category: z.ZodEnum<{
+            core: "core";
             strength: "strength";
             cardio: "cardio";
             flexibility: "flexibility";
             balance: "balance";
             endurance: "endurance";
-            core: "core";
         }>;
         muscleGroup: z.ZodOptional<z.ZodString>;
         muscleGroups: z.ZodOptional<z.ZodArray<z.ZodEnum<{
-            chest: "chest";
-            shoulders: "shoulders";
             core: "core";
+            chest: "chest";
             back: "back";
+            shoulders: "shoulders";
             arms: "arms";
             legs: "legs";
             "full-body": "full-body";
@@ -812,9 +812,9 @@ export declare const aiWorkoutDaySchema: z.ZodObject<{
             }, z.core.$strip>;
             progression: z.ZodOptional<z.ZodObject<{
                 type: z.ZodEnum<{
-                    rpe: "rpe";
                     linear: "linear";
                     percentage: "percentage";
+                    rpe: "rpe";
                 }>;
                 steps: z.ZodArray<z.ZodObject<{
                     fromSet: z.ZodNumber;
@@ -882,19 +882,19 @@ export declare const aiWorkoutWeekSchema: z.ZodObject<{
                 isolation: "isolation";
             }>;
             category: z.ZodEnum<{
+                core: "core";
                 strength: "strength";
                 cardio: "cardio";
                 flexibility: "flexibility";
                 balance: "balance";
                 endurance: "endurance";
-                core: "core";
             }>;
             muscleGroup: z.ZodOptional<z.ZodString>;
             muscleGroups: z.ZodOptional<z.ZodArray<z.ZodEnum<{
-                chest: "chest";
-                shoulders: "shoulders";
                 core: "core";
+                chest: "chest";
                 back: "back";
+                shoulders: "shoulders";
                 arms: "arms";
                 legs: "legs";
                 "full-body": "full-body";
@@ -923,9 +923,9 @@ export declare const aiWorkoutWeekSchema: z.ZodObject<{
                 }, z.core.$strip>;
                 progression: z.ZodOptional<z.ZodObject<{
                     type: z.ZodEnum<{
-                        rpe: "rpe";
                         linear: "linear";
                         percentage: "percentage";
+                        rpe: "rpe";
                     }>;
                     steps: z.ZodArray<z.ZodObject<{
                         fromSet: z.ZodNumber;
@@ -1006,19 +1006,19 @@ export declare const aiWorkoutProgramSchema: z.ZodObject<{
                     isolation: "isolation";
                 }>;
                 category: z.ZodEnum<{
+                    core: "core";
                     strength: "strength";
                     cardio: "cardio";
                     flexibility: "flexibility";
                     balance: "balance";
                     endurance: "endurance";
-                    core: "core";
                 }>;
                 muscleGroup: z.ZodOptional<z.ZodString>;
                 muscleGroups: z.ZodOptional<z.ZodArray<z.ZodEnum<{
-                    chest: "chest";
-                    shoulders: "shoulders";
                     core: "core";
+                    chest: "chest";
                     back: "back";
+                    shoulders: "shoulders";
                     arms: "arms";
                     legs: "legs";
                     "full-body": "full-body";
@@ -1047,9 +1047,9 @@ export declare const aiWorkoutProgramSchema: z.ZodObject<{
                     }, z.core.$strip>;
                     progression: z.ZodOptional<z.ZodObject<{
                         type: z.ZodEnum<{
-                            rpe: "rpe";
                             linear: "linear";
                             percentage: "percentage";
+                            rpe: "rpe";
                         }>;
                         steps: z.ZodArray<z.ZodObject<{
                             fromSet: z.ZodNumber;
@@ -1201,10 +1201,10 @@ export declare const exerciseSelectionOutputSchema: z.ZodObject<{
         name: z.ZodString;
         exerciseId: z.ZodOptional<z.ZodString>;
         category: z.ZodEnum<{
-            cardio: "cardio";
             core: "core";
             compound: "compound";
             isolation: "isolation";
+            cardio: "cardio";
             mobility: "mobility";
         }>;
         targetMuscles: z.ZodArray<z.ZodString>;
@@ -1223,8 +1223,8 @@ export declare const exerciseSelectionOutputSchema: z.ZodObject<{
     weeklyStructure: z.ZodObject<{
         splitType: z.ZodEnum<{
             custom: "custom";
-            full_body: "full_body";
             upper_lower: "upper_lower";
+            full_body: "full_body";
             push_pull_legs: "push_pull_legs";
             bro_split: "bro_split";
         }>;
@@ -1247,8 +1247,8 @@ export declare const workoutPlanningOutputSchema: z.ZodObject<{
         name: z.ZodString;
         splitType: z.ZodEnum<{
             custom: "custom";
-            full_body: "full_body";
             upper_lower: "upper_lower";
+            full_body: "full_body";
             push_pull_legs: "push_pull_legs";
             bro_split: "bro_split";
         }>;

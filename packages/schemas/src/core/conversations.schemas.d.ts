@@ -17,10 +17,10 @@ export declare const conversationCreateSchema: z.ZodObject<{
     modelOverride: z.ZodOptional<z.ZodString>;
     initialMessages: z.ZodOptional<z.ZodArray<z.ZodObject<{
         role: z.ZodEnum<{
-            system: "system";
-            user: "user";
-            assistant: "assistant";
             tool: "tool";
+            user: "user";
+            system: "system";
+            assistant: "assistant";
         }>;
         content: z.ZodString;
         metadata: z.ZodOptional<z.ZodUnknown>;

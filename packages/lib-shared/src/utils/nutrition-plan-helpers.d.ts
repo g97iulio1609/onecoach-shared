@@ -24,25 +24,15 @@ export declare function getNutritionPlanTotalDays(plan: NutritionPlan): number;
 /**
  * Get a specific day by day number (1-based)
  */
-export declare function getNutritionPlanDay(
-  plan: NutritionPlan,
-  dayNumber: number
-): NutritionDay | null;
+export declare function getNutritionPlanDay(plan: NutritionPlan, dayNumber: number): NutritionDay | null;
 /**
  * Get a specific day by week and day number
  */
-export declare function getNutritionPlanDayByWeek(
-  plan: NutritionPlan,
-  weekNumber: number,
-  dayNumber: number
-): NutritionDay | null;
+export declare function getNutritionPlanDayByWeek(plan: NutritionPlan, weekNumber: number, dayNumber: number): NutritionDay | null;
 /**
  * Get week by week number
  */
-export declare function getNutritionPlanWeek(
-  plan: NutritionPlan,
-  weekNumber: number
-): NutritionWeek | null;
+export declare function getNutritionPlanWeek(plan: NutritionPlan, weekNumber: number): NutritionWeek | null;
 /**
  * Iterate over all weeks in a plan
  */
@@ -61,10 +51,8 @@ export declare function iterateNutritionPlanDays(plan: NutritionPlan): Generator
  * @param targetDate - The target date to calculate the day for
  * @returns Object with weekNumber and dayNumber, or null if plan has no weeks
  */
-export declare function getWeekAndDayFromDate(
-  plan: NutritionPlan,
-  targetDate: Date
-): {
-  weekNumber: number;
-  dayNumber: number;
+export declare function getWeekAndDayFromDate(plan: NutritionPlan, targetDate: Date): {
+    weekNumber: number;
+    dayNumber: number;
 } | null;
+//# sourceMappingURL=nutrition-plan-helpers.d.ts.map

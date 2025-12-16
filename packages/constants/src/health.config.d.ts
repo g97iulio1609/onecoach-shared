@@ -8,7 +8,7 @@ export declare const HEALTH_DATA_TYPES: HealthDataType[];
 export declare const APPLE_HEALTH_PERMISSIONS: {
     permissions: {
         read: string[];
-        write: any[];
+        write: never[];
     };
 };
 export declare const ANDROID_HEALTH_PERMISSIONS: {

@@ -15,6 +15,8 @@ export type IntentType =
   | 'generate_exercises'
   | 'search_exercises'
   | 'create_exercise_variants'
+  | 'food_crud'
+  | 'exercise_crud'
   | 'general_chat'
   | 'get_info';
 

@@ -575,8 +575,8 @@ export declare const PatternBasedNutritionPlanSchema: z.ZodObject<{
     status: z.ZodDefault<z.ZodEnum<{
         ACTIVE: "ACTIVE";
         COMPLETED: "COMPLETED";
-        DRAFT: "DRAFT";
         ARCHIVED: "ARCHIVED";
+        DRAFT: "DRAFT";
     }>>;
     version: z.ZodDefault<z.ZodNumber>;
     userProfile: z.ZodOptional<z.ZodObject<{
@@ -653,6 +653,7 @@ export declare const PatternNutritionGenerationInputSchema: z.ZodObject<{
         allergies: z.ZodDefault<z.ZodArray<z.ZodString>>;
         intolerances: z.ZodDefault<z.ZodArray<z.ZodString>>;
         dietType: z.ZodEnum<{
+            none: "none";
             omnivore: "omnivore";
             vegetarian: "vegetarian";
             vegan: "vegan";
@@ -660,7 +661,6 @@ export declare const PatternNutritionGenerationInputSchema: z.ZodObject<{
             keto: "keto";
             paleo: "paleo";
             mediterranean: "mediterranean";
-            none: "none";
         }>;
         dislikedFoods: z.ZodDefault<z.ZodArray<z.ZodString>>;
         preferredFoods: z.ZodDefault<z.ZodArray<z.ZodString>>;
@@ -795,8 +795,8 @@ export declare const PatternNutritionGenerationOutputSchema: z.ZodObject<{
         status: z.ZodDefault<z.ZodEnum<{
             ACTIVE: "ACTIVE";
             COMPLETED: "COMPLETED";
-            DRAFT: "DRAFT";
             ARCHIVED: "ARCHIVED";
+            DRAFT: "DRAFT";
         }>>;
         version: z.ZodDefault<z.ZodNumber>;
         userProfile: z.ZodOptional<z.ZodObject<{

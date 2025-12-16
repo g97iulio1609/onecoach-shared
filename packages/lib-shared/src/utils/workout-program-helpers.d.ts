@@ -25,25 +25,15 @@ export declare function getWorkoutProgramTotalDays(program: WorkoutProgram): num
 /**
  * Get a specific day by day number (1-based)
  */
-export declare function getWorkoutProgramDay(
-  program: WorkoutProgram,
-  dayNumber: number
-): WorkoutDay | null;
+export declare function getWorkoutProgramDay(program: WorkoutProgram, dayNumber: number): WorkoutDay | null;
 /**
  * Get a specific day by week and day number
  */
-export declare function getWorkoutProgramDayByWeek(
-  program: WorkoutProgram,
-  weekNumber: number,
-  dayNumber: number
-): WorkoutDay | null;
+export declare function getWorkoutProgramDayByWeek(program: WorkoutProgram, weekNumber: number, dayNumber: number): WorkoutDay | null;
 /**
  * Get week by week number
  */
-export declare function getWorkoutProgramWeek(
-  program: WorkoutProgram,
-  weekNumber: number
-): WorkoutWeek | null;
+export declare function getWorkoutProgramWeek(program: WorkoutProgram, weekNumber: number): WorkoutWeek | null;
 /**
  * Iterate over all weeks in a program
  */
@@ -62,10 +52,8 @@ export declare function iterateWorkoutProgramDays(program: WorkoutProgram): Gene
  * @param targetDate - The target date to calculate the day for
  * @returns Object with weekNumber and dayNumber, or null if program has no weeks
  */
-export declare function getWeekAndDayFromDate(
-  program: WorkoutProgram,
-  targetDate: Date
-): {
-  weekNumber: number;
-  dayNumber: number;
+export declare function getWeekAndDayFromDate(program: WorkoutProgram, targetDate: Date): {
+    weekNumber: number;
+    dayNumber: number;
 } | null;
+//# sourceMappingURL=workout-program-helpers.d.ts.map

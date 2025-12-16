@@ -127,14 +127,14 @@ export declare function safeValidateAIGeneratedFood(input: unknown): z.ZodSafePa
         protein: number;
         carbs: number;
         fats: number;
-        fiber?: number;
+        fiber?: number | undefined;
     };
     servingSize: number;
     description: string;
-    brandName?: string;
-    imageUrl?: string;
-    barcode?: string;
-    notes?: string;
+    brandName?: string | undefined;
+    imageUrl?: string | null | undefined;
+    barcode?: string | null | undefined;
+    notes?: string | undefined;
 }>;
 /**
  * Valida un alimento per la creazione nel DB

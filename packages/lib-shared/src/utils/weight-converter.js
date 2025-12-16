@@ -12,14 +12,14 @@ import { kgToLbs, lbsToKg } from '@onecoach/lib-workout/intensity-calculator';
  * @returns Stringa formattata con valore e unità
  */
 export function formatWeight(weightKg, weightLbs, unit) {
-  if (weightKg === null || weightKg === undefined) {
-    return 'N/A';
-  }
-  if (unit === 'LBS') {
-    const lbs = weightLbs ?? kgToLbs(weightKg);
-    return `${lbs.toFixed(1)} lbs`;
-  }
-  return `${weightKg.toFixed(1)} kg`;
+    if (weightKg === null || weightKg === undefined) {
+        return 'N/A';
+    }
+    if (unit === 'LBS') {
+        const lbs = weightLbs ?? kgToLbs(weightKg);
+        return `${lbs.toFixed(1)} lbs`;
+    }
+    return `${weightKg.toFixed(1)} kg`;
 }
 /**
  * Ottiene il valore del peso in base all'unità preferita
@@ -29,13 +29,13 @@ export function formatWeight(weightKg, weightLbs, unit) {
  * @returns Valore del peso nell'unità richiesta
  */
 export function getWeightValue(weightKg, weightLbs, unit) {
-  if (weightKg === undefined || weightKg === null) {
-    return undefined;
-  }
-  if (unit === 'LBS') {
-    return weightLbs !== null && weightLbs !== undefined ? weightLbs : kgToLbs(weightKg);
-  }
-  return weightKg;
+    if (weightKg === undefined || weightKg === null) {
+        return undefined;
+    }
+    if (unit === 'LBS') {
+        return weightLbs !== null && weightLbs !== undefined ? weightLbs : kgToLbs(weightKg);
+    }
+    return weightKg;
 }
 // Re-export conversion functions
 export { kgToLbs, lbsToKg };
@@ -47,26 +47,28 @@ export { kgToLbs, lbsToKg };
  * @returns Oggetto con weightKg e weightLbs sempre sincronizzati
  */
 export function syncWeightUnits(weightKg, weightLbs) {
-  // Se non abbiamo nessuno dei due valori, ritorna null
-  if (!weightKg && !weightLbs) {
-    return null;
-  }
-  let finalWeightKg;
-  let finalWeightLbs;
-  if (weightKg !== undefined && weightKg !== null && weightKg > 0) {
-    // Abbiamo kg, usa quello come fonte di verità
-    finalWeightKg = weightKg;
-    finalWeightLbs = kgToLbs(weightKg);
-  } else if (weightLbs !== undefined && weightLbs !== null && weightLbs > 0) {
-    // Abbiamo solo lbs, converti in kg
-    finalWeightKg = lbsToKg(weightLbs);
-    finalWeightLbs = weightLbs;
-  } else {
-    // Valori non validi
-    return null;
-  }
-  return {
-    weightKg: finalWeightKg,
-    weightLbs: finalWeightLbs,
-  };
+    // Se non abbiamo nessuno dei due valori, ritorna null
+    if (!weightKg && !weightLbs) {
+        return null;
+    }
+    let finalWeightKg;
+    let finalWeightLbs;
+    if (weightKg !== undefined && weightKg !== null && weightKg > 0) {
+        // Abbiamo kg, usa quello come fonte di verità
+        finalWeightKg = weightKg;
+        finalWeightLbs = kgToLbs(weightKg);
+    }
+    else if (weightLbs !== undefined && weightLbs !== null && weightLbs > 0) {
+        // Abbiamo solo lbs, converti in kg
+        finalWeightKg = lbsToKg(weightLbs);
+        finalWeightLbs = weightLbs;
+    }
+    else {
+        // Valori non validi
+        return null;
+    }
+    return {
+        weightKg: finalWeightKg,
+        weightLbs: finalWeightLbs,
+    };
 }

@@ -8,13 +8,13 @@
  * Common interface for plans with weeks structure
  */
 export interface PlanWithWeeks {
-  weeks?: Array<{
-    weekNumber: number;
-    days?: Array<{
-      dayNumber: number;
+    weeks?: Array<{
+        weekNumber: number;
+        days?: Array<{
+            dayNumber: number;
+        }>;
     }>;
-  }>;
-  createdAt?: string | Date;
+    createdAt?: string | Date;
 }
 /**
  * Determine week and day number from date (generic implementation)
@@ -26,10 +26,8 @@ export interface PlanWithWeeks {
  * @param targetDate - The target date to calculate the day for
  * @returns Object with weekNumber and dayNumber, or null if plan has no weeks
  */
-export declare function getWeekAndDayFromDate<T extends PlanWithWeeks>(
-  plan: T,
-  targetDate: Date
-): {
-  weekNumber: number;
-  dayNumber: number;
+export declare function getWeekAndDayFromDate<T extends PlanWithWeeks>(plan: T, targetDate: Date): {
+    weekNumber: number;
+    dayNumber: number;
 } | null;
+//# sourceMappingURL=plan-helpers.d.ts.map

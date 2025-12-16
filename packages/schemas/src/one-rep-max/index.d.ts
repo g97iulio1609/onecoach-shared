@@ -79,7 +79,7 @@ export declare function validateOneRepMaxInput(input: unknown): OneRepMaxInput;
 export declare function safeValidateOneRepMaxInput(input: unknown): z.ZodSafeParseResult<{
     catalogExerciseId: string;
     oneRepMax: number;
-    notes?: string;
+    notes?: string | null | undefined;
 }>;
 /**
  * Valida un riferimento a un esercizio del catalogo.

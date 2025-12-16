@@ -5,8 +5,8 @@
 export declare class APIError extends Error {
     status: number;
     statusText: string;
-    data?: unknown;
-    constructor(message: string, status: number, statusText: string, data?: unknown);
+    data?: unknown | undefined;
+    constructor(message: string, status: number, statusText: string, data?: unknown | undefined);
 }
 export interface FetchOptions extends RequestInit {
     timeout?: number;

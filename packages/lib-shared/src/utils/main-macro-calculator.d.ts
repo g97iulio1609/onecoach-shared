@@ -6,8 +6,8 @@
 import type { Macros } from '@onecoach/types';
 export type MacroType = 'PROTEIN' | 'CARBS' | 'FATS' | 'BALANCED';
 export interface MainMacro {
-  type: MacroType;
-  percentage: number;
+    type: MacroType;
+    percentage: number;
 }
 /**
  * Calculate which macronutrient is predominant based on caloric contribution
@@ -48,3 +48,4 @@ export declare function getMainMacroEmoji(mainMacro: MainMacro): string;
  * Validate main macro data
  */
 export declare function isValidMainMacro(mainMacro: unknown): mainMacro is MainMacro;
+//# sourceMappingURL=main-macro-calculator.d.ts.map

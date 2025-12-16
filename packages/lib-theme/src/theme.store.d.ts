@@ -13,34 +13,34 @@ export declare const THEME_STORAGE_KEY = "onecoach-theme";
 export declare const lightColors: ThemeColors;
 export declare const darkColors: ThemeColors;
 export declare const useThemeStore: import("zustand").UseBoundStore<Omit<Omit<import("zustand").StoreApi<ThemeStore>, "setState" | "devtools"> & {
-    setState(partial: ThemeStore | Partial<ThemeStore> | ((state: ThemeStore) => ThemeStore | Partial<ThemeStore>), replace?: false, action?: string | {
+    setState(partial: ThemeStore | Partial<ThemeStore> | ((state: ThemeStore) => ThemeStore | Partial<ThemeStore>), replace?: false | undefined, action?: (string | {
         [x: string]: unknown;
         [x: number]: unknown;
         [x: symbol]: unknown;
         type: string;
-    }): void;
-    setState(state: ThemeStore | ((state: ThemeStore) => ThemeStore), replace: true, action?: string | {
+    }) | undefined): void;
+    setState(state: ThemeStore | ((state: ThemeStore) => ThemeStore), replace: true, action?: (string | {
         [x: string]: unknown;
         [x: number]: unknown;
         [x: symbol]: unknown;
         type: string;
-    }): void;
+    }) | undefined): void;
     devtools: {
         cleanup: () => void;
     };
 }, "setState" | "persist"> & {
-    setState(partial: ThemeStore | Partial<ThemeStore> | ((state: ThemeStore) => ThemeStore | Partial<ThemeStore>), replace?: false, action?: string | {
+    setState(partial: ThemeStore | Partial<ThemeStore> | ((state: ThemeStore) => ThemeStore | Partial<ThemeStore>), replace?: false | undefined, action?: (string | {
         [x: string]: unknown;
         [x: number]: unknown;
         [x: symbol]: unknown;
         type: string;
-    }): unknown;
-    setState(state: ThemeStore | ((state: ThemeStore) => ThemeStore), replace: true, action?: string | {
+    }) | undefined): unknown;
+    setState(state: ThemeStore | ((state: ThemeStore) => ThemeStore), replace: true, action?: (string | {
         [x: string]: unknown;
         [x: number]: unknown;
         [x: symbol]: unknown;
         type: string;
-    }): unknown;
+    }) | undefined): unknown;
     persist: {
         setOptions: (options: Partial<import("zustand/middleware").PersistOptions<ThemeStore, unknown, unknown>>) => void;
         clearStorage: () => void;
