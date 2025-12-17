@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "@onecoach/constants": "workspace:*",
-    "@prisma/client": "7.1.0",
-    "zod": "4.1.13"
+    "@prisma/client": "^7.2.0",
+    "zod": "4.2.1"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

@@ -423,6 +423,7 @@ model ai_chat_models {
   supportsVision        Boolean                @default(false)
   supportsTools         Boolean                @default(true)
   supportsStreaming     Boolean                @default(true)
+  supportsReasoning     Boolean                @default(false)
   // Custom endpoint URL (es. "https://api.openai.com/v1" o endpoint personalizzato)
   endpoint              String?
   // Riferimento a quale API key usare (es. "OPENAI_API_KEY", "custom_key_123")
