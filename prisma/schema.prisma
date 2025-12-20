@@ -2414,6 +2414,9 @@ model agenda_milestones {
   updatedAt                                                                       DateTime                        @updatedAt
   agenda_milestone_dependencies_agenda_milestone_dependencies_blockedIdToagenda_milestones agenda_milestone_dependencies[] @relation("agenda_milestone_dependencies_blockedIdToagenda_milestones")
   agenda_milestone_dependencies_agenda_milestone_dependencies_blockerIdToagenda_milestones agenda_milestone_dependencies[] @relation("agenda_milestone_dependencies_blockerIdToagenda_milestones")
+  parentId                                                                        String?
+  parent                                                                          agenda_milestones?              @relation("MilestoneHierarchy", fields: [parentId], references: [id], onDelete: Cascade, map: "oneagenda_milestone_parentId_fkey")
+  subMilestones                                                                   agenda_milestones[]             @relation("MilestoneHierarchy")
   agenda_projects                                                                 agenda_projects                 @relation(fields: [projectId], references: [id], onDelete: Cascade, map: "oneagenda_milestone_projectId_fkey")
   agenda_tasks                                                                    agenda_tasks[]
 
