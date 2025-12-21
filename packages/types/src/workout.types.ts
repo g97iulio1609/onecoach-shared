@@ -212,3 +212,48 @@ export interface WorkoutTemplate {
   createdAt: string;
   updatedAt: string;
 }
+import type { AgentWorkoutProgram } from './generation.types';
+export type { AgentWorkoutProgram };
+
+/**
+ * AI Workout Program - Specifico per la generazione/espansione
+ * Unifica AIWorkoutProgram con AgentWorkoutProgram per SSOT
+ */
+export type AIWorkoutProgram = AgentWorkoutProgram;
+
+/**
+ * Singola modifica in una progressione settimanale
+ */
+export interface WorkoutChange {
+  dayNumber: number;
+  exerciseIndex: number;
+  setGroupIndex: number;
+  reps: number;
+  weight?: number;
+  weightLbs?: number;
+  intensityPercent?: number;
+  rpe?: number;
+  rest?: number;
+  count?: number; // Permette di cambiare il numero di serie
+}
+
+/**
+ * Diff di progressione per generare settimane successive
+ */
+export interface ProgressionDiff {
+  week2: {
+    focus?: string;
+    notes?: string;
+    changes: WorkoutChange[];
+  };
+  week3: {
+    focus?: string;
+    notes?: string;
+    changes: WorkoutChange[];
+  };
+  week4: {
+    focus?: string;
+    notes?: string;
+    changes: WorkoutChange[];
+  };
+}

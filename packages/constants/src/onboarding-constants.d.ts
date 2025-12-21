@@ -24,7 +24,7 @@ export declare const ONBOARDING_STEPS: {
     readonly COMPLETION: 15;
 };
 export declare const TOTAL_STEPS = 15;
-export declare const WELCOME_STEPS: (2 | 1 | 14)[];
+export declare const WELCOME_STEPS: (1 | 2 | 14)[];
 export declare const ROUTE_TO_TOUR_STEP: Record<string, number>;
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[keyof typeof ONBOARDING_STEPS];
 /**
@@ -48,3 +48,4 @@ export interface StepCompletionInput {
     skipped?: boolean;
     metadata?: Record<string, unknown>;
 }
+//# sourceMappingURL=onboarding-constants.d.ts.map

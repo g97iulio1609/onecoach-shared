@@ -38,18 +38,18 @@ export declare const workoutStreamRequestSchema: z.ZodObject<{
         quality: "quality";
     }>>>;
     provider: z.ZodOptional<z.ZodEnum<{
-        google: "google";
-        anthropic: "anthropic";
-        openai: "openai";
-        xai: "xai";
         openrouter: "openrouter";
+        openai: "openai";
+        anthropic: "anthropic";
+        google: "google";
+        xai: "xai";
     }>>;
     model: z.ZodOptional<z.ZodString>;
     reasoningEnabled: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     reasoningEffort: z.ZodOptional<z.ZodEnum<{
         medium: "medium";
-        high: "high";
         low: "low";
+        high: "high";
     }>>;
 }, z.core.$strip>;
 /**
@@ -73,3 +73,4 @@ export type WorkoutRequestBase = z.infer<typeof workoutRequestBaseSchema>;
 export type WorkoutStreamRequest = z.infer<typeof workoutStreamRequestSchema>;
 export type CreateWorkoutSession = z.infer<typeof createWorkoutSessionSchema>;
 export type UpdateWorkoutSession = z.infer<typeof updateWorkoutSessionSchema>;
+//# sourceMappingURL=input.schemas.d.ts.map

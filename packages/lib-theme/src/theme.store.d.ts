@@ -70,4 +70,3 @@ export declare function useTheme(): ThemeHookResult;
  */
 export declare function useSystemThemeSync(): void;
 export type { ThemePreference, ResolvedTheme, ThemeColors, ThemeState, ThemeActions, ThemeStore };
-//# sourceMappingURL=theme.store.d.ts.map

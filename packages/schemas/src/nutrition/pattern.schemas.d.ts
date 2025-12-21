@@ -573,8 +573,8 @@ export declare const PatternBasedNutritionPlanSchema: z.ZodObject<{
     restrictions: z.ZodDefault<z.ZodArray<z.ZodString>>;
     preferences: z.ZodDefault<z.ZodArray<z.ZodString>>;
     status: z.ZodDefault<z.ZodEnum<{
-        ACTIVE: "ACTIVE";
         DRAFT: "DRAFT";
+        ACTIVE: "ACTIVE";
         COMPLETED: "COMPLETED";
         ARCHIVED: "ARCHIVED";
     }>>;
@@ -584,14 +584,14 @@ export declare const PatternBasedNutritionPlanSchema: z.ZodObject<{
         height: z.ZodNumber;
         age: z.ZodNumber;
         gender: z.ZodEnum<{
+            other: "other";
             male: "male";
             female: "female";
-            other: "other";
         }>;
         activityLevel: z.ZodEnum<{
+            light: "light";
             active: "active";
             sedentary: "sedentary";
-            light: "light";
             moderate: "moderate";
             very_active: "very_active";
         }>;
@@ -619,14 +619,14 @@ export declare const PatternNutritionGenerationInputSchema: z.ZodObject<{
         height: z.ZodNumber;
         age: z.ZodNumber;
         gender: z.ZodEnum<{
+            other: "other";
             male: "male";
             female: "female";
-            other: "other";
         }>;
         activityLevel: z.ZodEnum<{
+            light: "light";
             active: "active";
             sedentary: "sedentary";
-            light: "light";
             moderate: "moderate";
             very_active: "very_active";
         }>;
@@ -634,11 +634,11 @@ export declare const PatternNutritionGenerationInputSchema: z.ZodObject<{
     }, z.core.$strip>;
     goals: z.ZodObject<{
         goal: z.ZodEnum<{
+            performance: "performance";
+            health: "health";
             weight_loss: "weight_loss";
             muscle_gain: "muscle_gain";
             maintenance: "maintenance";
-            performance: "performance";
-            health: "health";
             body_recomposition: "body_recomposition";
         }>;
         targetCalories: z.ZodOptional<z.ZodNumber>;
@@ -653,6 +653,7 @@ export declare const PatternNutritionGenerationInputSchema: z.ZodObject<{
         allergies: z.ZodDefault<z.ZodArray<z.ZodString>>;
         intolerances: z.ZodDefault<z.ZodArray<z.ZodString>>;
         dietType: z.ZodEnum<{
+            none: "none";
             omnivore: "omnivore";
             vegetarian: "vegetarian";
             vegan: "vegan";
@@ -660,7 +661,6 @@ export declare const PatternNutritionGenerationInputSchema: z.ZodObject<{
             keto: "keto";
             paleo: "paleo";
             mediterranean: "mediterranean";
-            none: "none";
         }>;
         dislikedFoods: z.ZodDefault<z.ZodArray<z.ZodString>>;
         preferredFoods: z.ZodDefault<z.ZodArray<z.ZodString>>;
@@ -793,8 +793,8 @@ export declare const PatternNutritionGenerationOutputSchema: z.ZodObject<{
         restrictions: z.ZodDefault<z.ZodArray<z.ZodString>>;
         preferences: z.ZodDefault<z.ZodArray<z.ZodString>>;
         status: z.ZodDefault<z.ZodEnum<{
-            ACTIVE: "ACTIVE";
             DRAFT: "DRAFT";
+            ACTIVE: "ACTIVE";
             COMPLETED: "COMPLETED";
             ARCHIVED: "ARCHIVED";
         }>>;
@@ -804,14 +804,14 @@ export declare const PatternNutritionGenerationOutputSchema: z.ZodObject<{
             height: z.ZodNumber;
             age: z.ZodNumber;
             gender: z.ZodEnum<{
+                other: "other";
                 male: "male";
                 female: "female";
-                other: "other";
             }>;
             activityLevel: z.ZodEnum<{
+                light: "light";
                 active: "active";
                 sedentary: "sedentary";
-                light: "light";
                 moderate: "moderate";
                 very_active: "very_active";
             }>;
@@ -842,3 +842,4 @@ export declare const PatternNutritionGenerationOutputSchema: z.ZodObject<{
     }, z.core.$strip>;
 }, z.core.$strip>;
 export type PatternNutritionGenerationOutput = z.infer<typeof PatternNutritionGenerationOutputSchema>;
+//# sourceMappingURL=pattern.schemas.d.ts.map

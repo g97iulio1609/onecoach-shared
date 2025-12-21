@@ -77,4 +77,3 @@ export interface ThemeProviderProps {
     /** Initial resolved theme from server (SSR) */
     initialActualTheme?: ResolvedTheme;
 }
-//# sourceMappingURL=types.d.ts.map

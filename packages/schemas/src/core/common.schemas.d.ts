@@ -34,7 +34,7 @@ export declare const localeSchema: z.ZodString;
  * Accetta stringa vuota, null, undefined, o URL valido
  * Se viene fornita una stringa vuota o null, viene trasformata in undefined
  */
-export declare const optionalUrlSchema: z.ZodPipe<z.ZodTransform<{} | undefined, unknown>, z.ZodOptional<z.ZodURL>>;
+export declare const optionalUrlSchema: z.ZodPipe<z.ZodTransform<unknown, unknown>, z.ZodOptional<z.ZodURL>>;
 /**
  * String array schema
  */

@@ -69,6 +69,8 @@ export interface MarketplacePlanDetails extends marketplace_plans {
   coach?: {
     id: string;
     userId: string;
+    name: string | null;
+    image: string | null;
     bio: string | null;
   };
   stats?: {

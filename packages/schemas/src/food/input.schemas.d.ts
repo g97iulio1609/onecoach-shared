@@ -70,10 +70,10 @@ export declare const foodQuerySchema: z.ZodObject<{
     page: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
     pageSize: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
     sortBy: z.ZodDefault<z.ZodEnum<{
-        name: "name";
         createdAt: "createdAt";
         updatedAt: "updatedAt";
         calories: "calories";
+        name: "name";
     }>>;
     sortOrder: z.ZodDefault<z.ZodEnum<{
         asc: "asc";

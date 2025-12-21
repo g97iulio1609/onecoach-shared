@@ -7,4 +7,3 @@ export { useThemeStore, useTheme, useSystemThemeSync, lightColors, darkColors, T
 export { ThemeProvider, useThemeContext } from './theme-provider';
 export { cn, darkModeClasses } from './dark-mode-classes';
 export type { ThemePreference, ResolvedTheme, ThemeColors, ThemeState, ThemeActions, ThemeStore, ThemeProviderProps, } from './types';
-//# sourceMappingURL=index.d.ts.map

@@ -1,11 +1,26 @@
-export type HabitFrequency = 'DAILY' | 'WEEKLY';
+export type HabitFrequency = 'DAILY' | 'WEEKLY' | 'CUSTOM';
+export interface HabitLog {
+    id: string;
+    habitId: string;
+    date: Date | string;
+    completed: boolean;
+    value?: number;
+    notes?: string;
+}
 export interface Habit {
     id: string;
-    title: string;
+    name: string;
     description?: string;
     frequency: HabitFrequency;
-    streak: number;
-    completedToday: boolean;
+    streak?: number;
     color?: string;
-    history: boolean[];
+    logs?: HabitLog[];
+    metadata?: {
+        isCompletedToday?: boolean;
+        [key: string]: any;
+    };
+    visibility?: 'PRIVATE' | 'SHARED_WITH_COACH';
+    targetDays?: number[];
+    archived?: boolean;
+    history?: (string | number | Date)[];
 }

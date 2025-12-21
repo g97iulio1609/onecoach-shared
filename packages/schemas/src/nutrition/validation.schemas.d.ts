@@ -240,8 +240,8 @@ export declare const nutritionPlanValidationSchema: z.ZodObject<{
     restrictions: z.ZodDefault<z.ZodArray<z.ZodString>>;
     preferences: z.ZodDefault<z.ZodArray<z.ZodString>>;
     status: z.ZodDefault<z.ZodEnum<{
-        ACTIVE: "ACTIVE";
         DRAFT: "DRAFT";
+        ACTIVE: "ACTIVE";
         COMPLETED: "COMPLETED";
         ARCHIVED: "ARCHIVED";
     }>>;
@@ -252,14 +252,14 @@ export declare const nutritionPlanValidationSchema: z.ZodObject<{
         height: z.ZodNumber;
         age: z.ZodNumber;
         gender: z.ZodEnum<{
+            other: "other";
             male: "male";
             female: "female";
-            other: "other";
         }>;
         activityLevel: z.ZodEnum<{
+            light: "light";
             active: "active";
             sedentary: "sedentary";
-            light: "light";
             moderate: "moderate";
             very_active: "very_active";
         }>;
@@ -362,14 +362,14 @@ export declare const userMetricsSchema: z.ZodObject<{
     height: z.ZodNumber;
     age: z.ZodNumber;
     gender: z.ZodEnum<{
+        other: "other";
         male: "male";
         female: "female";
-        other: "other";
     }>;
     activityLevel: z.ZodEnum<{
+        light: "light";
         active: "active";
         sedentary: "sedentary";
-        light: "light";
         moderate: "moderate";
         very_active: "very_active";
     }>;
@@ -378,10 +378,10 @@ export declare const userMetricsSchema: z.ZodObject<{
  * Nutrition plan goals schema (array of goals)
  */
 export declare const nutritionPlanGoalsSchema: z.ZodArray<z.ZodEnum<{
+    performance: "performance";
     weight_loss: "weight_loss";
     muscle_gain: "muscle_gain";
     maintenance: "maintenance";
-    performance: "performance";
 }>>;
 /**
  * Macros validation schema
@@ -414,3 +414,4 @@ export declare const nutritionDayInputSchema: z.ZodObject<{
 export type UserMetrics = z.infer<typeof userMetricsSchema>;
 export type NutritionPlanGoals = z.infer<typeof nutritionPlanGoalsSchema>;
 export type NutritionDayInput = z.infer<typeof nutritionDayInputSchema>;
+//# sourceMappingURL=validation.schemas.d.ts.map

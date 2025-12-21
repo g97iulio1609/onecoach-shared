@@ -12,8 +12,8 @@ import { z } from 'zod';
 export declare const chatMessageSchema: z.ZodObject<{
     role: z.ZodEnum<{
         user: "user";
-        assistant: "assistant";
         system: "system";
+        assistant: "assistant";
     }>;
     content: z.ZodString;
 }, z.core.$strip>;
@@ -21,8 +21,8 @@ export declare const chatStreamRequestSchema: z.ZodObject<{
     messages: z.ZodArray<z.ZodObject<{
         role: z.ZodEnum<{
             user: "user";
-            assistant: "assistant";
             system: "system";
+            assistant: "assistant";
         }>;
         content: z.ZodString;
     }, z.core.$strip>>;
@@ -32,11 +32,11 @@ export declare const chatStreamRequestSchema: z.ZodObject<{
         quality: "quality";
     }>>>;
     provider: z.ZodOptional<z.ZodEnum<{
-        google: "google";
-        anthropic: "anthropic";
-        openai: "openai";
-        xai: "xai";
         openrouter: "openrouter";
+        openai: "openai";
+        anthropic: "anthropic";
+        google: "google";
+        xai: "xai";
     }>>;
     model: z.ZodOptional<z.ZodString>;
     temperature: z.ZodOptional<z.ZodNumber>;
@@ -45,8 +45,9 @@ export declare const chatStreamRequestSchema: z.ZodObject<{
     reasoning: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
     reasoningEffort: z.ZodDefault<z.ZodOptional<z.ZodEnum<{
         medium: "medium";
-        high: "high";
         low: "low";
+        high: "high";
     }>>>;
 }, z.core.$strip>;
 export type ChatStreamRequest = z.infer<typeof chatStreamRequestSchema>;
+//# sourceMappingURL=chat.schemas.d.ts.map

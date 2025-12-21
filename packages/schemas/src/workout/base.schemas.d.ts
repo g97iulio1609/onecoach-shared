@@ -154,9 +154,9 @@ export declare const exerciseSchema: z.ZodObject<{
     description: z.ZodString;
     type: z.ZodEnum<{
         core: "core";
+        isolation: "isolation";
         compound: "compound";
         accessory: "accessory";
-        isolation: "isolation";
     }>;
     category: z.ZodEnum<{
         strength: "strength";
@@ -257,9 +257,9 @@ export declare const workoutDaySchema: z.ZodObject<{
         description: z.ZodString;
         type: z.ZodEnum<{
             core: "core";
+            isolation: "isolation";
             compound: "compound";
             accessory: "accessory";
-            isolation: "isolation";
         }>;
         category: z.ZodEnum<{
             strength: "strength";
@@ -368,9 +368,9 @@ export declare const workoutWeekSchema: z.ZodObject<{
             description: z.ZodString;
             type: z.ZodEnum<{
                 core: "core";
+                isolation: "isolation";
                 compound: "compound";
                 accessory: "accessory";
-                isolation: "isolation";
             }>;
             category: z.ZodEnum<{
                 strength: "strength";
@@ -491,9 +491,9 @@ export declare const workoutProgramSchema: z.ZodObject<{
                 description: z.ZodString;
                 type: z.ZodEnum<{
                     core: "core";
+                    isolation: "isolation";
                     compound: "compound";
                     accessory: "accessory";
-                    isolation: "isolation";
                 }>;
                 category: z.ZodEnum<{
                     strength: "strength";
@@ -663,9 +663,9 @@ export declare const aiExerciseSchema: z.ZodObject<{
     description: z.ZodString;
     type: z.ZodEnum<{
         core: "core";
+        isolation: "isolation";
         compound: "compound";
         accessory: "accessory";
-        isolation: "isolation";
     }>;
     category: z.ZodEnum<{
         strength: "strength";
@@ -766,9 +766,9 @@ export declare const aiWorkoutDaySchema: z.ZodObject<{
         description: z.ZodString;
         type: z.ZodEnum<{
             core: "core";
+            isolation: "isolation";
             compound: "compound";
             accessory: "accessory";
-            isolation: "isolation";
         }>;
         category: z.ZodEnum<{
             strength: "strength";
@@ -877,9 +877,9 @@ export declare const aiWorkoutWeekSchema: z.ZodObject<{
             description: z.ZodString;
             type: z.ZodEnum<{
                 core: "core";
+                isolation: "isolation";
                 compound: "compound";
                 accessory: "accessory";
-                isolation: "isolation";
             }>;
             category: z.ZodEnum<{
                 strength: "strength";
@@ -1001,9 +1001,9 @@ export declare const aiWorkoutProgramSchema: z.ZodObject<{
                 description: z.ZodString;
                 type: z.ZodEnum<{
                     core: "core";
+                    isolation: "isolation";
                     compound: "compound";
                     accessory: "accessory";
-                    isolation: "isolation";
                 }>;
                 category: z.ZodEnum<{
                     strength: "strength";
@@ -1203,8 +1203,8 @@ export declare const exerciseSelectionOutputSchema: z.ZodObject<{
         category: z.ZodEnum<{
             cardio: "cardio";
             core: "core";
-            compound: "compound";
             isolation: "isolation";
+            compound: "compound";
             mobility: "mobility";
         }>;
         targetMuscles: z.ZodArray<z.ZodString>;
@@ -1278,3 +1278,4 @@ export declare const workoutPlanningOutputSchema: z.ZodObject<{
     }, z.core.$strip>;
 }, z.core.$strip>;
 export type WorkoutPlanningOutput = z.infer<typeof workoutPlanningOutputSchema>;
+//# sourceMappingURL=base.schemas.d.ts.map

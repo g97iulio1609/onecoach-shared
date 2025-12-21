@@ -18,8 +18,8 @@ export declare const conversationCreateSchema: z.ZodObject<{
     initialMessages: z.ZodOptional<z.ZodArray<z.ZodObject<{
         role: z.ZodEnum<{
             user: "user";
-            assistant: "assistant";
             system: "system";
+            assistant: "assistant";
             tool: "tool";
         }>;
         content: z.ZodString;
@@ -29,3 +29,4 @@ export declare const conversationCreateSchema: z.ZodObject<{
     }, z.core.$strip>>>;
 }, z.core.$strip>;
 export type ConversationCreateInput = z.infer<typeof conversationCreateSchema>;
+//# sourceMappingURL=conversations.schemas.d.ts.map

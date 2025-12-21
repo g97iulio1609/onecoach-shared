@@ -13,4 +13,3 @@ export declare function ThemeProvider({ children, defaultTheme, storageKey: _sto
  */
 export declare function useThemeContext(): ThemeContextValue;
 export {};
-//# sourceMappingURL=theme-provider.d.ts.map

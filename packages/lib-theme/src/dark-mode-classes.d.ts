@@ -106,4 +106,3 @@ export declare const darkModeClasses: {
  */
 export declare function cn(...classes: ClassValue[]): string;
 export type DarkModeClasses = typeof darkModeClasses;
-//# sourceMappingURL=dark-mode-classes.d.ts.map
