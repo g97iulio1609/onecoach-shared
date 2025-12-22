@@ -29,7 +29,7 @@
     "@onecoach/constants": "workspace:*",
     "@onecoach/types": "workspace:*",
     "@prisma/client": "^7.2.0",
-    "zod": "4.2.1"
+    "zod": "4.1.13"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
