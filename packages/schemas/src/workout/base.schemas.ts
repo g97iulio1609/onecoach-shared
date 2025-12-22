@@ -111,7 +111,7 @@ export type SetGroup = z.infer<typeof setGroupSchema>;
 export const exerciseSchema = z.object({
   // Identificazione
   id: z.string().optional(),
-  exerciseId: z.string().optional(), // ID dal catalogo esercizi (per lookup 1RM)
+  exerciseId: z.string().min(1, 'exerciseId OBBLIGATORIO - deve essere un ID esistente dal catalogo esercizi'),
   name: z.string().min(1),
   description: z.string().min(1),
 
@@ -230,7 +230,7 @@ export type AISetGroup = z.infer<typeof aiSetGroupSchema>;
  */
 export const aiExerciseSchema = z.object({
   id: z.string().optional(),
-  exerciseId: z.string().optional(),
+  exerciseId: z.string().min(1, 'exerciseId OBBLIGATORIO - deve essere un ID esistente dal catalogo esercizi'),
   name: z.string().min(1),
   description: z.string().min(1),
   type: z.enum(['compound', 'accessory', 'isolation', 'core']),
@@ -355,7 +355,7 @@ export const exerciseSelectionOutputSchema = z.object({
   selectedExercises: z.array(
     z.object({
       name: z.string(),
-      exerciseId: z.string().optional(),
+      exerciseId: z.string().min(1, 'exerciseId OBBLIGATORIO - SOLO ID esistenti dal catalogo'),
       category: z.enum(['compound', 'isolation', 'cardio', 'core', 'mobility']),
       targetMuscles: z.array(z.string()),
       equipment: z.array(z.string()),
