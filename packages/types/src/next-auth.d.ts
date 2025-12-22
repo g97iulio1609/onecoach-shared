@@ -38,5 +38,6 @@ declare module 'next-auth/jwt' {
     role: UserRole;
     credits: number;
     image?: string | null;
+    lastRefresh?: number;
   }
 }
