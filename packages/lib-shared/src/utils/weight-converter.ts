@@ -116,3 +116,44 @@ export function syncWeightUnits(
     weightLbs: finalWeightLbs,
   };
 }
+
+/**
+ * Round weight to the nearest plate increment
+ * 
+ * Common increments:
+ * - 2.5kg: Standard Olympic barbell plates
+ * - 2.0kg: Common dumbbell increments
+ * - 1.25kg: Micro plates for fine progression
+ * 
+ * @param weight - Weight in kg (or any unit)
+ * @param increment - Plate increment (default 2.5)
+ * @param maxDecimals - Maximum decimal places in output (default 2)
+ * @returns Rounded weight to nearest increment, 0 stays 0
+ * 
+ * @example
+ * roundToPlateIncrement(67.3, 2.5) // → 67.5
+ * roundToPlateIncrement(67.3, 2.0) // → 68.0
+ * roundToPlateIncrement(0, 2.5)    // → 0
+ */
+export function roundToPlateIncrement(
+  weight: number | null | undefined,
+  increment: number = 2.5,
+  maxDecimals: number = 2
+): number {
+  // Defensive: handle null, undefined, NaN, or zero
+  if (weight === null || weight === undefined || Number.isNaN(weight) || weight === 0) {
+    return 0;
+  }
+
+  // Ensure increment is valid (positive, non-zero)
+  if (increment <= 0 || Number.isNaN(increment)) {
+    increment = 2.5;
+  }
+
+  // Round to nearest increment
+  const rounded = Math.round(weight / increment) * increment;
+
+  // Apply max decimals to avoid floating point precision issues
+  const factor = Math.pow(10, maxDecimals);
+  return Math.round(rounded * factor) / factor;
+}

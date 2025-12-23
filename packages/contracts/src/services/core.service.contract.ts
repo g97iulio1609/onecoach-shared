@@ -88,6 +88,7 @@ export interface UserProfileInput {
   heightCm?: number | null;
   weightKg?: number | null;
   weightUnit?: WeightUnit;
+  weightIncrement?: number | null;
   activityLevel?: ActivityLevel | null;
   trainingFrequency?: number | null;
   dailyCalories?: number | null;
