@@ -1191,6 +1191,7 @@ model user_profiles {
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @default(now())
   weightUnit          WeightUnit     @default(KG)
+  weightIncrement       Decimal?       @db.Decimal(3, 2) @default(2.5)
   workoutGoals        String[]       @default([])
   nutritionGoals      String[]       @default([])
   dietType            DietType?      @default(OMNIVORE)
