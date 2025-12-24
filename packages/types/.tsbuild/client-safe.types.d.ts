@@ -163,6 +163,10 @@ export declare const OperationType: {
     readonly ANALYTICS_INSIGHTS: "ANALYTICS_INSIGHTS";
     readonly PROGRESS_ANALYSIS: "PROGRESS_ANALYSIS";
     readonly COMPLEXITY_EVALUATION: "COMPLEXITY_EVALUATION";
+    readonly CHAT_GENERATION: "CHAT_GENERATION";
+    readonly NUTRITION_GENERATION: "NUTRITION_GENERATION";
+    readonly WORKOUT_GENERATION: "WORKOUT_GENERATION";
+    readonly ONEAGENDA_GENERATION: "ONEAGENDA_GENERATION";
 };
 export type OperationType = (typeof OperationType)[keyof typeof OperationType];
 export declare const AffiliateRewardType: {

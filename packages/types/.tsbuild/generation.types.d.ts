@@ -146,7 +146,7 @@ export interface AgentWorkoutProgram {
  */
 export interface AgentWorkoutWeek {
     weekNumber: number;
-    phase: 'accumulation' | 'intensification' | 'realization' | 'deload';
+    phase?: 'accumulation' | 'intensification' | 'realization' | 'deload';
     days: AgentWorkoutDay[];
     notes?: string;
     focus?: string;

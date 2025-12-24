@@ -14,6 +14,7 @@ export interface UserProfileData {
     sex: 'male' | 'female' | 'other' | null;
     heightCm: number | null;
     weightKg: number | null;
+    weightIncrement?: number | null;
     weightUnit: WeightUnit;
     activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' | null;
     trainingFrequency: number | null;
