@@ -9,7 +9,7 @@
  */
 
 import { createId } from '@onecoach/lib-shared/utils';
-import { cuid2Schema } from '@onecoach/schemas';
+import { cuid2Schema } from '../core/common.schemas';
 import { z } from 'zod';
 
 /**

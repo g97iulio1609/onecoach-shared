@@ -4,7 +4,7 @@
  * Types shared across platforms for exercise-related functionality
  */
 
-import type { ExerciseApprovalStatus } from './index';
+import type { ExerciseApprovalStatus } from './client-safe.types';
 
 // ============================================================================
 // CATALOG EXERCISE REFERENCE
