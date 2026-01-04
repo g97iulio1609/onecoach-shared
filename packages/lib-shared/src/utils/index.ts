@@ -70,3 +70,6 @@ export * from './ai-model-mapper';
 
 // Weight Converter
 export * from './weight-converter';
+
+// Flight Types - SSOT for OneFlight feature
+export * from './flight-types';
