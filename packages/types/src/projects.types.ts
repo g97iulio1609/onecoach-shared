@@ -146,9 +146,18 @@ export interface CreateTaskInput {
   title: string;
   description?: string;
   priority?: TaskPriority;
+  startDate?: Date;
   dueDate?: Date;
   order?: number;
   dependencies?: string[];
+  /** Estimated time in minutes */
+  estimatedMinutes?: number;
+  /** User ID to assign this task to */
+  assignedToUserId?: string;
+  /** Tags for categorization */
+  tags?: string[];
+  /** Visibility setting */
+  visibility?: Visibility;
 }
 
 /**
