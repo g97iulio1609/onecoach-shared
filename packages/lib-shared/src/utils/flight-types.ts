@@ -101,3 +101,55 @@ export function isOneWay(response: FlightSearchResponse): response is OneWaySear
 export function getAllFlights(response: FlightSearchResponse): FlightResult[] {
   return isRoundTrip(response) ? [...response.outbound, ...response.return] : response.flights;
 }
+
+// ============================================================================
+// Route Grouping
+// ============================================================================
+
+/** A group of flights sharing the same route */
+export interface RouteGroup {
+  /** Route key: "FCO-DXB" */
+  routeKey: string;
+  /** Departure city */
+  cityFrom: string;
+  /** Departure airport code */
+  flyFrom: string;
+  /** Arrival city */
+  cityTo: string;
+  /** Arrival airport code */
+  flyTo: string;
+  /** Flights on this route */
+  flights: FlightResult[];
+  /** Lowest price in group */
+  lowestPrice: number;
+}
+
+/** Group flights by route (departure-arrival pair) */
+export function groupFlightsByRoute(flights: FlightResult[]): RouteGroup[] {
+  const groups = new Map<string, RouteGroup>();
+  
+  for (const flight of flights) {
+    const routeKey = `${flight.flyFrom}-${flight.flyTo}`;
+    
+    if (!groups.has(routeKey)) {
+      groups.set(routeKey, {
+        routeKey,
+        cityFrom: flight.cityFrom,
+        flyFrom: flight.flyFrom,
+        cityTo: flight.cityTo,
+        flyTo: flight.flyTo,
+        flights: [],
+        lowestPrice: Infinity,
+      });
+    }
+    
+    const group = groups.get(routeKey)!;
+    group.flights.push(flight);
+    if (flight.price < group.lowestPrice) {
+      group.lowestPrice = flight.price;
+    }
+  }
+  
+  // Sort by lowest price
+  return Array.from(groups.values()).sort((a, b) => a.lowestPrice - b.lowestPrice);
+}
