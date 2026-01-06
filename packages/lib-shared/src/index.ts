@@ -6,16 +6,29 @@
 
 export * from './id-generator';
 export * from './storage.service';
-export * from './api.service';
 export * from './date-utils';
-export * from './macro-calculations';
 export * from './prisma-type-guards';
+export * from './macro-calculations';
+// calculateMainMacro and MainMacro were removed or renamed to calculateMacros/Macros
 
-// Utils
+// Export from sub-directories
 export * from './utils';
+export * from './performance';
+export * from './components';
 
-// Hooks
-export * from './hooks';
-
-// Components - Must be imported from @onecoach/lib-shared/components to avoid UI deps in backend
-// export * from './components';
+// Explicitly export key utilities for cleaner access
+export * from './utils/logger';
+export * from './utils/error';
+export * from './utils/formatters';
+export * from './utils/validators';
+export * from './utils/http';
+export * from './utils/api-client';
+export * from './utils/batch-processing';
+export * from './utils/ai-model-mapper';
+export * from './utils/weight-converter';
+export * from './utils/flight-types';
+export * from './utils/dnd-helpers';
+export * from './utils/main-macro-calculator';
+export * from './utils/nutrition-plan-helpers';
+export * from './utils/image-url-sanitizer';
+// parseJsonResponse is likely in formatters or validators, using wildcard export from utils

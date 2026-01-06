@@ -11,7 +11,7 @@ import type {
   ReorderResult,
   MoveOperation,
   MoveResult,
-} from '@onecoach/types/dnd.types';
+} from '@onecoach/types';
 
 // ============================================================================
 // Generic Array Reordering

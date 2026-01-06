@@ -2,7 +2,7 @@
  * Flight Types - Single Source of Truth
  *
  * Shared types for the OneFlight feature.
- * Import from @onecoach/lib-shared/utils/flight-types
+ * Import from @onecoach/lib-shared
  *
  * @module flight-types
  */
