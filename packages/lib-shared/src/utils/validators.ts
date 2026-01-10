@@ -119,3 +119,17 @@ export function isInRange(value: number, min: number, max: number): boolean {
 export function isNonEmptyArray<T>(array: T[]): boolean {
   return Array.isArray(array) && array.length > 0;
 }
+
+/**
+ * Valida una password
+ *
+ * @param password - Password da validare
+ * @returns Oggetto con esito e eventuale errore
+ */
+export function validatePassword(password: string): { valid: boolean; error?: string } {
+  if (!password || password.length < 8) {
+    return { valid: false, error: 'La password deve essere di almeno 8 caratteri' };
+  }
+  // Aggiungere altre regole se necessario (maiuscole, numeri, ecc)
+  return { valid: true };
+}

@@ -5,7 +5,7 @@
  * UNICA FONTE DI VERITÀ per i contratti dei servizi AI
  */
 
-import type { Message, Conversation, ParsedAiResponse, RequestType } from '@onecoach/types';
+import type { Message, Conversation, ParsedAiResponse, RequestType } from '@onecoach/types-chat';
 
 /**
  * Chat Service Contract
